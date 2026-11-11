@@ -1,7 +1,7 @@
 # Jaden's Virtual Office — Public (GitHub Pages) Version
 
 A bookmarkable, live-in-the-browser version of Jaden's Virtual Office: nine
-animated bots (Scanner, Paper, Bell, George, Frank, Muse, and Clip 1/2/3)
+animated bots (Scanner, Paper, Bell, George, Frank, Muse, and Rob, Clip 2, Clip 3)
 across four rooms — trading, the shop, Muse's office at the end of the
 hallway, and the clipping room at the back — with Working / Waiting /
 Needs-you badges and an office log. It mirrors the in-app Virtual Office,

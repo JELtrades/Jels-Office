@@ -34,6 +34,16 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-11 16:51 ET", "clip1",
+     "Clip 1 named Rob by Jaden — viral ideas scout: finds explainer-video "
+     "ideas on Instagram that haven't been done yet. Now working at his desk."),
+    ("2026-11-11 16:00 ET", "paper",
+     "Asia model + midday model (lunch piece on fixed150) wired into paper "
+     "trading — first Asia model session tonight 19:00 ET, first lunch "
+     "piece Thu Nov 12 12:00 ET. First paper trade corrected to a LOSS "
+     "(-14 pts) by Jaden — wick 4 pts past the stop. Lucid Flex 50K pass "
+     "practice live: daily caps +$1,200 / -$300, 40% consistency, EOD "
+     "trailing floor (balance $49,888, floor $48,000, room $1,888)."),
     ("2026-11-11 15:11 ET", "clip1",
      "Clipping room opened at the back end of the hallway — three new bots "
      "(Clip 1/2/3) awaiting assignments from Jaden; recording gear in place."),
@@ -96,6 +106,32 @@ def in_window(now, start_h, start_m, end_h, end_m):
     return start <= now < end
 
 
+def in_evening_block(now):
+    """Paper-trading evening block 18:00-01:00 ET, starting Sun-Thu
+    evenings only — NO Friday Asia (Jaden's call Nov 11) and no
+    Saturday evening (futures closed). The 00:00-01:00 tail belongs to
+    the previous evening: Mon 00:00-01:00 (Sunday's tail) and Fri
+    00:00-01:00 (Thursday's tail) are active, but Sat 00:00-01:00 is
+    not (no Friday evening session) and Sun 00:00-01:00 is not (no
+    Saturday evening session)."""
+    hm = now.hour * 60 + now.minute
+    if hm >= 18 * 60:
+        return now.weekday() not in (4, 5)  # no Fri/Sat evening
+    if hm < 60:
+        return (now - timedelta(days=1)).weekday() not in (4, 5)
+    return False
+
+
+def next_evening_time(now):
+    """Next 18:00 ET on a Sun-Thu evening (Mon=0..Sun=6)."""
+    for ahead in range(0, 8):
+        cand = (now + timedelta(days=ahead)).replace(
+            hour=18, minute=0, second=0, microsecond=0)
+        if cand.weekday() not in (4, 5) and cand > now:
+            return cand
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Read the real sources
 # ---------------------------------------------------------------------------
@@ -146,18 +182,27 @@ def build():
 
     journal_last = load_journal_last_trade()
 
-    # --- Scanner: JELS watch / paper engine active window, Mon-Fri 09:30-14:00
-    scan_working = is_weekday and in_window(now, 9, 30, 14, 0)
-    next_scan = next_weekday_time(now, {0, 1, 2, 3, 4}, 9, 30)
+    # --- Scanner: JELS watch / paper engine active windows —
+    # day block Mon-Fri 09:30-15:00 + evening block Sun-Thu 18:00-01:00
+    day_block = is_weekday and in_window(now, 9, 30, 15, 0)
+    scan_working = day_block or in_evening_block(now)
+    next_scan_day = next_weekday_time(now, {0, 1, 2, 3, 4}, 9, 30)
+    next_scan_eve = next_evening_time(now)
+    next_scan = min((c for c in (next_scan_day, next_scan_eve) if c),
+                    default=None)
     scanner = {
         "id": "scanner",
         "name": "Scanner",
         "role": "MNQ / ES watch — JELS strat detection (15m + 5m CISD + FVG)",
         "status": "working" if scan_working else "waiting",
-        "status_reason": ("Inside the live watch window (Mon-Fri 09:30-14:00 ET)."
+        "status_reason": ("Inside the live watch window (Mon-Fri 09:30-15:00 ET "
+                          "or Sun-Thu 18:00-01:00 ET)."
                           if scan_working else
-                          "Outside the live watch window (Mon-Fri 09:30-14:00 ET)."),
-        "schedule": "Mon-Fri 09:30-14:00 ET (opens 09:30-10:30, midday 11:00-12:00)",
+                          "Outside the live watch window (Mon-Fri 09:30-15:00 ET "
+                          "or Sun-Thu 18:00-01:00 ET)."),
+        "schedule": ("Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET "
+                     "(Nyam opens 09:30-10:30, midday model 11:00-13:00, "
+                     "Asia model 19:00-23:00)"),
         "last_action": (f"Engine run #{paper.get('runs_total', '?')} at "
                         f"{paper.get('last_run_et', 'unknown')}; "
                         f"{len(trades)} paper trade(s) detected so far."),
@@ -167,31 +212,65 @@ def build():
     }
 
     # --- Paper: same active window; last action is the latest paper trade
+    # (The Nov 11 correction turned the first trade into a LOSS — the text
+    # must render WIN/LOSS from the sign of win_r, never hardcode WIN.)
     if latest:
-        outcome = latest.get("outcome_detail", latest.get("status", ""))
+        label = (latest.get("track_label") or latest.get("model")
+                 or "Nyam model")
+        wr = latest.get("win_r")
+        if latest.get("status") == "closed":
+            if wr is not None and wr > 0:
+                res_txt = f"WIN +{wr}R (+{latest.get('points')} pts)"
+            elif wr is not None and wr < 0:
+                res_txt = f"LOSS {wr}R ({latest.get('points')} pts)"
+                if latest.get("outcome_detail"):
+                    res_txt += f" ({latest['outcome_detail']})"
+            elif wr == 0:
+                res_txt = "breakeven"
+            else:
+                res_txt = latest.get("outcome_detail", "closed")
+        else:
+            res_txt = "open — awaiting entry/outcome"
+        if latest.get("management") == "fixed150":
+            stop_txt = "$150 fixed stop (18.75 pts at 4 micros)"
+        else:
+            stop_txt = f"Stop {latest.get('stop_pts')} pts"
         last_trade_txt = (
-            f"{latest['id']} — {latest.get('direction', '')} Nyam model "
-            f"{latest.get('source', '')} — "
-            f"{'WIN +' + str(latest.get('win_r')) + 'R (+' + str(latest.get('points')) + ' pts)' if latest.get('win_r', 0) > 0 else outcome} "
+            f"{latest['id']} — {latest.get('direction', '')} {label} "
+            f"{latest.get('source', '')} — {res_txt} "
             f"at {latest.get('closed_at_et', latest.get('detection_time_et', ''))}. "
-            f"Stop {latest.get('stop_pts')} pts; "
+            f"{stop_txt}; "
             f"wick went {latest.get('wick_beyond_stop_pts')} pts beyond stop."
         )
     else:
         last_trade_txt = "No paper trades yet."
+    # Flex 50K practice tracker — rides in the paper state file
+    # (engine persists state["flex"] on every run; derived from the
+    # closed trades, never a second ledger).
+    flex = paper.get("flex", {}) or {}
+    cap_state_txt = {"trading": "trading",
+                     "profit_cap": "day done — hit +$1,200 profit cap",
+                     "loss_cap": "day done — hit −$300 loss cap"}.get(
+                         flex.get("cap_state"), "trading")
     paper_bot = {
         "id": "paper",
         "name": "Paper",
-        "role": "JELS paper trader — log-only hypothetical trades, no real orders",
+        "role": ("JELS paper trader — log-only hypothetical trades, no real "
+                 "orders; practicing the Lucid Flex 50K pass (daily caps "
+                 "+$1,200 / −$300, 40% consistency, EOD trailing floor)"),
         "status": "working" if scan_working else "waiting",
-        "status_reason": ("Inside the paper-trading window (Mon-Fri 09:30-14:00 ET)."
+        "status_reason": ("Inside the paper-trading window (Mon-Fri 09:30-15:00 ET "
+                          "or Sun-Thu 18:00-01:00 ET)."
                           if scan_working else
-                          "Outside the paper-trading window (Mon-Fri 09:30-14:00 ET)."),
-        "schedule": "Mon-Fri 09:30-14:00 ET, checks every 5 min",
+                          "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET "
+                          "or Sun-Thu 18:00-01:00 ET)."),
+        "schedule": ("Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, "
+                     "checks every 5 min"),
         "last_action": last_trade_txt,
         "next_action": (f"Next window {fmt_time(next_scan)}"
                         if not scan_working else
-                        "Watching for the next JELS setup (opens + midday)."),
+                        "Watching for the next JELS setup (opens + midday "
+                        "model + Asia model)."),
         "needs_you": None,
         "stats": {
             "trades_opened": len(trades),
@@ -201,6 +280,22 @@ def build():
             "win_rate_pct": round(100 * len(wins) / len(closed), 1) if closed else None,
             "total_points": total_pts,
             "total_usd_4_micros": round(total_pts * 2 * 4, 2),
+            "flex_target_progress_usd": flex.get("total_pnl_usd"),
+            "flex_target_pct": flex.get("target_progress_pct"),
+            "flex_balance_usd": flex.get("balance"),
+            "flex_floor_usd": flex.get("floor"),
+            "flex_floor_locked": flex.get("floor_locked"),
+            "flex_room_usd": flex.get("room_usd"),
+            "flex_best_day_usd": flex.get("best_day_usd"),
+            "flex_best_day_date": flex.get("best_day_date"),
+            "flex_best_day_ratio": flex.get("best_day_ratio"),
+            "flex_required_total_usd": flex.get("required_total_usd"),
+            "flex_days_traded": flex.get("days_traded"),
+            "flex_today_pnl_usd": flex.get("today_pnl_usd"),
+            "flex_today_date": flex.get("today_date"),
+            "flex_cap_state": flex.get("cap_state"),
+            "flex_cap_state_text": cap_state_txt,
+            "flex_passed": flex.get("passed"),
         },
     }
 
@@ -303,10 +398,27 @@ def build():
     }
 
     # --- Clip 1/2/3: the new YouTube/clipping room at the back end of the
-    # hallway. Placeholder names — Jaden assigns their jobs when the room
-    # is done, so they are always waiting on the clipping-room couch.
+    # hallway. Clip 1 is Rob — assigned by Jaden Nov 11 ~16:51 ET as the
+    # viral ideas scout, so he works at his desk. Clip 2/3 are still
+    # placeholders awaiting assignment, waiting on the clipping-room couch.
     clips = []
     for i in (1, 2, 3):
+        if i == 1:
+            # Rob — viral ideas scout (Jaden, Nov 11 ~16:51 ET): finds only
+            # viral explainer-video ideas on Instagram that haven't been
+            # done yet. Working at his desk.
+            clips.append({
+                "id": "clip1",
+                "name": "Rob",
+                "role": "Viral ideas scout — finds explainer-video ideas on Instagram that haven't been done yet",
+                "status": "working",
+                "status_reason": "On the job — hunting viral explainer-video ideas on Instagram that haven't been done yet.",
+                "schedule": "Always on — scouting Instagram for fresh explainer ideas",
+                "last_action": "Assigned by Jaden Wed Nov 11 — now scouting Instagram for viral explainer-video ideas that haven't been done yet.",
+                "next_action": "Keep scouting Instagram for the next viral explainer idea.",
+                "needs_you": None,
+            })
+            continue
         clips.append({
             "id": f"clip{i}",
             "name": f"Clip {i}",
@@ -324,17 +436,26 @@ def build():
     # --- Office log, newest first, all from real sources
     log = []
     if latest:
+        lwr = latest.get("win_r")
+        if latest.get("status") == "closed" and lwr is not None and lwr > 0:
+            res_txt = (f"WIN +{lwr}R (+{latest.get('points')} pts, "
+                       f"+${latest.get('points', 0) * 8:.0f} at 4 micros)")
+        elif latest.get("status") == "closed" and lwr is not None and lwr < 0:
+            res_txt = (f"LOSS {lwr}R ({latest.get('points')} pts, "
+                       f"${latest.get('points', 0) * 8:.0f} at 4 micros)")
+        else:
+            res_txt = latest.get("outcome_detail", latest.get("status", ""))
         log.append({
             "time": latest.get("closed_at_et") or latest.get("detection_time_et"),
             "bot": "paper",
-            "text": (f"{latest['id']} closed — WIN +{latest.get('win_r')}R "
-                     f"(+{latest.get('points')} pts, +${latest.get('points', 0) * 8:.0f} at 4 micros). "
+            "text": (f"{latest['id']} closed — {res_txt}. "
                      f"Wick went {latest.get('wick_beyond_stop_pts')} pts beyond the stop."),
         })
         log.append({
             "time": latest.get("detection_time_et"),
             "bot": "paper",
-            "text": (f"{latest['id']} detected — {latest.get('direction')} Nyam model "
+            "text": (f"{latest['id']} detected — {latest.get('direction')} "
+                     f"{latest.get('track_label') or latest.get('model') or 'Nyam model'} "
                      f"{latest.get('source')}, CISD {latest.get('cisd_level')}, "
                      f"FVG {latest.get('zone', {}).get('bottom')}-{latest.get('zone', {}).get('top')}."),
         })
