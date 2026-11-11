@@ -561,25 +561,12 @@ import * as THREE from 'three';
   }
   hallWall(0);
   hallWall(3);
-  // ----- Muse's office walls (x -1..4, z 6..11.5) -----
-  // Back wall at z=6: solid except a 2-wide doorway (x 0.5..2.5) into the
-  // hallway, with a lintel above it. Side walls solid; far wall (z=11.5)
-  // is glass, like the penthouse walls, so the city stays in view.
-  (function officeWalls(){
-    var mat = new THREE.MeshStandardMaterial({ color: C.wall, roughness: 0.9 });
-    function solid(w, h, d, x, y, z){
-      var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-      m.position.set(x, y, z);
-      m.castShadow = true; m.receiveShadow = true;
-      scene.add(m);
-    }
-    solid(1.5, 4.2, 0.24, -0.25, 2.1, 6);   // back wall, left of doorway
-    solid(1.5, 4.2, 0.24, 3.25, 2.1, 6);    // back wall, right of doorway
-    solid(2, 1.0, 0.24, 1.5, 3.7, 6);        // lintel over the doorway
-    solid(0.24, 4.2, 5.5, -1, 2.1, 8.75);    // left wall
-    solid(0.24, 4.2, 5.5, 4, 2.1, 8.75);     // right wall
-  })();
-  windowWall(5, 0.24, 1.5, 11.65, true);     // far wall, glass
+  // ----- Muse's office: NO walls (x -1..4, z 6..11.5) -----
+  // Jaden, Nov 11: take the walls off the office so it's easy to see in.
+  // The back wall (with its doorway), both side walls, and the glass far
+  // wall are all removed; the office is an open platform at the end of
+  // the hallway — floor slab, rug, desk, guest chairs, couch, dog bed.
+  // The cross-beam over the office stays so the pendant has a home.
   // Ceiling beams cap the window walls (no slab, so the top-down orbit
   // view stays open). The cross-beams below hold the pendant lights and
   // sit high enough not to block the view into the rooms.
@@ -593,10 +580,8 @@ import * as THREE from 'three';
     beam.position.set(b[0], 4.3, b[1]);
     scene.add(beam);
   });
-  // beam over the office far wall + a cross-beam over the office for the pendant
-  var beamO = box(5.3, 0.22, 0.3, 0x241d18);
-  beamO.position.set(1.5, 4.3, 11.65);
-  scene.add(beamO);
+  // cross-beam over the office for the pendant (the beam over the office
+  // far wall went with the walls)
   var beamOC = box(5, 0.18, 0.24, 0x241d18);
   beamOC.position.set(1.5, 4.2, 8.5);
   scene.add(beamOC);
@@ -612,10 +597,7 @@ import * as THREE from 'three';
     t.position.set(s[0], 3.88, s[1]);
     scene.add(t);
   });
-  // gold trim under the header on the office far wall's inner face
-  var trimO = new THREE.Mesh(new THREE.BoxGeometry(5, 0.07, 0.05), trimMat);
-  trimO.position.set(1.5, 3.88, 11.48);
-  scene.add(trimO);
+  // (gold trim on the office far wall's inner face went with the walls)
 
   function plant(x, z){
     var g = new THREE.Group();
@@ -1049,7 +1031,7 @@ import * as THREE from 'three';
   artO2.position.set(3.25, 1.6, 6.15);
   artO2.rotation.y = Math.PI;
   scene.add(artO2);
-  // Small 2-seat couch along the office's right wall (faces -x into the room).
+  // Small 2-seat couch along the office's right edge (faces -x into the room).
   var sofaO = buildSofa(2);
   sofaO.position.set(3.45, 0, 8.2);
   sofaO.rotation.y = -Math.PI / 2;
