@@ -263,10 +263,10 @@ def build():
         "needs_you": KEEPER_OPEN_ITEMS,
     }
 
-    # --- Ledger: trade journal — real unlogged sessions waiting on Jaden
+    # --- Frank (ledger): trade journal — real unlogged sessions waiting on Jaden
     ledger = {
         "id": "ledger",
-        "name": "Ledger",
+        "name": "Frank",
         "role": "Trade journal + Lucid account buffers — points, R, setup, one lesson per trade",
         "status": "needs-you",
         "status_reason": "11 sessions unlogged — the journal is waiting on Jaden.",

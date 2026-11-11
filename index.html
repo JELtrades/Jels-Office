@@ -673,6 +673,24 @@ import * as THREE from 'three';
     }
     var armL = arm(-0.36), armR = arm(0.36);
 
+    // Frank (ledger) carries a book in his right hand — dark red cover,
+    // gold pages. It hangs from the right-arm pivot, so it stays in his
+    // hand while he idles at his desk and while he walks the office.
+    if(spot.id === "ledger"){
+      var book = new THREE.Group();
+      var cover = rBox(0.06, 0.34, 0.26, 0x7f1d1d);
+      book.add(tagMesh(cover, spot.id));
+      var pages = rBox(0.055, 0.30, 0.22, 0xe8c87a);
+      pages.position.y = 0.005;
+      book.add(pages);
+      var spine = rBox(0.065, 0.34, 0.045, 0x5b1212);
+      spine.position.set(0, 0, -0.12);
+      book.add(spine);
+      book.position.set(0, -0.44, 0.07);
+      book.rotation.z = 0.12;
+      armR.add(book);
+    }
+
     // anchor: on the aisle side of its desk, facing the desk
     var anchor = new THREE.Vector3(spot.x, 0, spot.z + (isFront ? -1.05 : 1.05));
     var faceYaw = isFront ? 0 : Math.PI;
