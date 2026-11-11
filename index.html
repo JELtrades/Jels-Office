@@ -410,7 +410,7 @@ import * as THREE from 'three';
 
   var scene = new THREE.Scene();
   scene.background = new THREE.Color(0x14101f);
-  scene.fog = new THREE.Fog(0x241a33, 45, 130);
+  scene.fog = new THREE.Fog(0x241a33, 55, 150);
 
   var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 120);
   var orbit = { theta: 0.785, phi: 0.92, radius: 17.5, target: new THREE.Vector3(0, 0.7, 0) };
@@ -470,10 +470,11 @@ import * as THREE from 'three';
   rug.position.set(0, 0.015, 0); rug.castShadow = false;
   scene.add(rug);
 
-  // ----- penthouse window walls: floor-to-ceiling glass on all four sides -----
-  // Dark metal frames with mullions + a slim gold trim under the header, so
-  // the room stays open to the city. The glass is faint and depthWrite-off
-  // so the skyline reads cleanly through it from any orbit angle.
+  // ----- penthouse window walls: floor-to-ceiling glass on the back and -----
+  // left sides only — the front (+z, camera side) and right (+x) sides are
+  // open, so the room is easy to see into. Dark metal frames with mullions
+  // + a slim gold trim under the header; the glass is faint and depthWrite-
+  // off so the skyline reads cleanly through it from any orbit angle.
   var glassMat = new THREE.MeshStandardMaterial({
     color: 0xaac4e0, transparent: true, opacity: 0.10,
     roughness: 0.06, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false
@@ -513,29 +514,31 @@ import * as THREE from 'three';
     scene.add(g);
   }
   windowWall(18, 0.24, 0, -6.15, true);   // back
-  windowWall(18, 0.24, 0,  6.15, true);   // front
   windowWall(12, 0.24, -9.15, 0, false);  // left
-  windowWall(12, 0.24,  9.15, 0, false);  // right
-  // Ceiling beams cap the window walls (no slab, so the top-down orbit view
-  // stays open) — the pendant lights hang from these.
-  [[0, -6.15, 18, 0.3], [0, 6.15, 18, 0.3]].forEach(function(b){
+  // front (+z) and right (+x) are open — no wall, so the camera looks
+  // straight into the room.
+  // Ceiling beams cap the remaining window walls (no slab, so the top-down
+  // orbit view stays open). The beams on the removed front/right sides are
+  // gone with their walls; the cross-beams below hold the pendant lights
+  // and sit high enough not to block the view into the room.
+  [[0, -6.15, 18, 0.3]].forEach(function(b){
     var beam = box(b[2], 0.22, b[3], 0x241d18);
     beam.position.set(b[0], 4.3, b[1]);
     scene.add(beam);
   });
-  [[-9.15, 0], [9.15, 0]].forEach(function(b){
+  [[-9.15, 0]].forEach(function(b){
     var beam = box(0.3, 0.22, 12, 0x241d18);
     beam.position.set(b[0], 4.3, b[1]);
     scene.add(beam);
   });
   // Slim gold trim just under the header on the inner face of each wall.
   var trimMat = new THREE.MeshStandardMaterial({ color: C.accent, emissive: C.accent, emissiveIntensity: 0.9, roughness: 0.4 });
-  [[0, -5.98], [0, 5.98]].forEach(function(s){
+  [[0, -5.98]].forEach(function(s){
     var t = new THREE.Mesh(new THREE.BoxGeometry(18, 0.07, 0.05), trimMat);
     t.position.set(s[0], 3.88, s[1]);
     scene.add(t);
   });
-  [[-8.98, 0], [8.98, 0]].forEach(function(s){
+  [[-8.98, 0]].forEach(function(s){
     var t = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 12), trimMat);
     t.position.set(s[0], 3.88, s[1]);
     scene.add(t);
@@ -610,9 +613,10 @@ import * as THREE from 'three';
     transparent: true, opacity: 0.85, fog: false, depthWrite: false
   }));
   scene.add(stars);
-  // City ground plane (dark asphalt, just below the room floor slab).
+  // City ground plane (dark asphalt, far below — the room is high up in a
+  // tower, looking down at the streets and rooftops).
   var cityGround = box(220, 0.1, 220, 0x0d0b12);
-  cityGround.position.y = -0.56;
+  cityGround.position.y = -26;
   cityGround.castShadow = false;
   scene.add(cityGround);
   // Facade texture: dark tower with a grid of windows, some lit warm/cool.
@@ -650,31 +654,35 @@ import * as THREE from 'three';
       roughness: 0.95, metalness: 0
     });
   });
-  // ~70 towers in a ring around the room, taller further out. The sector
-  // around the default camera angle stays clear of near towers so the first
-  // view into the room is never blocked.
+  // ~70 towers in a ring pushed well back from the room (radius 24-68), so
+  // the skyline reads as distant. Most towers top out below the room floor
+  // — we are high up, looking down at rooftops — with only a few tall ones
+  // rising above our level far away. The sector around the default camera
+  // angle stays clear of near towers so the first view into the room is
+  // never blocked.
   var cityRnd = mulberry32(20261111);
   var placed = 0, guard = 0;
   while(placed < 70 && guard++ < 600){
     var ang = cityRnd() * Math.PI * 2;
-    var rad = 14 + cityRnd() * 34;
+    var rad = 24 + cityRnd() * 44;
     var dAng = Math.abs(ang - 0.785);
     if(dAng > Math.PI) dAng = Math.PI * 2 - dAng;
-    if(rad < 22 && dAng < 0.5) continue;
+    if(rad < 34 && dAng < 0.5) continue;
     var bw = 2.5 + cityRnd() * 2.5;
     var bd = 2.5 + cityRnd() * 2.5;
-    var bh = 3 + cityRnd() * 9 + rad * 0.38;
-    if(bh > 30) bh = 30;
+    var bh = 6 + cityRnd() * 10 + rad * 0.12;
+    if(cityRnd() < 0.12) bh = 28 + cityRnd() * 8;
+    if(bh > 36) bh = 36;
     var b = new THREE.Mesh(cityGeo, cityMats[placed % 3]);
     b.scale.set(bw, bh, bd);
-    b.position.set(Math.cos(ang) * rad, -0.5 + bh / 2, Math.sin(ang) * rad);
+    b.position.set(Math.cos(ang) * rad, -26 + bh / 2, Math.sin(ang) * rad);
     b.rotation.y = cityRnd() * Math.PI;
     b.castShadow = false; b.receiveShadow = false;
     scene.add(b);
     if(bh > 20 && placed % 11 === 0){
       var bc = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0xff4444 }));
-      bc.position.set(b.position.x, -0.5 + bh + 0.15, b.position.z);
+      bc.position.set(b.position.x, -26 + bh + 0.15, b.position.z);
       scene.add(bc);
     }
     placed++;
@@ -751,7 +759,7 @@ import * as THREE from 'three';
   table.add(sprout);
   table.position.set(-5.5, 0, 4.0);
   scene.add(table);
-  // Floor lamps: one by the sofa with a real warm light, one by the right
+  // Floor lamps: one by the sofa with a real warm light, one by the left
   // wall (emissive only) — both clear of the walk lanes.
   function floorLamp(x, z, withLight){
     var g = new THREE.Group();
@@ -782,9 +790,9 @@ import * as THREE from 'three';
     scene.add(g);
   }
   floorLamp(-4.15, 5.2, true);
-  floorLamp(8.5, 3.4, false);
-  // Console + bottles against the right wall (x 8.3..8.8 — clear of the
-  // x=7.8 side lane).
+  floorLamp(-8.5, 3.4, false);
+  // Console + bottles against the back wall (z -5.45..-5.95 — clear of the
+  // back lane and Bell's desk).
   var sideboard = new THREE.Group();
   function sbBox(w, h, d, mat, x, y, z){
     var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
@@ -813,7 +821,8 @@ import * as THREE from 'three';
     gl.position.set(0, 0.95, gz);
     sideboard.add(gl);
   });
-  sideboard.position.set(8.55, 0, 0.9);
+  sideboard.position.set(5.5, 0, -5.7);
+  sideboard.rotation.y = Math.PI / 2;
   scene.add(sideboard);
   // Pendant lights over the gaps between desks, hung from the cross-beams.
   function pendant(x, z){
@@ -836,8 +845,8 @@ import * as THREE from 'three';
   pendant(-2.7, -2.6);
   pendant(2.7, -2.6);
   pendant(0, 2.6);
-  // Wall art — the walls are glass, so the big canvas leans against the
-  // front wall and a smaller one hangs on the right wall. Abstract, on-palette.
+  // Wall art — the big canvas hangs on the back wall and a smaller one on
+  // the left wall. Abstract, on-palette.
   function artTexture(seed){
     var rnd = mulberry32(seed);
     var cv = document.createElement("canvas");
@@ -875,12 +884,12 @@ import * as THREE from 'three';
     return g;
   }
   var art1 = framedArt(1.62, 1.17, 101);
-  art1.position.set(-1.8, 0.67, 5.78);
-  art1.rotation.x = 0.06;
+  art1.position.set(-1.8, 1.0, -5.95);
+  art1.rotation.y = Math.PI;
   scene.add(art1);
   var art2 = framedArt(1.02, 0.82, 202);
-  art2.position.set(8.95, 1.0, -2.2);
-  art2.rotation.y = Math.PI / 2;
+  art2.position.set(-8.95, 1.0, -2.2);
+  art2.rotation.y = -Math.PI / 2;
   scene.add(art2);
 
   // ----- desks -----
@@ -1099,7 +1108,7 @@ import * as THREE from 'three';
   // A small dog, not a bot: no name label, no desk, no click target.
   // He wanders the open floor on axis-aligned paths (never crossing a
   // desk), pauses to sniff, then pads back to his bed in the front-right
-  // corner by the windows, lies down for a while, and gets up again.
+  // corner by the open edge, lies down for a while, and gets up again.
   var DOG_BED = { x: 6.9, z: 5.3 };
   // Open-floor waypoints only: clear of every desk footprint and ring,
   // clear of the robots' corner pause points, and clear of the lounge
@@ -1140,10 +1149,15 @@ import * as THREE from 'three';
     var chest = rBox(0.28, 0.28, 0.20, black);
     chest.position.set(0, 0.41, 0.30);
     bodyG.add(chest);
-    // white chest blaze on the front of the chest + white belly patch
-    var blaze = rBox(0.20, 0.22, 0.03, white);
-    blaze.position.set(0, 0.36, 0.41);
+    // white chest blaze on the front of the chest + white belly patch —
+    // the blaze runs up the chest toward the neck
+    var blaze = rBox(0.24, 0.32, 0.03, white);
+    blaze.position.set(0, 0.40, 0.41);
     bodyG.add(blaze);
+    // white collar around the neck
+    var collar = rBox(0.26, 0.10, 0.26, white);
+    collar.position.set(0, 0.51, 0.36);
+    bodyG.add(collar);
     var belly = rBox(0.20, 0.04, 0.40, white);
     belly.position.set(0, 0.27, 0.02);
     bodyG.add(belly);
@@ -1155,10 +1169,10 @@ import * as THREE from 'three';
     head.position.y = 0.10;
     headG.add(head);
     // white blaze up the face + white muzzle + nose
-    var faceBlaze = rBox(0.07, 0.15, 0.02, white);
+    var faceBlaze = rBox(0.09, 0.16, 0.02, white);
     faceBlaze.position.set(0, 0.12, 0.13);
     headG.add(faceBlaze);
-    var muzzle = rBox(0.14, 0.08, 0.10, white);
+    var muzzle = rBox(0.16, 0.08, 0.10, white);
     muzzle.position.set(0, 0.03, 0.14);
     headG.add(muzzle);
     var nose = rBox(0.07, 0.05, 0.04, 0x111111);
@@ -1186,19 +1200,20 @@ import * as THREE from 'three';
     tail.position.set(0, 0.10, -0.10);
     tail.rotation.x = -0.7;
     tailG.add(tail);
-    var tailTip = rCyl(0.04, 0.05, 0.10, white, {}, 10);
-    tailTip.position.set(0, 0.20, -0.19);
+    var tailTip = rCyl(0.05, 0.06, 0.18, white, {}, 10);
+    tailTip.position.set(0, 0.22, -0.21);
     tailTip.rotation.x = -0.7;
     tailG.add(tailTip);
-    // legs: pivots at hip/shoulder height, black above, white paws below
+    // legs: pivots at hip/shoulder height, black above, white lower legs
+    // below (white runs more than halfway up each leg)
     function dogLeg(dx, dz){
       var pivot = new THREE.Group();
       pivot.position.set(dx, 0.28, dz);
-      var upper = rBox(0.09, 0.20, 0.09, black);
-      upper.position.y = -0.10;
+      var upper = rBox(0.09, 0.12, 0.09, black);
+      upper.position.y = -0.06;
       pivot.add(upper);
-      var paw = rBox(0.09, 0.08, 0.11, white);
-      paw.position.y = -0.24;
+      var paw = rBox(0.09, 0.16, 0.11, white);
+      paw.position.y = -0.20;
       pivot.add(paw);
       bodyG.add(pivot);
       return pivot;
