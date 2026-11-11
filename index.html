@@ -409,15 +409,15 @@ import * as THREE from 'three';
   container.insertBefore(renderer.domElement, labelsEl);
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(C.bg);
-  scene.fog = new THREE.Fog(C.bg, 30, 62);
+  scene.background = new THREE.Color(0x14101f);
+  scene.fog = new THREE.Fog(0x241a33, 45, 130);
 
   var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 120);
   var orbit = { theta: 0.785, phi: 0.92, radius: 17.5, target: new THREE.Vector3(0, 0.7, 0) };
   var orbitGoal = { theta: 0.785, phi: 0.92, radius: 17.5 };
 
   // ----- lights -----
-  scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x3a2f26, 1.3));
+  scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x3a2f26, 1.5));
   var sun = new THREE.DirectionalLight(0xfff2dd, 1.9);
   sun.position.set(8, 14, 6);
   sun.castShadow = true;
@@ -426,7 +426,7 @@ import * as THREE from 'three';
   sun.shadow.camera.top = 12; sun.shadow.camera.bottom = -12;
   sun.shadow.camera.far = 40;
   scene.add(sun);
-  var warm = new THREE.PointLight(C.accent, 22, 26, 1.8);
+  var warm = new THREE.PointLight(C.accent, 28, 26, 1.8);
   warm.position.set(0, 5.5, 0);
   scene.add(warm);
 
@@ -470,20 +470,76 @@ import * as THREE from 'three';
   rug.position.set(0, 0.015, 0); rug.castShadow = false;
   scene.add(rug);
 
-  var backWall = box(18, 3, 0.3, C.wall);
-  backWall.position.set(0, 1.5, -6.15);
-  scene.add(backWall);
-  var leftWall = box(0.3, 3, 12, C.wall);
-  leftWall.position.set(-9.15, 1.5, 0);
-  scene.add(leftWall);
-  // gold accent strips along the wall tops
-  var stripMat = new THREE.MeshStandardMaterial({ color: C.accent, emissive: C.accent, emissiveIntensity: 0.9, roughness: 0.4 });
-  var strip1 = new THREE.Mesh(new THREE.BoxGeometry(18, 0.07, 0.05), stripMat);
-  strip1.position.set(0, 2.92, -5.98);
-  scene.add(strip1);
-  var strip2 = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 12), stripMat);
-  strip2.position.set(-8.98, 2.92, 0);
-  scene.add(strip2);
+  // ----- penthouse window walls: floor-to-ceiling glass on all four sides -----
+  // Dark metal frames with mullions + a slim gold trim under the header, so
+  // the room stays open to the city. The glass is faint and depthWrite-off
+  // so the skyline reads cleanly through it from any orbit angle.
+  var glassMat = new THREE.MeshStandardMaterial({
+    color: 0xaac4e0, transparent: true, opacity: 0.10,
+    roughness: 0.06, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false
+  });
+  var frameMat = new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 });
+  function windowWall(w, d, x, z, alongX){
+    // w = wall length along its run, d = frame depth, (x,z) = wall centre.
+    // Sill 0-0.25, glass 0.25-3.95, header 3.95-4.2, transom at y 2.2.
+    var g = new THREE.Group();
+    function frameBox(len, h, dep, px, py, pz){
+      var m = new THREE.Mesh(new THREE.BoxGeometry(len, h, dep), frameMat);
+      m.position.set(px, py, pz);
+      m.castShadow = true; m.receiveShadow = true;
+      g.add(m);
+    }
+    var step = 2.25, n = Math.round(w / step), i;
+    if(alongX){
+      frameBox(w, 0.25, d, 0, 0.125, 0);
+      frameBox(w, 0.25, d, 0, 4.075, 0);
+      frameBox(w, 0.1, d * 0.8, 0, 2.2, 0);
+      for(i = 0; i <= n; i++) frameBox(0.14, 3.7, d, -w / 2 + (w * i) / n, 2.1, 0);
+      var glass = new THREE.Mesh(new THREE.BoxGeometry(w - 0.1, 3.7, 0.03), glassMat);
+      glass.position.set(0, 2.1, 0);
+      glass.renderOrder = 2;
+      g.add(glass);
+    } else {
+      frameBox(d, 0.25, w, 0, 0.125, 0);
+      frameBox(d, 0.25, w, 0, 4.075, 0);
+      frameBox(d * 0.8, 0.1, w, 0, 2.2, 0);
+      for(i = 0; i <= n; i++) frameBox(d, 3.7, 0.14, 0, 2.1, -w / 2 + (w * i) / n);
+      var glass2 = new THREE.Mesh(new THREE.BoxGeometry(0.03, 3.7, w - 0.1), glassMat);
+      glass2.position.set(0, 2.1, 0);
+      glass2.renderOrder = 2;
+      g.add(glass2);
+    }
+    g.position.set(x, 0, z);
+    scene.add(g);
+  }
+  windowWall(18, 0.24, 0, -6.15, true);   // back
+  windowWall(18, 0.24, 0,  6.15, true);   // front
+  windowWall(12, 0.24, -9.15, 0, false);  // left
+  windowWall(12, 0.24,  9.15, 0, false);  // right
+  // Ceiling beams cap the window walls (no slab, so the top-down orbit view
+  // stays open) — the pendant lights hang from these.
+  [[0, -6.15, 18, 0.3], [0, 6.15, 18, 0.3]].forEach(function(b){
+    var beam = box(b[2], 0.22, b[3], 0x241d18);
+    beam.position.set(b[0], 4.3, b[1]);
+    scene.add(beam);
+  });
+  [[-9.15, 0], [9.15, 0]].forEach(function(b){
+    var beam = box(0.3, 0.22, 12, 0x241d18);
+    beam.position.set(b[0], 4.3, b[1]);
+    scene.add(beam);
+  });
+  // Slim gold trim just under the header on the inner face of each wall.
+  var trimMat = new THREE.MeshStandardMaterial({ color: C.accent, emissive: C.accent, emissiveIntensity: 0.9, roughness: 0.4 });
+  [[0, -5.98], [0, 5.98]].forEach(function(s){
+    var t = new THREE.Mesh(new THREE.BoxGeometry(18, 0.07, 0.05), trimMat);
+    t.position.set(s[0], 3.88, s[1]);
+    scene.add(t);
+  });
+  [[-8.98, 0], [8.98, 0]].forEach(function(s){
+    var t = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 12), trimMat);
+    t.position.set(s[0], 3.88, s[1]);
+    scene.add(t);
+  });
 
   function plant(x, z){
     var g = new THREE.Group();
@@ -503,6 +559,329 @@ import * as THREE from 'three';
   plant(-8.2, -5.1);
   plant(8.2, -5.1);
   plant(-8.2, 5.1);
+  plant(8.2, 5.1);
+
+  // ----- dusk sky, stars, city ground + skyline -----
+  function mulberry32(a){
+    return function(){
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  // Gradient sky dome: warm horizon glow fading to deep violet above.
+  var skyCanvas = document.createElement("canvas");
+  skyCanvas.width = 4; skyCanvas.height = 512;
+  var sctx = skyCanvas.getContext("2d");
+  var skyGrad = sctx.createLinearGradient(0, 0, 0, 512);
+  skyGrad.addColorStop(0.00, "#0a0618");
+  skyGrad.addColorStop(0.30, "#17102e");
+  skyGrad.addColorStop(0.45, "#33234e");
+  skyGrad.addColorStop(0.48, "#6b3a58");
+  skyGrad.addColorStop(0.50, "#ff9a55");
+  skyGrad.addColorStop(0.53, "#3a2140");
+  skyGrad.addColorStop(0.62, "#120b22");
+  skyGrad.addColorStop(1.00, "#0a0616");
+  sctx.fillStyle = skyGrad;
+  sctx.fillRect(0, 0, 4, 512);
+  var skyTex = new THREE.CanvasTexture(skyCanvas);
+  skyTex.colorSpace = THREE.SRGBColorSpace;
+  var sky = new THREE.Mesh(
+    new THREE.SphereGeometry(58, 32, 20),
+    new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide, fog: false, depthWrite: false })
+  );
+  sky.renderOrder = -10;
+  scene.add(sky);
+  // Stars above the skyline.
+  var starGeo = new THREE.BufferGeometry();
+  var starPos = [];
+  var starRnd = mulberry32(7);
+  for(var si = 0; si < 260; si++){
+    var sa = starRnd() * Math.PI * 2;
+    var sy = 8 + starRnd() * 44;
+    var sr = 52 + starRnd() * 4;
+    var sxz = Math.sqrt(Math.max(sr * sr - sy * sy, 1));
+    starPos.push(Math.cos(sa) * sxz, sy, Math.sin(sa) * sxz);
+  }
+  starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
+  var stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
+    color: 0xfff6e0, size: 0.3, sizeAttenuation: true,
+    transparent: true, opacity: 0.85, fog: false, depthWrite: false
+  }));
+  scene.add(stars);
+  // City ground plane (dark asphalt, just below the room floor slab).
+  var cityGround = box(220, 0.1, 220, 0x0d0b12);
+  cityGround.position.y = -0.56;
+  cityGround.castShadow = false;
+  scene.add(cityGround);
+  // Facade texture: dark tower with a grid of windows, some lit warm/cool.
+  // The same texture is the emissive map, so only the lit windows glow.
+  function facadeTexture(seed, litRatio){
+    var rnd = mulberry32(seed);
+    var cv = document.createElement("canvas");
+    cv.width = 128; cv.height = 256;
+    var ctx = cv.getContext("2d");
+    ctx.fillStyle = "#151021";
+    ctx.fillRect(0, 0, 128, 256);
+    for(var x = 0; x < 8; x++){
+      for(var y = 0; y < 16; y++){
+        var r = rnd();
+        if(r < litRatio){
+          ctx.fillStyle = rnd() < 0.7 ? "#ffd27a" : "#bcd8ff";
+          ctx.globalAlpha = 0.55 + rnd() * 0.45;
+        } else {
+          ctx.fillStyle = "#0a0812";
+          ctx.globalAlpha = 1;
+        }
+        ctx.fillRect(6 + x * 15, 8 + y * 15, 9, 10);
+      }
+    }
+    ctx.globalAlpha = 1;
+    var tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }
+  var cityGeo = new THREE.BoxGeometry(1, 1, 1);
+  var cityMats = [11, 23, 37].map(function(seed, i){
+    var t = facadeTexture(seed, [0.42, 0.3, 0.55][i]);
+    return new THREE.MeshStandardMaterial({
+      map: t, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.85,
+      roughness: 0.95, metalness: 0
+    });
+  });
+  // ~70 towers in a ring around the room, taller further out. The sector
+  // around the default camera angle stays clear of near towers so the first
+  // view into the room is never blocked.
+  var cityRnd = mulberry32(20261111);
+  var placed = 0, guard = 0;
+  while(placed < 70 && guard++ < 600){
+    var ang = cityRnd() * Math.PI * 2;
+    var rad = 14 + cityRnd() * 34;
+    var dAng = Math.abs(ang - 0.785);
+    if(dAng > Math.PI) dAng = Math.PI * 2 - dAng;
+    if(rad < 22 && dAng < 0.5) continue;
+    var bw = 2.5 + cityRnd() * 2.5;
+    var bd = 2.5 + cityRnd() * 2.5;
+    var bh = 3 + cityRnd() * 9 + rad * 0.38;
+    if(bh > 30) bh = 30;
+    var b = new THREE.Mesh(cityGeo, cityMats[placed % 3]);
+    b.scale.set(bw, bh, bd);
+    b.position.set(Math.cos(ang) * rad, -0.5 + bh / 2, Math.sin(ang) * rad);
+    b.rotation.y = cityRnd() * Math.PI;
+    b.castShadow = false; b.receiveShadow = false;
+    scene.add(b);
+    if(bh > 20 && placed % 11 === 0){
+      var bc = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8),
+        new THREE.MeshBasicMaterial({ color: 0xff4444 }));
+      bc.position.set(b.position.x, -0.5 + bh + 0.15, b.position.z);
+      scene.add(bc);
+    }
+    placed++;
+  }
+
+  // ----- penthouse decor (clear of desks, robots, labels, walk paths) -----
+  // Cross-beams over the desk rows — the pendant lights hang from these.
+  [[-2.6], [2.6]].forEach(function(z){
+    var cb = box(18, 0.18, 0.24, 0x241d18);
+    cb.position.set(0, 4.2, z[0]);
+    scene.add(cb);
+  });
+  // Lounge corner, front-left: low sofa + coffee table + rug + floor lamp.
+  // Lives at x -7.3..-4.15, z 3.5..5.9 — clear of the front-left waypoint
+  // (-7.8, 4.6), the z=0 aisle and the x=+/-7.8 side lanes.
+  var loungeRug = box(3.6, 0.02, 2.4, 0x33291f);
+  loungeRug.position.set(-5.5, 0.01, 4.7);
+  loungeRug.castShadow = false;
+  scene.add(loungeRug);
+  var sofa = new THREE.Group();
+  var sofaMat = new THREE.MeshStandardMaterial({ color: 0x3a2f26, roughness: 0.9 });
+  var cushionMat = new THREE.MeshStandardMaterial({ color: 0x4a3f35, roughness: 0.9 });
+  function sofaBox(w, h, d, mat, x, y, z){
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true; m.receiveShadow = true;
+    sofa.add(m);
+    return m;
+  }
+  [[-1.1, -0.42], [1.1, -0.42], [-1.1, 0.42], [1.1, 0.42]].forEach(function(p){
+    sofaBox(0.08, 0.12, 0.08, sofaMat, p[0], 0.06, p[1]);
+  });
+  sofaBox(2.4, 0.4, 1.0, sofaMat, 0, 0.32, 0);            // base
+  sofaBox(2.4, 0.75, 0.28, sofaMat, 0, 0.87, 0.38);       // backrest (+z, faces -z into room)
+  sofaBox(0.28, 0.6, 1.0, sofaMat, -1.06, 0.82, 0);       // arms
+  sofaBox(0.28, 0.6, 1.0, sofaMat, 1.06, 0.82, 0);
+  sofaBox(0.95, 0.16, 0.8, cushionMat, -0.48, 0.6, -0.05); // seat cushions
+  sofaBox(0.95, 0.16, 0.8, cushionMat, 0.48, 0.6, -0.05);
+  var bc1 = sofaBox(0.95, 0.55, 0.18, cushionMat, -0.48, 0.97, 0.28);
+  bc1.rotation.x = -0.12;
+  var bc2 = sofaBox(0.95, 0.55, 0.18, cushionMat, 0.48, 0.97, 0.28);
+  bc2.rotation.x = -0.12;
+  var pillow = sofaBox(0.42, 0.42, 0.14,
+    new THREE.MeshStandardMaterial({ color: C.accent, roughness: 0.85 }), -0.75, 0.87, 0.22);
+  pillow.rotation.z = 0.15; pillow.rotation.x = -0.1;
+  sofa.position.set(-5.5, 0, 4.9);
+  scene.add(sofa);
+  // Coffee table in front of the sofa, with a book and a small succulent.
+  var table = new THREE.Group();
+  function tableBox(w, h, d, mat, x, y, z){
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true; m.receiveShadow = true;
+    table.add(m);
+    return m;
+  }
+  var tableMat = new THREE.MeshStandardMaterial({ color: 0x2a2521, roughness: 0.7 });
+  tableBox(1.3, 0.06, 0.7, tableMat, 0, 0.42, 0);
+  tableBox(1.32, 0.02, 0.72, new THREE.MeshStandardMaterial({ color: C.accent, roughness: 0.4, metalness: 0.5 }), 0, 0.38, 0);
+  tableBox(1.1, 0.04, 0.55, tableMat, 0, 0.12, 0);
+  [[-0.58, -0.28], [0.58, -0.28], [-0.58, 0.28], [0.58, 0.28]].forEach(function(p){
+    tableBox(0.06, 0.4, 0.06, tableMat, p[0], 0.21, p[1]);
+  });
+  tableBox(0.3, 0.04, 0.22, new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.8 }), -0.3, 0.47, 0);
+  var pot = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.12, 12),
+    new THREE.MeshStandardMaterial({ color: 0x4a3f35, roughness: 0.9 }));
+  pot.position.set(0.35, 0.51, 0.05);
+  pot.castShadow = true;
+  table.add(pot);
+  var sprout = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.2, 8),
+    new THREE.MeshStandardMaterial({ color: C.plant, roughness: 0.9 }));
+  sprout.position.set(0.35, 0.66, 0.05);
+  sprout.castShadow = true;
+  table.add(sprout);
+  table.position.set(-5.5, 0, 4.0);
+  scene.add(table);
+  // Floor lamps: one by the sofa with a real warm light, one by the right
+  // wall (emissive only) — both clear of the walk lanes.
+  function floorLamp(x, z, withLight){
+    var g = new THREE.Group();
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.04, 16),
+      new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 }));
+    base.position.y = 0.02;
+    base.castShadow = true;
+    g.add(base);
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.5, 10),
+      new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 }));
+    pole.position.y = 0.79;
+    pole.castShadow = true;
+    g.add(pole);
+    var shade = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.3, 16, 1, true),
+      new THREE.MeshStandardMaterial({ color: 0xf5e6c8, emissive: 0xffd9a0, emissiveIntensity: 1.2, roughness: 0.9, side: THREE.DoubleSide }));
+    shade.position.y = 1.6;
+    g.add(shade);
+    var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 10),
+      new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xffd9a0, emissiveIntensity: 2.0 }));
+    bulb.position.y = 1.52;
+    g.add(bulb);
+    if(withLight){
+      var pl = new THREE.PointLight(0xffd9a0, 8, 7, 1.8);
+      pl.position.y = 1.5;
+      g.add(pl);
+    }
+    g.position.set(x, 0, z);
+    scene.add(g);
+  }
+  floorLamp(-4.15, 5.2, true);
+  floorLamp(8.5, 3.4, false);
+  // Console + bottles against the right wall (x 8.3..8.8 — clear of the
+  // x=7.8 side lane).
+  var sideboard = new THREE.Group();
+  function sbBox(w, h, d, mat, x, y, z){
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true; m.receiveShadow = true;
+    sideboard.add(m);
+    return m;
+  }
+  var sbMat = new THREE.MeshStandardMaterial({ color: 0x2a2521, roughness: 0.7 });
+  sbBox(0.5, 0.06, 2.2, sbMat, 0, 0.86, 0);
+  sbBox(0.42, 0.04, 2.0, sbMat, 0, 0.18, 0);
+  [[-0.18, -1.0], [0.18, -1.0], [-0.18, 1.0], [0.18, 1.0]].forEach(function(p){
+    sbBox(0.06, 0.84, 0.06, sbMat, p[0], 0.43, p[1]);
+  });
+  var bottleCols = [0x8a5a1a, 0x2a4a1a, 0x8a5a1a, 0x5b3a1a];
+  [[-0.7, 0.28], [-0.45, 0.24], [0.5, 0.3], [0.75, 0.26]].forEach(function(bp, i){
+    var bt = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, bp[1], 12),
+      new THREE.MeshStandardMaterial({ color: bottleCols[i], roughness: 0.3, metalness: 0.1 }));
+    bt.position.set(0, 0.89 + bp[1] / 2, bp[0]);
+    bt.castShadow = true;
+    sideboard.add(bt);
+  });
+  [0.1, 0.28].forEach(function(gz){
+    var gl = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.04, 0.12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xd8cdb8, transparent: true, opacity: 0.5, roughness: 0.1 }));
+    gl.position.set(0, 0.95, gz);
+    sideboard.add(gl);
+  });
+  sideboard.position.set(8.55, 0, 0.9);
+  scene.add(sideboard);
+  // Pendant lights over the gaps between desks, hung from the cross-beams.
+  function pendant(x, z){
+    var g = new THREE.Group();
+    var cord = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 1.15, 8),
+      new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6 }));
+    cord.position.y = 3.62;
+    g.add(cord);
+    var shade = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.22, 0.24, 16, 1, true),
+      new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4, side: THREE.DoubleSide }));
+    shade.position.y = 2.95;
+    g.add(shade);
+    var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 10),
+      new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xffd9a0, emissiveIntensity: 2.2 }));
+    bulb.position.y = 2.82;
+    g.add(bulb);
+    g.position.set(x, 0, z);
+    scene.add(g);
+  }
+  pendant(-2.7, -2.6);
+  pendant(2.7, -2.6);
+  pendant(0, 2.6);
+  // Wall art — the walls are glass, so the big canvas leans against the
+  // front wall and a smaller one hangs on the right wall. Abstract, on-palette.
+  function artTexture(seed){
+    var rnd = mulberry32(seed);
+    var cv = document.createElement("canvas");
+    cv.width = 256; cv.height = 192;
+    var ctx = cv.getContext("2d");
+    ctx.fillStyle = "#241d18";
+    ctx.fillRect(0, 0, 256, 192);
+    ctx.fillStyle = "#e8c87a";
+    ctx.beginPath();
+    ctx.arc(70 + rnd() * 40, 60 + rnd() * 30, 34 + rnd() * 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#b45309";
+    ctx.fillRect(140 + rnd() * 30, 100 + rnd() * 20, 70, 46);
+    ctx.fillStyle = "#faf5ec";
+    ctx.fillRect(30, 140 + rnd() * 20, 110, 12);
+    ctx.strokeStyle = "#171310";
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.arc(190, 60, 30, 0.3, Math.PI * 1.2);
+    ctx.stroke();
+    var tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }
+  function framedArt(w, h, seed){
+    var g = new THREE.Group();
+    var frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.16, h + 0.16, 0.06),
+      new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6 }));
+    frame.castShadow = true; frame.receiveShadow = true;
+    g.add(frame);
+    var art = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.02),
+      new THREE.MeshStandardMaterial({ map: artTexture(seed), roughness: 0.85 }));
+    art.position.z = -0.025;
+    g.add(art);
+    return g;
+  }
+  var art1 = framedArt(1.62, 1.17, 101);
+  art1.position.set(-1.8, 0.67, 5.78);
+  art1.rotation.x = 0.06;
+  scene.add(art1);
+  var art2 = framedArt(1.02, 0.82, 202);
+  art2.position.set(8.95, 1.0, -2.2);
+  art2.rotation.y = Math.PI / 2;
+  scene.add(art2);
 
   // ----- desks -----
   // Desks are NOT rotated: every robot sits on the -z side of its desk and
