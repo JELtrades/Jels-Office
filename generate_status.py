@@ -34,6 +34,11 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-11 18:12 ET", "clip3",
+     "Clip 3 assigned by Jaden — the fixer: fixes finished videos and "
+     "crisps them up, fixes the sound, matches the style all the way "
+     "through, and adds a funny ending. First job: polish Jane's gum "
+     "video into a v2. Now working at his desk."),
     ("2026-11-11 17:35 ET", "muse",
      "Muse's office expanded to 10x12, same size as the trading room — big "
      "3.8-wide desk at the far end, and a second dog: a Catahoula Leopard "
@@ -428,8 +433,10 @@ def build():
 
     # --- Clip 1/2/3: the new YouTube/clipping room at the back end of the
     # hallway. Clip 1 is Rob — assigned by Jaden Nov 11 ~16:51 ET as the
-    # viral ideas scout, so he works at his desk. Clip 2/3 are still
-    # placeholders awaiting assignment, waiting on the clipping-room couch.
+    # viral ideas scout, so he works at his desk. Clip 2 is Jane — assigned
+    # Nov 11 ~16:54 ET to make the videos, working at her desk. Clip 3 is
+    # the fixer — assigned Nov 11 ~18:12 ET to fix finished videos and
+    # crisp them up, working at his desk.
     clips = []
     for i in (1, 2, 3):
         if i == 1:
@@ -463,6 +470,23 @@ def build():
                 "schedule": "Always on — making explainer videos from Rob's finds",
                 "last_action": "Assigned by Jaden Wed Nov 11 — now making explainer videos in the style of Rob's viral finds, each with a different idea.",
                 "next_action": "Make the next explainer video from Rob's latest find.",
+                "needs_you": None,
+            })
+            continue
+        if i == 3:
+            # Clip 3 — the fixer (Jaden, Nov 11 ~18:12 ET): fixes finished
+            # videos and crisps them up — fixes the sound, matches the
+            # style all the way through, and adds a funny ending. First
+            # job: polish Jane's gum video into a v2. Working at his desk.
+            clips.append({
+                "id": "clip3",
+                "name": "Clip 3",
+                "role": "Fixes finished videos and crisps them up — fixes the sound, matches the style all the way through, and adds a funny ending",
+                "status": "working",
+                "status_reason": "On the job — polishing Jane's gum video into a v2: fixing the sound, matching the style all the way through, and adding a funny ending.",
+                "schedule": "Always on — fixing finished videos and crisping them up",
+                "last_action": "Assigned by Jaden Wed Nov 11 — now fixing finished videos and crisping them up; first job is Jane's gum video.",
+                "next_action": "Polish Jane's gum video into a v2 — sound fix, style match, funny ending.",
                 "needs_you": None,
             })
             continue

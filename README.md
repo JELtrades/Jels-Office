@@ -32,6 +32,18 @@ Shepherd (bed 1, far-left) and a Catahoula Leopard Dog with a merle coat
 Camera radius 46, shadow camera ±24, so the longer building
 (z −18..+18) frames comfortably.
 
+## The bots
+
+- **Scanner** — MNQ/ES watch, JELS strat setups.
+- **Paper** — JELS paper trader, plus Lucid Flex 50K pass practice.
+- **Bell** — Trump-statement sweeps + session reminders.
+- **George** — Grind & Gather (Shopify), waiting until launch Nov 27, 2026.
+- **Frank** — trade journal + Lucid account buffers.
+- **Muse** — Jaden's assistant, always working.
+- **Rob (Clip 1)** — viral explainer-idea scout: finds explainer-video ideas on Instagram that haven't been done yet, sends the best finds to Jane.
+- **Jane (Clip 2)** — makes the same style of video as the viral explainer Rob finds, just with a different idea.
+- **Clip 3** — the fixer: fixes finished videos and crisps them up — fixes the sound, matches the style all the way through, and adds a funny ending.
+
 ## Files
 
 | File | What it is |
