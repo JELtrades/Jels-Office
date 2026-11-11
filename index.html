@@ -530,7 +530,10 @@ import * as THREE from 'three';
   // (same canvas-texture pattern as the city facades and the wall art).
   // They sit just above the floor (y 0.02, depthWrite off) so they read
   // cleanly from the default camera and bots walk over them like rugs.
-  function floorLogo(w, h, x, z, draw){
+  // The YouTube logo rides at y 0.05: the hallway runner rug's top face
+  // is exactly y 0.02 and it runs under the logo, so at 0.02 the two
+  // coplanar faces z-fought and the logo clipped through the ground.
+  function floorLogo(w, h, x, z, draw, y){
     var cv = document.createElement("canvas");
     cv.width = 512; cv.height = Math.round(512 * h / w);
     var ctx = cv.getContext("2d");
@@ -540,7 +543,7 @@ import * as THREE from 'three';
     var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
     m.rotation.x = -Math.PI / 2;
-    m.position.set(x, 0.02, z);
+    m.position.set(x, y === undefined ? 0.02 : y, z);
     m.renderOrder = 1;
     scene.add(m);
   }
@@ -586,6 +589,7 @@ import * as THREE from 'three';
     ctx.fill();
   });
   // Clipping room: YouTube play button — red rounded rect, white triangle
+  // (y 0.05 — raised to clear the hallway runner rug underneath)
   floorLogo(2.0, 1.3, 1.5, -12, function(ctx, W, H){
     ctx.fillStyle = "#FF0000";
     rr(ctx, W * 0.06, H * 0.10, W * 0.88, H * 0.80, H * 0.18);
@@ -597,7 +601,7 @@ import * as THREE from 'three';
     ctx.lineTo(W * 0.66, H * 0.50);
     ctx.closePath();
     ctx.fill();
-  });
+  }, 0.05);
 
   // ----- penthouse window walls: floor-to-ceiling glass on the back and -----
   // on each room's outer side (left for trading, right for the shop) — the

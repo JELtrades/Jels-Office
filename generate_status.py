@@ -16,7 +16,7 @@ status.json to the GitHub repo every 5 minutes (see README.md).
 
 import json
 import re
-from datetime import datetime, timedelta, time as dtime
+from datetime import date, datetime, timedelta, time as dtime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -34,6 +34,9 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-11 16:58 ET", "keeper",
+     "George sits waiting until launch — Nov 27, 2026, at Jaden's call. "
+     "Launch items (social links, store password + test order) parked until then."),
     ("2026-11-11 16:54 ET", "clip2",
      "Clip 2 named Jane by Jaden — makes the same style of video as the "
      "viral explainer Rob finds, just with a different idea. Rob sends his "
@@ -69,6 +72,9 @@ KEEPER_OPEN_ITEMS = [
     "Social links in Shopify — needs Jaden's handles",
     "Store password — remove at launch, then place a test order",
 ]
+# Black Friday — Grind & Gather launch. George waits until this date;
+# on/after it his open items surface as needs-you again.
+LAUNCH_DATE = date(2026, 11, 27)
 KEEPER_LAST_ACTION = ("Paid shipping options removed Wed Nov 11 ~10:28 ET — "
                       "free US shipping (7-15 days) is now the only option.")
 
@@ -351,17 +357,31 @@ def build():
         "needs_you": None,
     }
 
-    # --- George (keeper): Grind & Gather store, Shopify only — real open decisions waiting on Jaden
+    # --- George (keeper): Grind & Gather store, Shopify only.
+    # Jaden Nov 11 ~16:58 ET: "make george just sit waiting till we have
+    # the launch date" — date rule, not a hardcoded status. Before the
+    # Nov 27 launch he waits (on the shop sofa); on/after launch his
+    # open items surface as needs-you again. Items stay recorded in the
+    # detail text either way so nothing is lost.
+    launch_reached = now.date() >= LAUNCH_DATE
     keeper = {
         "id": "keeper",
         "name": "George",
         "role": "Grind & Gather store — Shopify only: product, discount, policies, payments, launch",
-        "status": "needs-you",
-        "status_reason": f"{len(KEEPER_OPEN_ITEMS)} decision(s) waiting on Jaden.",
+        "status": "needs-you" if (launch_reached and KEEPER_OPEN_ITEMS) else "waiting",
+        "status_reason": (
+            f"{len(KEEPER_OPEN_ITEMS)} decision(s) waiting on Jaden."
+            if launch_reached else
+            "Waiting for launch — Nov 27, 2026. "
+            f"{len(KEEPER_OPEN_ITEMS)} launch item(s) parked until then."),
         "schedule": "No fixed schedule — acts when Jaden decides; launch target Black Fri Nov 27",
         "last_action": KEEPER_LAST_ACTION,
-        "next_action": "Remove the store password at launch, then place a test order.",
-        "needs_you": KEEPER_OPEN_ITEMS,
+        "next_action": (
+            "Remove the store password at launch, then place a test order."
+            if launch_reached else
+            "Launch Nov 27, 2026 — then: social links (needs Jaden's handles); "
+            "remove the store password, then place a test order."),
+        "needs_you": KEEPER_OPEN_ITEMS if launch_reached else None,
     }
 
     # --- Frank (ledger): trade journal — looks back for logs himself; a day

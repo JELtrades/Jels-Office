@@ -62,12 +62,13 @@ that bot's real schedule against the current America/New_York time:
   around the clock. Otherwise **waiting**.
 - **Bell — working** only within 45 minutes after a scheduled reminder
   (Mon–Fri 7:00 AM ET NY, Sun–Thu 5:00 PM ET Asia). Otherwise **waiting**.
-- **Keeper / Ledger — needs-you** while real recorded decisions are open:
-  Keeper = sample order undecided, DBA filing pinned, social handles
-  missing, NC tax ID expected ~Nov 24. Ledger = 11 trade sessions
-  unlogged, weekly review Fri Nov 13 5:45 PM ET. These flip to waiting /
-  working only when Jaden actually resolves them — the script does not
-  invent activity.
+- **Keeper — waiting** until the Grind & Gather launch (Black Fri Nov 27,
+  2026) at Jaden's call; his launch items (social handles, store password
+  + test order) stay recorded and surface as **needs-you** again on/after
+  Nov 27. **Ledger — needs-you** while real recorded decisions are open:
+  11 trade sessions unlogged, weekly review Fri Nov 13 5:45 PM ET. These
+  flip to waiting / working only when Jaden actually resolves them — the
+  script does not invent activity.
 
 Sources read (never written): `goals/trading-session-reminders/hidden_files/ict-paper-state.json`,
 `goals/trump-statement-market-alerts/hidden_files/reported.json`,
