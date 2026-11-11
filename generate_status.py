@@ -52,10 +52,6 @@ KEEPER_OPEN_ITEMS = [
 KEEPER_LAST_ACTION = ("Paid shipping options removed Wed Nov 11 ~10:28 ET — "
                       "free US shipping (7-15 days) is now the only option.")
 
-LEDGER_OPEN_ITEMS = [
-    "11 sessions still unlogged (Oct 26 - Nov 9): points + R, setup, one lesson each",
-    "Weekly review Fri Nov 13, 5:45 PM ET — needs the logged trades to tally",
-]
 LEDGER_LAST_ACTION = "Weekly review — week of Nov 2-6 (no trades logged that week)."
 
 
@@ -263,20 +259,23 @@ def build():
         "needs_you": KEEPER_OPEN_ITEMS,
     }
 
-    # --- Frank (ledger): trade journal — real unlogged sessions waiting on Jaden
+    # --- Frank (ledger): trade journal — looks back for logs himself; a day
+    # with no log means Jaden probably didn't trade, so nothing waits on him.
+    frank_working = weekday == 4 and in_window(now, 17, 45, 18, 45)
     ledger = {
         "id": "ledger",
         "name": "Frank",
-        "role": "Trade journal + Lucid account buffers — points, R, setup, one lesson per trade",
-        "status": "needs-you",
-        "status_reason": "11 sessions unlogged — the journal is waiting on Jaden.",
+        "role": "Trade journal + Lucid account buffers — looks back for logs himself; a day with no log means Jaden probably didn't trade",
+        "status": "working" if frank_working else "waiting",
+        "status_reason": ("Weekly review in progress — tallying the logged trades."
+                          if frank_working else
+                          "Between reviews — a day with no log means Jaden probably didn't trade."),
         "schedule": "Weekly review Fridays 5:45 PM ET",
         "last_action": LEDGER_LAST_ACTION,
         "next_action": "Weekly review Fri Nov 13, 5:45 PM ET.",
-        "needs_you": LEDGER_OPEN_ITEMS,
+        "needs_you": None,
         "stats": {
             "last_logged_trade": journal_last,
-            "unlogged_sessions": 11,
             "lucid_lfe_buffer_usd": 1471,
             "lucid_lde_buffer_usd": 105,
         },

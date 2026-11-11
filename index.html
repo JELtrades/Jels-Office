@@ -216,7 +216,7 @@
       var bits = [];
       if(s.trades_opened != null) bits.push("Paper trades: " + s.trades_opened + " opened, " + s.closed + " closed (" + s.wins + "W / " + s.losses + "L, " + s.win_rate_pct + "% WR)");
       if(s.total_points != null) bits.push("Total: " + (s.total_points >= 0 ? "+" : "") + s.total_points + " pts (+" + "$" + s.total_usd_4_micros + " at 4 micros)");
-      if(s.last_logged_trade) bits.push("Last logged trade: " + s.last_logged_trade + " · unlogged sessions: " + s.unlogged_sessions);
+      if(s.last_logged_trade) bits.push("Last logged trade: " + s.last_logged_trade + (s.unlogged_sessions != null ? " · unlogged sessions: " + s.unlogged_sessions : ""));
       if(s.lucid_lfe_buffer_usd != null) bits.push("Lucid buffers — LFE ~$" + s.lucid_lfe_buffer_usd + ", LDE ~$" + s.lucid_lde_buffer_usd);
       if(bits.length) stats = "<dt>Stats</dt><dd>" + esc(bits.join(" · ")) + "</dd>";
     }
