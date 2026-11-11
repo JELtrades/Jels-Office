@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 15:55:49 ET",
-  "generated_at_utc": "2026-11-11T20:55:49Z",
+  "generated_at_et": "2026-11-11 16:00:44 ET",
+  "generated_at_utc": "2026-11-11T21:00:44Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -9,21 +9,21 @@
       "name": "Scanner",
       "role": "MNQ / ES watch \u2014 JELS strat detection (15m + 5m CISD + FVG)",
       "status": "waiting",
-      "status_reason": "Outside the live watch window (Mon-Fri 09:30-14:00 ET).",
-      "schedule": "Mon-Fri 09:30-14:00 ET (opens 09:30-10:30, midday 11:00-12:00)",
+      "status_reason": "Outside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Fri 18:00-01:00 ET).",
+      "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Fri 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
       "last_action": "Engine run #69 at 2026-11-11 15:55 ET; 1 paper trade(s) detected so far.",
-      "next_action": "Next scan window Thu Nov 12, 9:30 AM ET",
+      "next_action": "Next scan window Wed Nov 11, 6:00 PM ET",
       "needs_you": null
     },
     {
       "id": "paper",
       "name": "Paper",
-      "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders",
+      "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders; practicing the Lucid Flex 50K pass (daily caps +$1,200 / \u2212$300, 40% consistency, EOD trailing floor)",
       "status": "waiting",
-      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-14:00 ET).",
-      "schedule": "Mon-Fri 09:30-14:00 ET, checks every 5 min",
-      "last_action": "PT-20261111-01 \u2014 bearish Nyam model 5m \u2014 corrected to loss by Jaden Nov 11 \u2014 wick 4 pts beyond the 14-pt stop; close-based win voided at 2026-11-11 10:00 ET. Stop 14.0 pts; wick went 4.0 pts beyond stop.",
-      "next_action": "Next window Thu Nov 12, 9:30 AM ET",
+      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Fri 18:00-01:00 ET).",
+      "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Fri 18:00-01:00 ET, checks every 5 min",
+      "last_action": "PT-20261111-01 \u2014 bearish Nyam model 5m \u2014 LOSS -1.0R (-14.0 pts) (corrected to loss by Jaden Nov 11 \u2014 wick 4 pts beyond the 14-pt stop; close-based win voided) at 2026-11-11 10:00 ET. Stop 14.0 pts; wick went 4.0 pts beyond stop.",
+      "next_action": "Next window Wed Nov 11, 6:00 PM ET",
       "needs_you": null,
       "stats": {
         "trades_opened": 1,
@@ -32,7 +32,23 @@
         "losses": 1,
         "win_rate_pct": 0.0,
         "total_points": -14.0,
-        "total_usd_4_micros": -112.0
+        "total_usd_4_micros": -112.0,
+        "flex_target_progress_usd": null,
+        "flex_target_pct": null,
+        "flex_balance_usd": null,
+        "flex_floor_usd": null,
+        "flex_floor_locked": null,
+        "flex_room_usd": null,
+        "flex_best_day_usd": null,
+        "flex_best_day_date": null,
+        "flex_best_day_ratio": null,
+        "flex_required_total_usd": null,
+        "flex_days_traded": null,
+        "flex_today_pnl_usd": null,
+        "flex_today_date": null,
+        "flex_cap_state": null,
+        "flex_cap_state_text": "trading",
+        "flex_passed": null
       }
     },
     {
@@ -145,7 +161,7 @@
     {
       "time": "2026-11-11 10:00 ET",
       "bot": "paper",
-      "text": "PT-20261111-01 closed \u2014 WIN +-1.0R (+-14.0 pts, +$-112 at 4 micros). Wick went 4.0 pts beyond the stop."
+      "text": "PT-20261111-01 closed \u2014 LOSS -1.0R (-14.0 pts, $-112 at 4 micros). Wick went 4.0 pts beyond the stop."
     },
     {
       "time": "2026-11-11 09:53 ET",
