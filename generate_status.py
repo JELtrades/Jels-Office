@@ -34,6 +34,10 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-11 16:54 ET", "clip2",
+     "Clip 2 named Jane by Jaden — makes the same style of video as the "
+     "viral explainer Rob finds, just with a different idea. Rob sends his "
+     "best finds to Jane. Now working at her desk."),
     ("2026-11-11 16:51 ET", "clip1",
      "Clip 1 named Rob by Jaden — viral ideas scout: finds explainer-video "
      "ideas on Instagram that haven't been done yet. Now working at his desk."),
@@ -406,16 +410,34 @@ def build():
         if i == 1:
             # Rob — viral ideas scout (Jaden, Nov 11 ~16:51 ET): finds only
             # viral explainer-video ideas on Instagram that haven't been
-            # done yet. Working at his desk.
+            # done yet, and sends the best finds to Jane (clip2). Working
+            # at his desk.
             clips.append({
                 "id": "clip1",
                 "name": "Rob",
-                "role": "Viral ideas scout — finds explainer-video ideas on Instagram that haven't been done yet",
+                "role": "Viral ideas scout — finds explainer-video ideas on Instagram that haven't been done yet, and sends the best finds to Jane",
                 "status": "working",
-                "status_reason": "On the job — hunting viral explainer-video ideas on Instagram that haven't been done yet.",
+                "status_reason": "On the job — hunting viral explainer-video ideas on Instagram that haven't been done yet, and passing the best finds to Jane.",
                 "schedule": "Always on — scouting Instagram for fresh explainer ideas",
-                "last_action": "Assigned by Jaden Wed Nov 11 — now scouting Instagram for viral explainer-video ideas that haven't been done yet.",
-                "next_action": "Keep scouting Instagram for the next viral explainer idea.",
+                "last_action": "Assigned by Jaden Wed Nov 11 — now scouting Instagram for viral explainer-video ideas that haven't been done yet, and sending the best finds to Jane.",
+                "next_action": "Keep scouting Instagram for the next viral explainer idea to send Jane.",
+                "needs_you": None,
+            })
+            continue
+        if i == 2:
+            # Jane — makes the videos (Jaden, Nov 11 ~16:54 ET): same style
+            # of video as the viral explainer Rob finds, just with a
+            # different idea. Rob sends her his best finds. Working at
+            # her desk.
+            clips.append({
+                "id": "clip2",
+                "name": "Jane",
+                "role": "Makes the same style of video as the viral explainer Rob finds — just with a different idea",
+                "status": "working",
+                "status_reason": "On the job — making explainer videos in the style of Rob's viral finds, with fresh ideas.",
+                "schedule": "Always on — making explainer videos from Rob's finds",
+                "last_action": "Assigned by Jaden Wed Nov 11 — now making explainer videos in the style of Rob's viral finds, each with a different idea.",
+                "next_action": "Make the next explainer video from Rob's latest find.",
                 "needs_you": None,
             })
             continue
