@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 17:45:47 ET",
-  "generated_at_utc": "2026-11-11T22:45:47Z",
+  "generated_at_et": "2026-11-11 17:49:11 ET",
+  "generated_at_utc": "2026-11-11T22:49:11Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -136,6 +136,11 @@
   ],
   "log": [
     {
+      "time": "2026-11-11 17:35 ET",
+      "bot": "muse",
+      "text": "Muse's office expanded to 10x12, same size as the trading room \u2014 big 3.8-wide desk at the far end, and a second dog: a Catahoula Leopard Dog (merle coat) with its own bed in the office. Both dogs wander the office and lie in their own beds."
+    },
+    {
       "time": "2026-11-11 17:22 ET",
       "bot": "bell",
       "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
@@ -189,11 +194,6 @@
       "time": "2026-11-11 06:56 ET",
       "bot": "bell",
       "text": "NY session reminder sent \u2014 Veterans Day, stocks/CME normal hours, no red-folder USD events; PPI Fri Nov 13 preview."
-    },
-    {
-      "time": "2026-11-10 16:47 ET",
-      "bot": "paper",
-      "text": "Paper trading went live \u2014 JELS Nyam model opens 09:30-10:30 ET + midday 11:00-12:00 ET, log-only, no real orders."
     }
   ]
 }

@@ -34,6 +34,11 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-11 17:35 ET", "muse",
+     "Muse's office expanded to 10x12, same size as the trading room — big "
+     "3.8-wide desk at the far end, and a second dog: a Catahoula Leopard "
+     "Dog (merle coat) with its own bed in the office. Both dogs wander the "
+     "office and lie in their own beds."),
     ("2026-11-11 16:58 ET", "keeper",
      "George sits waiting until launch — Nov 27, 2026, at Jaden's call. "
      "Launch items (social links, store password + test order) parked until then."),

@@ -370,8 +370,10 @@ import * as THREE from 'three';
   var STATUS = { working: C.green, waiting: C.amber, "needs-you": C.orange };
 
   // Desks: the five bots plus Muse's desk in the new office at the end of
-  // the hallway (x 1.5, z 9.8, rotated 180° so Muse sits on the +z side
-  // facing back toward the door). rotY is 0 unless noted. The three Clip
+  // the hallway (x 1.5, z 15.9, rotated 180° so Muse sits on the +z side
+  // facing back toward the door). rotY is 0 unless noted. It is a BIG
+  // executive desk (3.8 wide, vs 2.3 for the other bots) at the far end of
+  // the expanded 10x12 office. The three Clip
   // bots' desks are full-size (2.3 wide, same as every other room) now
   // that the clipping room is 10 wide x 12 deep like the trading room:
   // two back desks at z -14.6, one front desk at z -9.4, all on the
@@ -382,7 +384,7 @@ import * as THREE from 'three';
     { id: "bell",    x: -7.5, z:  2.6, room: "trading" },
     { id: "keeper",  x:  6.5, z: -2.6, room: "shopify" },
     { id: "ledger",  x: -2.5, z:  2.6, room: "trading" },
-    { id: "muse",    x:  1.5, z:  9.8, room: "office", rotY: Math.PI },
+    { id: "muse",    x:  1.5, z: 15.9, room: "office", rotY: Math.PI, w: 3.8, ringR: 2.05, screenW: 1.5, kbW: 1.1 },
     { id: "clip1",   x: -1, z: -14.6, room: "clipping" },
     { id: "clip2",   x:  4, z: -14.6, room: "clipping" },
     { id: "clip3",   x: -1, z: -9.4, room: "clipping" }
@@ -427,8 +429,8 @@ import * as THREE from 'three';
   scene.fog = new THREE.Fog(0x241a33, 55, 150);
 
   var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 120);
-  var orbit = { theta: 0.785, phi: 0.92, radius: 37, target: new THREE.Vector3(0, 0.7, 0) };
-  var orbitGoal = { theta: 0.785, phi: 0.92, radius: 37 };
+  var orbit = { theta: 0.785, phi: 0.92, radius: 46, target: new THREE.Vector3(0, 0.7, 4) };
+  var orbitGoal = { theta: 0.785, phi: 0.92, radius: 46 };
 
   // ----- lights -----
   scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x3a2f26, 1.5));
@@ -471,9 +473,10 @@ import * as THREE from 'three';
     slab.castShadow = false;
     scene.add(slab);
   });
-  // Muse's office at the end of the hallway (x -1..4, z 6..11.5).
-  var officeSlab = box(5, 0.5, 5.5, C.floor);
-  officeSlab.position.set(1.5, -0.25, 8.75);
+  // Muse's office at the end of the hallway (x -3.5..6.5, z 6..18) —
+  // expanded Nov 11 to 10 wide x 12 deep, same size as the trading room.
+  var officeSlab = box(10, 0.5, 12, C.floor);
+  officeSlab.position.set(1.5, -0.25, 12);
   officeSlab.castShadow = false;
   scene.add(officeSlab);
   // Clipping room at the back end of the hallway (x -3.5..6.5, z -18..-6) —
@@ -700,8 +703,8 @@ import * as THREE from 'three';
   });
   // cross-beam over the office for the pendant (the beam over the office
   // far wall went with the walls)
-  var beamOC = box(5, 0.18, 0.24, 0x241d18);
-  beamOC.position.set(1.5, 4.2, 8.5);
+  var beamOC = box(10, 0.18, 0.24, 0x241d18);
+  beamOC.position.set(1.5, 4.2, 12);
   scene.add(beamOC);
   // beam over the clipping room far wall + a cross-beam over the clipping
   // room for its pendant (over the room centre, above the YouTube logo)
@@ -1094,7 +1097,7 @@ import * as THREE from 'three';
   pendant(6.5, 2.6);
   pendant(1.5, -2.6);
   pendant(1.5, 2.6);
-  pendant(1.5, 8.5);   // over Muse's office
+  pendant(1.5, 12);   // over Muse's office
   // Wall art — the big canvas hangs on the back wall and a smaller one on
   // the left wall. Abstract, on-palette.
   function artTexture(seed){
@@ -1148,14 +1151,14 @@ import * as THREE from 'three';
   scene.add(art3);
 
   // ----- Muse's office decor -----
-  var officeRug = box(3, 0.02, 2.4, 0x33291f);
-  officeRug.position.set(1.5, 0.01, 8.3);
+  var officeRug = box(4.5, 0.02, 3.5, 0x33291f);
+  officeRug.position.set(1.5, 0.01, 13.5);
   officeRug.castShadow = false;
   scene.add(officeRug);
-  plant(3.5, 10.7);
-  floorLamp(3.5, 6.6, true);
+  plant(6.0, 15.0);
+  floorLamp(6.0, 6.6, true);
   var artO = framedArt(1.2, 0.9, 404);
-  artO.position.set(-0.85, 1.6, 8.5);
+  artO.position.set(-3.35, 1.6, 12.0);
   artO.rotation.y = -Math.PI / 2;
   scene.add(artO);
   var artO2 = framedArt(1.0, 0.8, 505);
@@ -1164,10 +1167,10 @@ import * as THREE from 'three';
   scene.add(artO2);
   // Small 2-seat couch along the office's right edge (faces -x into the room).
   var sofaO = buildSofa(2);
-  sofaO.position.set(3.45, 0, 8.2);
+  sofaO.position.set(5.95, 0, 12.0);
   sofaO.rotation.y = Math.PI / 2;   // face -x into the room (was -PI/2: faced the wall)
   scene.add(sofaO);
-  // Two guest chairs facing Muse's desk (z 8.1, facing +z). A bot that
+  // Two guest chairs facing Muse's big desk (z 14.3, facing +z). A bot that
   // needs help walks here and sits until it is back to work.
   function buildChair(){
     // simple armchair, faces local -z (backrest on local +z); seat top 0.62
@@ -1192,11 +1195,11 @@ import * as THREE from 'three';
     return g;
   }
   var chairA = buildChair();
-  chairA.position.set(0.6, 0, 8.1);
+  chairA.position.set(0.6, 0, 14.3);
   chairA.rotation.y = Math.PI;
   scene.add(chairA);
   var chairB = buildChair();
-  chairB.position.set(2.4, 0, 8.1);
+  chairB.position.set(2.4, 0, 14.3);
   chairB.rotation.y = Math.PI;
   scene.add(chairB);
   // Muse's office chair (backrest on local +z, behind him as he faces -z).
@@ -1219,7 +1222,7 @@ import * as THREE from 'three';
     return g;
   }
   var museChair = buildOfficeChair();
-  museChair.position.set(1.5, 0, 10.85);
+  museChair.position.set(1.5, 0, 17.65);
   scene.add(museChair);
 
   // ----- Clipping room (YouTube) decor -----
@@ -1385,7 +1388,7 @@ import * as THREE from 'three';
       g.add(leg);
     });
     // keyboard on the near side of the desktop (local -z, by the robot)
-    var kb = box(0.7, 0.04, 0.28, 0x1a1512);
+    var kb = box(spot.kbW || 0.7, 0.04, 0.28, 0x1a1512);
     kb.position.set(0, 0.92, -0.12);
     g.add(kb);
     // monitor on the far side (local +z), screen facing the robot (-z);
@@ -1397,7 +1400,7 @@ import * as THREE from 'three';
       color: C.screen, roughness: 0.4, metalness: 0.2,
       emissive: C.green, emissiveIntensity: 0.35
     });
-    var screen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.55, 0.06), screenMat);
+    var screen = new THREE.Mesh(new THREE.BoxGeometry(spot.screenW || 0.9, 0.55, 0.06), screenMat);
     screen.position.set(0, 1.38, 0.34);
     screen.rotation.x = 0.08;
     screen.castShadow = true;
@@ -1678,12 +1681,12 @@ import * as THREE from 'three';
     }
     var armL = jellyArm(-0.42), armR = jellyArm(0.42);
 
-    g.position.set(1.5, 0.5, 10.75);
+    g.position.set(1.5, 0.5, 17.55);
     scene.add(g);
     bots["muse"] = {
       id: "muse",
       group: g, legL: null, legR: null, armL: armL, armR: armR,
-      chestMat: null, anchor: new THREE.Vector3(1.5, 0, 10.75), faceYaw: Math.PI,
+      chestMat: null, anchor: new THREE.Vector3(1.5, 0, 17.55), faceYaw: Math.PI,
       room: "office", isMuse: true,
       mode: "settle", place: null, placeKey: null, targetPlace: null,
       legs: [], legIndex: 0, phase: Math.random() * Math.PI * 2,
@@ -1692,22 +1695,27 @@ import * as THREE from 'three';
   }
   buildMuse();
 
-  // ----- office dog: black and white Australian Shepherd -----
-  // A small dog, not a bot: no name label, no desk, no click target.
-  // He lives in Muse's office now: wanders the office floor on
+  // ----- office dogs: black and white Australian Shepherd + Catahoula -----
+  // Two small dogs, not bots: no name labels, no desks, no click targets.
+  // They live in Muse's office: each wanders the office floor on
   // axis-aligned paths (never crossing the desk, the guest chairs, or the
-  // couch), pauses to sniff, then pads back to his bed in the far-left
-  // corner, lies down for a while, and gets up again.
-  var DOG_BED = { x: -0.15, z: 10.55 };
+  // couch), pauses to sniff, then pads back to ITS OWN bed in a far corner,
+  // lies down for a while, and gets up again. Dog 1 (the Aussie) uses bed 1
+  // in the far-left corner and walks the left strip; dog 2 (the Catahoula
+  // Leopard Dog, merle coat) uses bed 2 in the far-right corner and walks
+  // a lane left of the couch. They never share or swap beds.
+  var DOG_BED = { x: -2.75, z: 17.2 };
+  var DOG_BED2 = { x: 5.75, z: 17.2 };
+  var DOG_LANE2 = 4.9;
   // Waypoints inside the office only, all on open floor: clear of the
-  // desk (x 0.35..2.65, z 9.2..10.4), the guest chairs (z 7.7..8.5),
-  // the couch on the right wall, and the bed.
+  // big desk (x -0.4..3.4, z 15.32..16.48), the guest chairs (z 13.94..14.66),
+  // the couch on the right wall (x 5.43..6.47, z 10.72..13.28), and the beds.
   var DOG_WAYPOINTS = [
-    [1.5, 7.0], [0.4, 7.5], [2.6, 7.5], [-0.4, 9.0], [1.5, 9.0]
+    [1.5, 7.0], [1.5, 10.0], [-1.5, 10.0], [4.5, 12.0], [1.5, 13.0], [3.5, 13.5]
   ];
   var DOG_BLACK = 0x211b16, DOG_WHITE = 0xe9e2d4;
 
-  function buildDogBed(){
+  function buildDogBed(bx, bz){
     var g = new THREE.Group();
     // raised rim (torus, squashed flat) + soft cushion inside
     var rim = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.14, 12, 32),
@@ -1719,16 +1727,19 @@ import * as THREE from 'three';
     var cushion = cyl(0.46, 0.46, 0.09, 0xded2bd);
     cushion.position.y = 0.05;
     g.add(cushion);
-    g.position.set(DOG_BED.x, 0, DOG_BED.z);
+    g.position.set(bx, 0, bz);
     scene.add(g);
   }
-  buildDogBed();
+  buildDogBed(DOG_BED.x, DOG_BED.z);
+  buildDogBed(DOG_BED2.x, DOG_BED2.z);
 
-  function buildDog(){
+  // opts: { coat, patch (null = solid coat), light, eye, tailTip,
+  //         spawn: [x, z], bed: { x, z }, lane: number }
+  function buildDog(opts){
     var g = new THREE.Group();
     var bodyG = new THREE.Group();
     g.add(bodyG);
-    var black = DOG_BLACK, white = DOG_WHITE;
+    var black = opts.coat, white = opts.light, patch = opts.patch;
     // torso: black, long; chest slightly forward
     var torso = rBox(0.30, 0.30, 0.62, black);
     torso.position.y = 0.42;
@@ -1768,7 +1779,7 @@ import * as THREE from 'three';
     // eyes
     [-0.06, 0.06].forEach(function(dx){
       var eye = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.035, 0.02),
-        rMat(0x111111, { roughness: 0.3 }));
+        rMat(opts.eye, { roughness: 0.3 }));
       eye.position.set(dx, 0.13, 0.125);
       headG.add(eye);
     });
@@ -1779,7 +1790,15 @@ import * as THREE from 'three';
       ear.rotation.z = -s * 0.28;
       headG.add(ear);
     });
-    // tail: medium fluffy, black with a white tip, on a pivot so it can wag
+    if(patch){
+      // Merle patches: flat darker spots on the coat (torso + forehead),
+      // so the Catahoula reads as a leopard-pattern dog at render size.
+      var p1 = rBox(0.20, 0.03, 0.28, patch); p1.position.set(0.04, 0.57, -0.08); bodyG.add(p1);
+      var p2 = rBox(0.02, 0.16, 0.20, patch); p2.position.set(-0.16, 0.44, 0.06); bodyG.add(p2);
+      var p3 = rBox(0.02, 0.14, 0.18, patch); p3.position.set(0.16, 0.45, -0.10); bodyG.add(p3);
+      var p4 = rBox(0.08, 0.07, 0.02, patch); p4.position.set(-0.09, 0.20, 0.125); headG.add(p4);
+    }
+    // tail: medium fluffy, coat color, on a pivot so it can wag
     var tailG = new THREE.Group();
     tailG.position.set(0, 0.48, -0.32);
     bodyG.add(tailG);
@@ -1787,7 +1806,7 @@ import * as THREE from 'three';
     tail.position.set(0, 0.10, -0.10);
     tail.rotation.x = -0.7;
     tailG.add(tail);
-    var tailTip = rCyl(0.05, 0.06, 0.18, white, {}, 10);
+    var tailTip = rCyl(0.05, 0.06, 0.18, opts.tailTip, {}, 10);
     tailTip.position.set(0, 0.22, -0.21);
     tailTip.rotation.x = -0.7;
     tailG.add(tailTip);
@@ -1810,24 +1829,37 @@ import * as THREE from 'three';
 
     // Spawn inside Muse's office (a waypoint), never in the hallway:
     // the dog belongs in the office from the first frame.
-    g.position.set(1.5, 0, 7.0);
+    g.position.set(opts.spawn[0], 0, opts.spawn[1]);
     g.rotation.y = 0;
     scene.add(g);
     return {
       group: g, bodyG: bodyG, headG: headG, tailG: tailG,
       legFL: legFL, legFR: legFR, legBL: legBL, legBR: legBR,
       mode: "pause", timer: 1.5, legs: [], legIndex: 0,
-      phase: 0, speed: 1.1, yaw: 0, fold: 0, wanders: 0
+      phase: 0, speed: 1.1, yaw: 0, fold: 0, wanders: 0,
+      bed: opts.bed, lane: opts.lane
     };
   }
-  var dog = buildDog();
+  // Dog 1: the black-and-white Australian Shepherd, in bed 1 (far-left).
+  var dog = buildDog({ coat: DOG_BLACK, patch: null, light: DOG_WHITE, eye: 0x111111, tailTip: DOG_WHITE, spawn: [1.5, 7.0], bed: DOG_BED, lane: DOG_BED.x });
+  // Dog 2: the Catahoula Leopard Dog — merle coat (gray-blue base, darker
+  // leopard patches), pale blue eyes, in bed 2 (far-right).
+  var dog2 = buildDog({ coat: 0x7e8ba0, patch: 0x46536a, light: 0xe9e2d4, eye: 0x86d8ff, tailTip: 0x46536a, spawn: [4.5, 12.0], bed: DOG_BED2, lane: DOG_LANE2 });
 
-  function dogPath(from, to){
-    // Route via the front aisle (z=7.0): it runs in front of the guest
-    // chairs and the desk, so the dog never cuts through the furniture.
+  function dogPath(from, to, lane){
+    // Route via the front aisle (z=7.0): sideways at the current z into the
+    // dog's lane, down the lane to the aisle, along the aisle, then up the
+    // lane to the target's z and sideways into it. All legs axis-aligned,
+    // so the dog never cuts diagonally across furniture. The aisle runs in
+    // front of the guest chairs and the desk. Each dog has its own lane:
+    // the Aussie walks the left strip (his bed's x), the Catahoula a lane
+    // left of the couch (x 4.9), so neither crosses the other dog's bed,
+    // the couch, or the big desk. (No lane given = the dog's current x.)
+    var lx = (lane === undefined) ? from.x : lane;
     var legs = [
-      new THREE.Vector3(from.x, 0, 7.0),
-      new THREE.Vector3(to[0], 0, 7.0),
+      new THREE.Vector3(lx, 0, from.z),
+      new THREE.Vector3(lx, 0, 7.0),
+      new THREE.Vector3(lx, 0, to[1]),
       new THREE.Vector3(to[0], 0, to[1])
     ];
     return legs.filter(function(p, i){
@@ -1869,7 +1901,7 @@ import * as THREE from 'three';
       d.timer -= dt;
       if(d.timer <= 0){
         if(d.wanders >= 2 + Math.floor(Math.random() * 2)){
-          d.legs = dogPath(g.position, [DOG_BED.x, DOG_BED.z]);
+          d.legs = dogPath(g.position, [d.bed.x, d.bed.z], d.lane);
           d.legIndex = 0;
           d.mode = "toBed";
         } else {
@@ -1887,7 +1919,7 @@ import * as THREE from 'three';
       g.rotation.y = d.yaw;
       if(d.timer <= 0){
         var wp2 = DOG_WAYPOINTS[Math.floor(Math.random() * DOG_WAYPOINTS.length)];
-        d.legs = dogPath(g.position, wp2);
+        d.legs = dogPath(g.position, wp2, d.lane);
         d.legIndex = 0;
         d.wanders = 0;
         d.mode = "toFloor";
@@ -1971,8 +2003,8 @@ import * as THREE from 'three';
     clip3:  { room: "clipping", x: 5.9, z: -11, yaw: -Math.PI / 2, approach: { x: 4.9, z: -11 }, seatY: 0.42 }
   };
   var GUEST_CHAIRS = [
-    { x: 0.6, z: 8.1, yaw: 0, approach: { x: 0.6, z: 8.8 }, seatY: 0.36, takenBy: null },
-    { x: 2.4, z: 8.1, yaw: 0, approach: { x: 2.4, z: 8.8 }, seatY: 0.36, takenBy: null }
+    { x: 0.6, z: 14.3, yaw: 0, approach: { x: 0.6, z: 15.0 }, seatY: 0.36, takenBy: null },
+    { x: 2.4, z: 14.3, yaw: 0, approach: { x: 2.4, z: 15.0 }, seatY: 0.36, takenBy: null }
   ];
   function claimChair(id){
     var held = null;
@@ -2275,6 +2307,7 @@ import * as THREE from 'three';
     camera.lookAt(orbit.target);
     Object.keys(bots).forEach(function(id){ stepRobot(bots[id], dt, t); });
     stepDog(dog, dt, t);
+    stepDog(dog2, dt, t);
     Object.keys(desks).forEach(function(id){
       var dk = desks[id];
       dk.ringMat.opacity = dk.status === "needs-you" ? 0.55 + 0.3 * Math.sin(t * 2.5) : 0.85;

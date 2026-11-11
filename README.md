@@ -17,15 +17,20 @@ Four rooms, all in one scene (x = left/right, z = front/back, camera side +z):
 | Trading (left) | 10 wide × 12 deep | x −10..0, z −6..6 |
 | Shop (right) | 7 wide × 12 deep | x 3..10, z −6..6 |
 | Hallway | 3 wide | x 0..3, z −6..6, doorways into both rooms |
-| Muse's office (front end of hallway) | 5 × 5.5, open platform, no walls | x −1..4, z 6..11.5 |
+| Muse's office (front end of hallway) | **10 wide × 12 deep — same size as the trading room** | x −3.5..6.5, z 6..18, open platform, no walls |
 | Clipping (back end of hallway) | **10 wide × 12 deep — same size as the trading room** | x −3.5..6.5, z −18..-6, open platform, glass far wall |
 
 The clipping room was resized to match the trading room on Nov 11: full-size
 2.3-wide desks (two back at z −14.6, one front at z −9.4), 3-seat couch on
 the right edge (seats z −13/−12/−11), recording gear around the subject
 spot (1.5, −12) on the YouTube floor logo, hallway runner extended to the
-far wall. Camera radius 37, shadow camera ±24, so the longer building
-(z −18..+11.5) frames comfortably.
+far wall. Muse's office was expanded the same day to match the trading room:
+big 3.8-wide desk at the far end (z 15.9), 2-seat couch on the right edge,
+and two dog beds in the far corners — the black-and-white Australian
+Shepherd (bed 1, far-left) and a Catahoula Leopard Dog with a merle coat
+(bed 2, far-right); each dog wanders the office and lies in its own bed.
+Camera radius 46, shadow camera ±24, so the longer building
+(z −18..+18) frames comfortably.
 
 ## Files
 
