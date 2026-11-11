@@ -1362,14 +1362,17 @@ import * as THREE from 'three';
     smile.position.set(0, 0.47, -0.42);
     smile.rotation.z = Math.PI;
     g.add(smile);
-    // black top hat, slightly tilted
+    // black top hat, taller + wider so it reads clearly above the head,
+    // slightly tilted
     var hatMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.15, metalness: 0.35 });
-    var brim = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.30, 0.03, 24), hatMat);
+    var brim = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.37, 0.03, 24), hatMat);
     brim.position.y = 0.93;
+    brim.rotation.z = 0.07;
     brim.castShadow = true;
     g.add(tagMesh(brim, "muse"));
-    var crown = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.19, 0.26, 24), hatMat);
-    crown.position.y = 1.07;
+    var crown = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.23, 0.44, 24), hatMat);
+    crown.position.y = 1.16;
+    crown.rotation.z = 0.07;
     crown.castShadow = true;
     g.add(tagMesh(crown, "muse"));
     // gold chain around the neck + gold "$" pendant
@@ -1377,12 +1380,15 @@ import * as THREE from 'three';
       color: 0xffd700, roughness: 0.25, metalness: 0.9,
       emissive: 0x8a6d00, emissiveIntensity: 0.35
     });
-    var chain = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.02, 10, 40), gold);
+    // thicker, wider ring so it sits proud of the face patch — the old
+    // 0.38 ring was buried inside the patch from the front, which is why
+    // no gold was visible
+    var chain = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.035, 12, 48), gold);
     chain.rotation.x = Math.PI / 2;
     chain.position.y = 0.70;
     g.add(chain);
-    var bail = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.08, 8), gold);
-    bail.position.set(0, 0.65, -0.40);
+    var bail = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.08, 8), gold);
+    bail.position.set(0, 0.65, -0.44);
     g.add(bail);
     var dollarCanvas = document.createElement("canvas");
     dollarCanvas.width = 128; dollarCanvas.height = 128;
@@ -1395,9 +1401,9 @@ import * as THREE from 'three';
     dctx.fillText("$", 64, 68);
     var dollarTex = new THREE.CanvasTexture(dollarCanvas);
     dollarTex.colorSpace = THREE.SRGBColorSpace;
-    var dollar = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.15),
+    var dollar = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.22),
       new THREE.MeshBasicMaterial({ map: dollarTex, transparent: true, side: THREE.DoubleSide }));
-    dollar.position.set(0, 0.56, -0.40);
+    dollar.position.set(0, 0.56, -0.44);
     g.add(dollar);
     // droopy jelly arms (pivots at the shoulders, for the typing bob)
     function jellyArm(dx){
@@ -1543,7 +1549,9 @@ import * as THREE from 'three';
     var legFL = dogLeg(-0.11, 0.20), legFR = dogLeg(0.11, 0.20);
     var legBL = dogLeg(-0.11, -0.20), legBR = dogLeg(0.11, -0.20);
 
-    g.position.set(0, 0, 0.5);
+    // Spawn inside Muse's office (a waypoint), never in the hallway:
+    // the dog belongs in the office from the first frame.
+    g.position.set(1.5, 0, 7.0);
     g.rotation.y = 0;
     scene.add(g);
     return {
@@ -1951,7 +1959,9 @@ import * as THREE from 'three';
     Object.keys(bots).forEach(function(id){
       var els = labelEls[id];
       var b = bots[id];
-      projV.set(b.group.position.x, 1.85, b.group.position.z).project(camera);
+      // Anchor above the bot's own height: a seated bot rides seatY higher,
+      // so a fixed 1.85 put the tag pill right on its head/antenna.
+      projV.set(b.group.position.x, b.group.position.y + 1.85, b.group.position.z).project(camera);
       var show = projV.z < 1;
       var x = (projV.x * 0.5 + 0.5) * w;
       var y = (-projV.y * 0.5 + 0.5) * h;
