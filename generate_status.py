@@ -4,7 +4,7 @@
 Reads Jaden's REAL logs/state files and derives each bot's status from its
 real schedule and the current America/New_York time. Nothing is faked:
 a bot only shows "working" when it is inside one of its real active
-windows (or, for Newswire, when its last sweep is fresh). "needs-you"
+windows (or, for Bell, when its last Trump sweep is fresh or a reminder just fired). "needs-you"
 means a real recorded decision is waiting on Jaden.
 
 Run:  python3 generate_status.py
@@ -204,7 +204,8 @@ def build():
         },
     }
 
-    # --- Newswire: 30-min Trump/market sweeps, around the clock
+    # --- Bell's Trump-sweep half: 30-min sweeps, around the clock
+    # (The old separate news bot's job is folded into Bell — same "tell Jaden when it matters" work.)
     fresh = last_checked is not None and (now - last_checked) <= timedelta(minutes=45)
     if last_checked:
         next_sweep = last_checked + timedelta(minutes=30)
@@ -212,41 +213,42 @@ def build():
             next_sweep += timedelta(minutes=30)
     else:
         next_sweep = None
-    newswire = {
-        "id": "newswire",
-        "name": "Newswire",
-        "role": "Trump statement / market-news alerts — 30-min sweeps, bullish/bearish read",
-        "status": "working" if fresh else "waiting",
-        "status_reason": (f"Last sweep {fmt_time(last_checked)} — fresh."
-                          if fresh else
-                          f"Last sweep {fmt_time(last_checked)} — stale, no recent check."),
-        "schedule": "Every 30 minutes, around the clock",
-        "last_action": (f"Last sweep {fmt_time(last_checked)}: "
-                        f"{'no qualifying market-moving statement, no alert' if last_result == 'no_alert' else last_result}. "
-                        f"{alerts_ever} qualifying alert(s) ever."),
-        "next_action": f"Next sweep ~{fmt_time(next_sweep)}" if next_sweep else "Next sweep unknown",
-        "needs_you": None,
-    }
 
-    # --- Bell: session reminders, Mon-Fri 07:00 and Sun-Thu 17:00
+    # --- Bell: alerts & reminders — Trump sweeps + session reminders
     ny_today = is_weekday and in_window(now, 7, 0, 7, 45)
     asia_today = weekday in {6, 0, 1, 2, 3} and in_window(now, 17, 0, 17, 45)
-    bell_working = ny_today or asia_today
+    reminder_working = ny_today or asia_today
+    # Working when either half is live: a reminder just fired, or the last
+    # Trump sweep is fresh. Waiting only when both halves are quiet.
+    bell_working = reminder_working or fresh
     next_ny = next_weekday_time(now, {0, 1, 2, 3, 4}, 7, 0)
     next_asia = next_weekday_time(now, {6, 0, 1, 2, 3}, 17, 0)
     nxt = min(x for x in (next_ny, next_asia) if x)
+    if reminder_working:
+        bell_reason = "Just sent a session reminder."
+        if fresh:
+            bell_reason += f" Last Trump sweep {fmt_time(last_checked)} — fresh."
+    elif fresh:
+        bell_reason = f"Last Trump sweep {fmt_time(last_checked)} — fresh; between session reminders."
+    else:
+        bell_reason = (f"Between session reminders; last Trump sweep "
+                       f"{fmt_time(last_checked)} — stale, no recent check.")
     bell = {
         "id": "bell",
         "name": "Bell",
-        "role": "Session reminders — NY open prep + Asia open prep, red-folder news + flat windows",
+        "role": "Alerts & reminders — Trump statement / market-news sweeps every 30 min + session reminders (NY 7 AM, Asia 5 PM)",
         "status": "working" if bell_working else "waiting",
-        "status_reason": ("Just sent a session reminder."
-                          if bell_working else
-                          "Between scheduled reminders."),
-        "schedule": "Mon-Fri 7:00 AM ET (NY) + Sun-Thu 5:00 PM ET (Asia)",
+        "status_reason": bell_reason,
+        "schedule": ("Trump sweeps every 30 min, around the clock + session reminders "
+                     "Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)"),
         "last_action": ("NY session reminder sent Wed Nov 11, 06:56 ET — Veterans Day, "
-                        "no red-folder USD events; PPI Fri Nov 13 preview."),
-        "next_action": f"Next reminder {fmt_time(nxt)}",
+                        "no red-folder USD events; PPI Fri Nov 13 preview. "
+                        f"Last Trump sweep {fmt_time(last_checked)}: "
+                        f"{'no qualifying market-moving statement, no alert' if last_result == 'no_alert' else last_result}. "
+                        f"{alerts_ever} qualifying alert(s) ever."),
+        "next_action": (f"Next Trump sweep ~{fmt_time(next_sweep)} · "
+                        f"next reminder {fmt_time(nxt)}" if next_sweep else
+                        f"Next reminder {fmt_time(nxt)}"),
         "needs_you": None,
     }
 
@@ -282,7 +284,7 @@ def build():
         },
     }
 
-    bots = [scanner, paper_bot, newswire, bell, keeper, ledger]
+    bots = [scanner, paper_bot, bell, keeper, ledger]
 
     # --- Office log, newest first, all from real sources
     log = []
@@ -304,7 +306,7 @@ def build():
     if last_checked:
         log.append({
             "time": last_checked.strftime("%Y-%m-%d %H:%M ET"),
-            "bot": "newswire",
+            "bot": "bell",
             "text": "Trump sweep — no qualifying market-moving statement, no alert.",
         })
     for t, bot_id, text in RECORDED_LOG:

@@ -141,7 +141,7 @@
 <body>
 <header>
   <h1>Jaden's Virtual Office <span class="dot">•</span> Live Bot Status</h1>
-  <p class="sub">Six bots, one floor. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
+  <p class="sub">Five bots, one floor. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
   <div class="toolbar">
     <span class="stamp">Last updated: <b id="updated">loading…</b></span>
     <span class="countdown" id="countdown"></span>
@@ -369,13 +369,15 @@ import * as THREE from 'three';
   };
   var STATUS = { working: C.green, waiting: C.amber, "needs-you": C.orange };
 
+  // Five desks: back row of three, front row of two, centred.
+  // Every robot sits on the -z side of its desk and faces +z — toward its
+  // monitor and toward the default camera — so no robot shows its back.
   var DESK_SPOTS = [
-    { id: "scanner",  x: -5.4, z: -2.6 },
-    { id: "paper",    x:  0.0, z: -2.6 },
-    { id: "newswire", x:  5.4, z: -2.6 },
-    { id: "bell",     x: -5.4, z:  2.6 },
-    { id: "keeper",   x:  0.0, z:  2.6 },
-    { id: "ledger",   x:  5.4, z:  2.6 }
+    { id: "scanner", x: -5.4, z: -2.6 },
+    { id: "paper",   x:  0.0, z: -2.6 },
+    { id: "bell",    x:  5.4, z: -2.6 },
+    { id: "keeper",  x: -2.7, z:  2.6 },
+    { id: "ledger",  x:  2.7, z:  2.6 }
   ];
   // Aisle + corner-lane waypoints. Paths are axis-aligned so robots never
   // clip a desk: first out to the centre aisle (z=0), then along it.
@@ -503,9 +505,13 @@ import * as THREE from 'three';
   plant(-8.2, 5.1);
 
   // ----- desks -----
+  // Desks are NOT rotated: every robot sits on the -z side of its desk and
+  // faces +z (toward its monitor and the default camera). The keyboard is
+  // on the near (-z) half of the desktop and the monitor on the far (+z)
+  // half, its screen facing the robot — the old layout had the monitor
+  // between the robot and the keyboard, i.e. the desk was backwards.
   function buildDesk(spot){
     var g = new THREE.Group();
-    var isFront = spot.z > 0; // front row faces the aisle (-z); back row is rotated
     // desktop + legs
     var top = box(2.3, 0.1, 1.15, C.deskTop);
     top.position.y = 0.85;
@@ -515,23 +521,24 @@ import * as THREE from 'three';
       leg.position.set(dx, 0.4, 0);
       g.add(leg);
     });
-    // monitor on the aisle side (local -z), screen facing the robot
+    // keyboard on the near side of the desktop (local -z, by the robot)
+    var kb = box(0.7, 0.04, 0.28, 0x1a1512);
+    kb.position.set(0, 0.92, -0.12);
+    g.add(kb);
+    // monitor on the far side (local +z), screen facing the robot (-z);
+    // top tilted slightly away from the robot, like a real monitor
     var stand = box(0.08, 0.28, 0.08, C.monitor);
-    stand.position.set(0, 1.02, -0.32);
+    stand.position.set(0, 1.02, 0.32);
     g.add(stand);
     var screenMat = new THREE.MeshStandardMaterial({
       color: C.screen, roughness: 0.4, metalness: 0.2,
       emissive: C.green, emissiveIntensity: 0.35
     });
     var screen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.55, 0.06), screenMat);
-    screen.position.set(0, 1.38, -0.34);
-    screen.rotation.x = -0.08;
+    screen.position.set(0, 1.38, 0.34);
+    screen.rotation.x = 0.08;
     screen.castShadow = true;
     g.add(tagMesh(screen, spot.id));
-    // keyboard on the robot side of the desktop
-    var kb = box(0.7, 0.04, 0.28, 0x1a1512);
-    kb.position.set(0, 0.92, -0.12);
-    g.add(kb);
     // mug
     var mug = cyl(0.06, 0.05, 0.13, C.accent);
     mug.position.set(0.92, 0.97, 0.3);
@@ -560,7 +567,6 @@ import * as THREE from 'three';
     g.add(beam);
 
     g.position.set(spot.x, 0, spot.z);
-    if(!isFront) g.rotation.y = Math.PI; // back row: monitor faces +z (aisle)
     scene.add(g);
     desks[spot.id] = { ringMat: ringMat, beamMat: beamMat, screenMat: screenMat, selRing: selRing };
   }
@@ -586,7 +592,6 @@ import * as THREE from 'three';
   }
   function buildRobot(spot){
     var g = new THREE.Group();
-    var isFront = spot.z > 0;
     // legs (pivot at the hip so they can step) + feet
     function leg(dx){
       var pivot = new THREE.Group();
@@ -691,9 +696,10 @@ import * as THREE from 'three';
       armR.add(book);
     }
 
-    // anchor: on the aisle side of its desk, facing the desk
-    var anchor = new THREE.Vector3(spot.x, 0, spot.z + (isFront ? -1.05 : 1.05));
-    var faceYaw = isFront ? 0 : Math.PI;
+    // anchor: on the -z side of its desk, facing +z — toward the desk's
+    // monitor and toward the default camera, never its back to the room
+    var anchor = new THREE.Vector3(spot.x, 0, spot.z - 1.05);
+    var faceYaw = 0;
     g.position.copy(anchor);
     g.rotation.y = faceYaw;
     scene.add(g);
@@ -750,7 +756,18 @@ import * as THREE from 'three';
     return a + d * t;
   }
   function buildPath(from, to){
-    var legs = [new THREE.Vector3(from.x, 0, 0)];
+    // Back-row robots now sit on the wall side of their desks (z < -3), so
+    // a straight cut to the centre aisle would cross their own desk. From
+    // there, first slide sideways along the back lane to the side aisle,
+    // then out to the aisle — every leg stays axis-aligned and clear.
+    var legs = [];
+    if(from.z < -3){
+      var sx = (from.x >= 0 ? 1 : -1) * 7.8;
+      legs.push(new THREE.Vector3(sx, 0, from.z));
+      legs.push(new THREE.Vector3(sx, 0, 0));
+    } else {
+      legs.push(new THREE.Vector3(from.x, 0, 0));
+    }
     if(to[1] !== 0){
       var side = (to[0] >= 0 ? 1 : -1) * 7.8;
       legs.push(new THREE.Vector3(side, 0, 0));
