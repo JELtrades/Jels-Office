@@ -435,8 +435,8 @@ def build():
     # hallway. Clip 1 is Rob — assigned by Jaden Nov 11 ~16:51 ET as the
     # viral ideas scout, so he works at his desk. Clip 2 is Jane — assigned
     # Nov 11 ~16:54 ET to make the videos, working at her desk. Clip 3 is
-    # the fixer — assigned Nov 11 ~18:12 ET to fix finished videos and
-    # crisp them up, working at his desk.
+    # Flea — the fixer, assigned Nov 11 ~18:12 ET to fix finished videos
+    # and crisp them up (renamed Flea Nov 11 ~18:21 ET), working at his desk.
     clips = []
     for i in (1, 2, 3):
         if i == 1:
@@ -474,13 +474,14 @@ def build():
             })
             continue
         if i == 3:
-            # Clip 3 — the fixer (Jaden, Nov 11 ~18:12 ET): fixes finished
-            # videos and crisps them up — fixes the sound, matches the
-            # style all the way through, and adds a funny ending. First
-            # job: polish Jane's gum video into a v2. Working at his desk.
+            # Flea (clip3) — the fixer (Jaden, Nov 11 ~18:12 ET; renamed
+            # Flea Nov 11 ~18:21 ET): fixes finished videos and crisps them
+            # up — fixes the sound, matches the style all the way through,
+            # and adds a funny ending. First job: polish Jane's gum video
+            # into a v2. Working at his desk.
             clips.append({
                 "id": "clip3",
-                "name": "Clip 3",
+                "name": "Flea",
                 "role": "Fixes finished videos and crisps them up — fixes the sound, matches the style all the way through, and adds a funny ending",
                 "status": "working",
                 "status_reason": "On the job — polishing Jane's gum video into a v2: fixing the sound, matching the style all the way through, and adding a funny ending.",

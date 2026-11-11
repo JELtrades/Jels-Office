@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 18:20:47 ET",
-  "generated_at_utc": "2026-11-11T23:20:47Z",
+  "generated_at_et": "2026-11-11 18:22:23 ET",
+  "generated_at_utc": "2026-11-11T23:22:23Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -59,7 +59,7 @@
       "status_reason": "Last Trump sweep Wed Nov 11, 5:52 PM ET \u2014 fresh; between session reminders.",
       "schedule": "Trump sweeps every 30 min, around the clock + session reminders Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)",
       "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Wed Nov 11, 5:52 PM ET: no qualifying market-moving statement, no alert. 3 qualifying alert(s) ever.",
-      "next_action": "Next Trump sweep ~Wed Nov 11, 6:22 PM ET \u00b7 next reminder Thu Nov 12, 7:00 AM ET",
+      "next_action": "Next Trump sweep ~Wed Nov 11, 6:52 PM ET \u00b7 next reminder Thu Nov 12, 7:00 AM ET",
       "needs_you": null
     },
     {
@@ -124,7 +124,7 @@
     },
     {
       "id": "clip3",
-      "name": "Clip 3",
+      "name": "Flea",
       "role": "Fixes finished videos and crisps them up \u2014 fixes the sound, matches the style all the way through, and adds a funny ending",
       "status": "working",
       "status_reason": "On the job \u2014 polishing Jane's gum video into a v2: fixing the sound, matching the style all the way through, and adding a funny ending.",

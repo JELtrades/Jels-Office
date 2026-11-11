@@ -1,7 +1,7 @@
 # Jaden's Virtual Office — Public (GitHub Pages) Version
 
 A bookmarkable, live-in-the-browser version of Jaden's Virtual Office: nine
-animated bots (Scanner, Paper, Bell, George, Frank, Muse, and Rob, Jane, Clip 3)
+animated bots (Scanner, Paper, Bell, George, Frank, Muse, and Rob, Jane, Flea)
 across four rooms — trading, the shop, Muse's office at the end of the
 hallway, and the clipping room at the back — with Working / Waiting /
 Needs-you badges and an office log. It mirrors the in-app Virtual Office,
@@ -42,7 +42,7 @@ Camera radius 46, shadow camera ±24, so the longer building
 - **Muse** — Jaden's assistant, always working.
 - **Rob (Clip 1)** — viral explainer-idea scout: finds explainer-video ideas on Instagram that haven't been done yet, sends the best finds to Jane.
 - **Jane (Clip 2)** — makes the same style of video as the viral explainer Rob finds, just with a different idea.
-- **Clip 3** — the fixer: fixes finished videos and crisps them up — fixes the sound, matches the style all the way through, and adds a funny ending.
+- **Flea (Clip 3)** — the fixer: fixes finished videos and crisps them up — fixes the sound, matches the style all the way through, and adds a funny ending.
 
 ## Files
 
