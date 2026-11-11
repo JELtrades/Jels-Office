@@ -1,7 +1,8 @@
 # Jaden's Virtual Office — Public (GitHub Pages) Version
 
 A bookmarkable, live-in-the-browser version of Jaden's Virtual Office: six
-animated bot desks (Scanner, Paper, Newswire, Bell, Keeper, Ledger) with
+animated bots (Scanner, Paper, Bell, George, Frank, and Muse) across three
+rooms — trading, the shop, and Muse's office at the end of the hallway — with
 Working / Waiting / Needs-you badges and an office log. It mirrors the
 in-app Virtual Office, but it is a plain static site — it opens from any
 browser via a normal URL and stays live.

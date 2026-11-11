@@ -41,8 +41,11 @@ RECORDED_LOG = [
      "NY session reminder sent — Veterans Day, stocks/CME normal hours, no "
      "red-folder USD events; PPI Fri Nov 13 preview."),
     ("2026-11-10 16:47 ET", "paper",
-     "Paper trading went live — JELS union opens 09:30-10:30 ET + midday "
+     "Paper trading went live — JELS Nyam model opens 09:30-10:30 ET + midday "
      "11:00-12:00 ET, log-only, no real orders."),
+    ("2026-11-11 14:25 ET", "muse",
+     "Muse's office opened at the end of the hallway — waiting bots take the "
+     "couches, bots that need help come to sit in the guest chairs."),
 ]
 
 KEEPER_OPEN_ITEMS = [
@@ -164,7 +167,7 @@ def build():
     if latest:
         outcome = latest.get("outcome_detail", latest.get("status", ""))
         last_trade_txt = (
-            f"{latest['id']} — {latest.get('direction', '')} union "
+            f"{latest['id']} — {latest.get('direction', '')} Nyam model "
             f"{latest.get('source', '')} — "
             f"{'WIN +' + str(latest.get('win_r')) + 'R (+' + str(latest.get('points')) + ' pts)' if latest.get('win_r', 0) > 0 else outcome} "
             f"at {latest.get('closed_at_et', latest.get('detection_time_et', ''))}. "
@@ -281,7 +284,22 @@ def build():
         },
     }
 
-    bots = [scanner, paper_bot, bell, keeper, ledger]
+    # --- Muse: Jaden's assistant — always at his desk in the office at the
+    # end of the hallway, typing. Waiting bots sit on the couches; a bot
+    # that needs Jaden comes to sit in one of Muse's guest chairs.
+    muse = {
+        "id": "muse",
+        "name": "Muse",
+        "role": "Jaden's assistant — answers, builds, and runs the office",
+        "status": "working",
+        "status_reason": "Always on — typing at the desk in the office at the end of the hallway.",
+        "schedule": "Always on",
+        "last_action": "Reworked the office — waiting bots take the couches, needs-you bots come to the guest chairs.",
+        "next_action": "On call whenever Jaden (or a bot) needs help.",
+        "needs_you": None,
+    }
+
+    bots = [scanner, paper_bot, bell, keeper, ledger, muse]
 
     # --- Office log, newest first, all from real sources
     log = []
@@ -296,7 +314,7 @@ def build():
         log.append({
             "time": latest.get("detection_time_et"),
             "bot": "paper",
-            "text": (f"{latest['id']} detected — {latest.get('direction')} union "
+            "text": (f"{latest['id']} detected — {latest.get('direction')} Nyam model "
                      f"{latest.get('source')}, CISD {latest.get('cisd_level')}, "
                      f"FVG {latest.get('zone', {}).get('bottom')}-{latest.get('zone', {}).get('top')}."),
         })
