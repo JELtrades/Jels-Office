@@ -251,6 +251,9 @@
     if(bot){
       renderDetail(bot);
       detailEl.scrollIntoView({behavior:"smooth", block:"nearest"});
+    } else {
+      // No bot selected (empty-space click / Close button): hide the panel.
+      renderDetail(null);
     }
     if(window.Office3D && window.Office3D.select) window.Office3D.select(id);
   }
@@ -356,12 +359,13 @@ import * as THREE from 'three';
 
   // Same palette as the 2D office — no redesign, just rendered in 3D.
   var C = {
-    bg: 0x171310, floor: 0x241d18, card: 0x2a2521, card2: 0x332b25,
+    bg: 0x171310, floor: 0x2c241d, card: 0x2a2521, card2: 0x332b25,
     line: 0x4a3f35, accent: 0xe8c87a, ink: 0xfaf5ec,
     green: 0x4ade80, amber: 0xfbbf24, orange: 0xfb923c,
-    head: 0x3d342c, body: 0x4a3f35, arm: 0x6b5b4c, ant: 0x8a7a68,
-    deskTop: 0x332b25, deskLeg: 0x241d18, monitor: 0x1a1512, screen: 0x11100e,
-    rug: 0x2e2620, plant: 0x5c6b52, wall: 0x2a2521
+    head: 0xe6ded0, body: 0xd9d2c4, arm: 0x4a3f35, ant: 0x3d342c,
+    face: 0x1a1512, dark: 0x2e2721,
+    deskTop: 0x3e342b, deskLeg: 0x2e2620, monitor: 0x1a1512, screen: 0x11100e,
+    rug: 0x3a2f26, plant: 0x5c6b52, wall: 0x332c26
   };
   var STATUS = { working: C.green, waiting: C.amber, "needs-you": C.orange };
 
@@ -411,8 +415,8 @@ import * as THREE from 'three';
   var orbitGoal = { theta: 0.785, phi: 0.92, radius: 17.5 };
 
   // ----- lights -----
-  scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x241d18, 0.75));
-  var sun = new THREE.DirectionalLight(0xfff2dd, 1.15);
+  scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x3a2f26, 1.3));
+  var sun = new THREE.DirectionalLight(0xfff2dd, 1.9);
   sun.position.set(8, 14, 6);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -420,7 +424,7 @@ import * as THREE from 'three';
   sun.shadow.camera.top = 12; sun.shadow.camera.bottom = -12;
   sun.shadow.camera.far = 40;
   scene.add(sun);
-  var warm = new THREE.PointLight(C.accent, 12, 22, 1.8);
+  var warm = new THREE.PointLight(C.accent, 22, 26, 1.8);
   warm.position.set(0, 5.5, 0);
   scene.add(warm);
 
@@ -548,7 +552,7 @@ import * as THREE from 'three';
     g.add(selRing);
     // status light beam above the desk
     var beamMat = new THREE.MeshBasicMaterial({
-      color: C.green, transparent: true, opacity: 0.09,
+      color: C.green, transparent: true, opacity: 0.05,
       blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
     });
     var beam = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 2.6, 20, 1, true), beamMat);
@@ -562,66 +566,112 @@ import * as THREE from 'three';
   }
   DESK_SPOTS.forEach(buildDesk);
 
-  // ----- robots (same look as the 2D CSS robot: dark head, gold eyes, antenna) -----
+  // ----- robots: clearly humanoid, fully opaque, light warm shell so they
+  // stand out from the dark desks and floor. Distinct head, face plate with
+  // glowing gold eyes, antenna with glowing tip, arms with hands, chest light.
+  function rMat(color, opts){
+    return new THREE.MeshStandardMaterial(Object.assign(
+      { color: color, roughness: 0.55, metalness: 0.15, transparent: false, opacity: 1 },
+      opts || {}));
+  }
+  function rBox(w, h, d, color, opts){
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), rMat(color, opts));
+    m.castShadow = true; m.receiveShadow = true;
+    return m;
+  }
+  function rCyl(rt, rb, h, color, opts, seg){
+    var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 20), rMat(color, opts));
+    m.castShadow = true; m.receiveShadow = true;
+    return m;
+  }
   function buildRobot(spot){
     var g = new THREE.Group();
     var isFront = spot.z > 0;
-    // legs (pivot at the hip so they can step)
+    // legs (pivot at the hip so they can step) + feet
     function leg(dx){
       var pivot = new THREE.Group();
-      pivot.position.set(dx, 0.24, 0);
-      var m = box(0.16, 0.24, 0.16, C.body);
-      m.position.y = -0.12;
+      pivot.position.set(dx, 0.26, 0);
+      var m = rBox(0.17, 0.26, 0.17, C.dark);
+      m.position.y = -0.13;
       pivot.add(m);
+      var foot = rBox(0.18, 0.06, 0.28, C.body);
+      foot.position.set(0, -0.24, 0.04);
+      pivot.add(foot);
       g.add(pivot);
       return pivot;
     }
-    var legL = leg(-0.12), legR = leg(0.12);
-    // body
-    var body = box(0.52, 0.42, 0.34, C.body);
-    body.position.y = 0.45;
+    var legL = leg(-0.13), legR = leg(0.13);
+    // pelvis
+    var pelvis = rBox(0.46, 0.12, 0.30, C.dark);
+    pelvis.position.y = 0.28;
+    g.add(pelvis);
+    // torso (light shell) + shoulder bar
+    var body = rBox(0.54, 0.42, 0.34, C.body);
+    body.position.y = 0.50;
     g.add(tagMesh(body, spot.id));
-    // chest status light
-    var chestMat = new THREE.MeshStandardMaterial({
-      color: 0x111111, emissive: C.green, emissiveIntensity: 1.4, roughness: 0.4
-    });
-    var chest = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 12), chestMat);
-    chest.position.set(0, 0.47, 0.19);
+    var shoulders = rBox(0.64, 0.10, 0.36, C.body);
+    shoulders.position.y = 0.70;
+    g.add(shoulders);
+    // chest status light with dark bezel so it reads as a lamp
+    var bezel = rBox(0.17, 0.17, 0.03, C.dark);
+    bezel.position.set(0, 0.52, 0.18);
+    g.add(bezel);
+    var chestMat = rMat(0x111111, { emissive: C.green, emissiveIntensity: 1.8, roughness: 0.4 });
+    var chest = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 14), chestMat);
+    chest.position.set(0, 0.52, 0.20);
     g.add(chest);
-    // head
-    var head = box(0.58, 0.42, 0.42, C.head);
-    head.position.y = 0.87;
+    // neck + head
+    var neck = rCyl(0.09, 0.09, 0.08, C.dark);
+    neck.position.y = 0.78;
+    g.add(neck);
+    var head = rBox(0.56, 0.40, 0.40, C.head);
+    head.position.y = 0.99;
     g.add(tagMesh(head, spot.id));
-    // eyes (gold, glowing)
-    var eyeMat = new THREE.MeshStandardMaterial({ color: 0x111111, emissive: C.accent, emissiveIntensity: 1.6 });
-    [-0.13, 0.13].forEach(function(dx){
-      var eye = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.09, 0.03), eyeMat);
-      eye.position.set(dx, 0.9, 0.22);
+    // side ears widen the head silhouette
+    [-0.30, 0.30].forEach(function(dx){
+      var ear = rBox(0.05, 0.14, 0.14, C.dark);
+      ear.position.set(dx, 0.99, 0);
+      g.add(ear);
+    });
+    // dark face plate so the gold eyes pop
+    var face = rBox(0.46, 0.30, 0.03, C.face);
+    face.position.set(0, 1.00, 0.20);
+    g.add(face);
+    // eyes (gold, glowing, larger than before)
+    var eyeMat = rMat(0x111111, { emissive: C.accent, emissiveIntensity: 2.6 });
+    [-0.12, 0.12].forEach(function(dx){
+      var eye = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.11, 0.03), eyeMat);
+      eye.position.set(dx, 1.03, 0.22);
+      eye.castShadow = false;
       g.add(eye);
     });
-    // mouth
-    var mouth = box(0.2, 0.03, 0.02, C.ant);
-    mouth.position.set(0, 0.74, 0.22);
+    // mouth line
+    var mouth = rBox(0.18, 0.03, 0.02, C.arm);
+    mouth.position.set(0, 0.87, 0.22);
     g.add(mouth);
     // antenna + glowing tip
-    var ant = cyl(0.025, 0.025, 0.16, C.ant);
-    ant.position.y = 1.14;
+    var ant = rCyl(0.025, 0.025, 0.16, C.ant);
+    ant.position.y = 1.24;
     g.add(ant);
-    var tip = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0x111111, emissive: C.accent, emissiveIntensity: 1.8 }));
-    tip.position.y = 1.24;
+    var tip = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 12),
+      rMat(0x111111, { emissive: C.accent, emissiveIntensity: 2.2 }));
+    tip.position.y = 1.35;
     g.add(tip);
-    // arms (pivot at the shoulder so they can type / swing)
+    // arms (pivot at the shoulder) with dark hands
     function arm(dx){
       var pivot = new THREE.Group();
-      pivot.position.set(dx, 0.6, 0);
-      var m = box(0.09, 0.36, 0.09, C.arm);
+      pivot.position.set(dx, 0.68, 0);
+      var m = rBox(0.12, 0.36, 0.12, C.arm);
       m.position.y = -0.18;
       pivot.add(m);
+      var hand = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 12), rMat(C.dark));
+      hand.position.y = -0.38;
+      hand.castShadow = true;
+      pivot.add(hand);
       g.add(pivot);
       return pivot;
     }
-    var armL = arm(-0.31), armR = arm(0.31);
+    var armL = arm(-0.36), armR = arm(0.36);
 
     // anchor: on the aisle side of its desk, facing the desk
     var anchor = new THREE.Vector3(spot.x, 0, spot.z + (isFront ? -1.05 : 1.05));
@@ -788,6 +838,9 @@ import * as THREE from 'three';
     var hits = ray.intersectObjects(clickables, false);
     if(hits.length && hits[0].object.userData.botId){
       window.Office.selectBot(hits[0].object.userData.botId);
+    } else {
+      // Clicked empty space: hide the detail panel and the speech bubble.
+      window.Office.selectBot(null);
     }
   }
 
@@ -829,7 +882,9 @@ import * as THREE from 'three';
       var y = (-projV.y * 0.5 + 0.5) * h;
       if(x < -40 || x > w + 40 || y < -20 || y > h + 40) show = false;
       els.tag.style.display = show ? "block" : "none";
-      els.bubble.style.display = show ? "block" : "none";
+      // Speech bubble is the in-scene detail card: show it only for the
+      // single selected bot, never all six at once.
+      els.bubble.style.display = (show && id === selectedId) ? "block" : "none";
       if(!show) return;
       var cx = Math.max(120, Math.min(w - 120, x));
       els.tag.style.left = cx + "px";
