@@ -1,0 +1,129 @@
+{
+  "generated_at_et": "2026-11-11 10:41:43 ET",
+  "generated_at_utc": "2026-11-11T15:41:43Z",
+  "office": "Jaden's Virtual Office",
+  "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
+  "bots": [
+    {
+      "id": "scanner",
+      "name": "Scanner",
+      "role": "MNQ / ES watch \u2014 JELS strat detection (15m + 5m CISD + FVG)",
+      "status": "working",
+      "status_reason": "Inside the live watch window (Mon-Fri 09:30-14:00 ET).",
+      "schedule": "Mon-Fri 09:30-14:00 ET (opens 09:30-10:30, midday 11:00-12:00)",
+      "last_action": "Engine run #18 at 2026-11-11 10:38 ET; 1 paper trade(s) detected so far.",
+      "next_action": "Scanning every 5 minutes right now.",
+      "needs_you": null
+    },
+    {
+      "id": "paper",
+      "name": "Paper",
+      "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders",
+      "status": "working",
+      "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-14:00 ET).",
+      "schedule": "Mon-Fri 09:30-14:00 ET, checks every 5 min",
+      "last_action": "PT-20261111-01 \u2014 bearish union 5m \u2014 WIN +2.0R (+28.0 pts) at 2026-11-11 10:00 ET. Stop 14.0 pts; wick went 4.0 pts beyond stop.",
+      "next_action": "Watching for the next JELS setup (opens + midday).",
+      "needs_you": null,
+      "stats": {
+        "trades_opened": 1,
+        "closed": 1,
+        "wins": 1,
+        "losses": 0,
+        "win_rate_pct": 100.0,
+        "total_points": 28.0,
+        "total_usd_4_micros": 224.0
+      }
+    },
+    {
+      "id": "newswire",
+      "name": "Newswire",
+      "role": "Trump statement / market-news alerts \u2014 30-min sweeps, bullish/bearish read",
+      "status": "working",
+      "status_reason": "Last sweep Wed Nov 11, 10:22 AM ET \u2014 fresh.",
+      "schedule": "Every 30 minutes, around the clock",
+      "last_action": "Last sweep Wed Nov 11, 10:22 AM ET: no qualifying market-moving statement, no alert. 3 qualifying alert(s) ever.",
+      "next_action": "Next sweep ~Wed Nov 11, 10:52 AM ET",
+      "needs_you": null
+    },
+    {
+      "id": "bell",
+      "name": "Bell",
+      "role": "Session reminders \u2014 NY open prep + Asia open prep, red-folder news + flat windows",
+      "status": "waiting",
+      "status_reason": "Between scheduled reminders.",
+      "schedule": "Mon-Fri 7:00 AM ET (NY) + Sun-Thu 5:00 PM ET (Asia)",
+      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview.",
+      "next_action": "Next reminder Wed Nov 11, 5:00 PM ET",
+      "needs_you": null
+    },
+    {
+      "id": "keeper",
+      "name": "Keeper",
+      "role": "Grind & Gather store \u2014 Shopify, DSers, policies, launch prep",
+      "status": "needs-you",
+      "status_reason": "4 decision(s) waiting on Jaden.",
+      "schedule": "No fixed schedule \u2014 acts when Jaden decides; launch target Black Fri Nov 27",
+      "last_action": "Paid shipping options removed Wed Nov 11 ~10:28 ET \u2014 free US shipping (7-15 days) is now the only option.",
+      "next_action": "Sample order decision ($19.58) \u2014 then quality check + real weight.",
+      "needs_you": [
+        "Sample order \u2014 go / no-go still undecided ($19.58, mapped AliExpress listing)",
+        "DBA / assumed business name filing \u2014 Yancey County, $26, pinned open",
+        "Social links \u2014 needs Jaden's handles",
+        "NC sales tax ID \u2014 expected by mail ~Nov 24, Jaden enters it in Shopify"
+      ]
+    },
+    {
+      "id": "ledger",
+      "name": "Ledger",
+      "role": "Trade journal + Lucid account buffers \u2014 points, R, setup, one lesson per trade",
+      "status": "needs-you",
+      "status_reason": "11 sessions unlogged \u2014 the journal is waiting on Jaden.",
+      "schedule": "Weekly review Fridays 5:45 PM ET",
+      "last_action": "Weekly review \u2014 week of Nov 2-6 (no trades logged that week).",
+      "next_action": "Weekly review Fri Nov 13, 5:45 PM ET.",
+      "needs_you": [
+        "11 sessions still unlogged (Oct 26 - Nov 9): points + R, setup, one lesson each",
+        "Weekly review Fri Nov 13, 5:45 PM ET \u2014 needs the logged trades to tally"
+      ],
+      "stats": {
+        "last_logged_trade": "2026-10-14",
+        "unlogged_sessions": 11,
+        "lucid_lfe_buffer_usd": 1471,
+        "lucid_lde_buffer_usd": 105
+      }
+    }
+  ],
+  "log": [
+    {
+      "time": "2026-11-11 10:28 ET",
+      "bot": "keeper",
+      "text": "Paid shipping options removed from Grind & Gather \u2014 free US shipping (7-15 business days) is now the only option."
+    },
+    {
+      "time": "2026-11-11 10:22 ET",
+      "bot": "newswire",
+      "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
+    },
+    {
+      "time": "2026-11-11 10:00 ET",
+      "bot": "paper",
+      "text": "PT-20261111-01 closed \u2014 WIN +2.0R (+28.0 pts, +$224 at 4 micros). Wick went 4.0 pts beyond the stop."
+    },
+    {
+      "time": "2026-11-11 09:53 ET",
+      "bot": "paper",
+      "text": "PT-20261111-01 detected \u2014 bearish union 5m, CISD 28343.0, FVG 28272.25-28286.25."
+    },
+    {
+      "time": "2026-11-11 06:56 ET",
+      "bot": "bell",
+      "text": "NY session reminder sent \u2014 Veterans Day, stocks/CME normal hours, no red-folder USD events; PPI Fri Nov 13 preview."
+    },
+    {
+      "time": "2026-11-10 16:47 ET",
+      "bot": "paper",
+      "text": "Paper trading went live \u2014 JELS union opens 09:30-10:30 ET + midday 11:00-12:00 ET, log-only, no real orders."
+    }
+  ]
+}
