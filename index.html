@@ -141,7 +141,7 @@
 <body>
 <header>
   <h1>Jaden's Virtual Office <span class="dot">•</span> Live Bot Status</h1>
-  <p class="sub">Five bots, one floor. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
+  <p class="sub">Five bots, two rooms. Trading on the left, the shop on the right, joined by a hallway. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
   <div class="toolbar">
     <span class="stamp">Last updated: <b id="updated">loading…</b></span>
     <span class="countdown" id="countdown"></span>
@@ -369,22 +369,24 @@ import * as THREE from 'three';
   };
   var STATUS = { working: C.green, waiting: C.amber, "needs-you": C.orange };
 
-  // Five desks: back row of three, front row of two, centred.
-  // Every robot sits on the -z side of its desk and faces +z — toward its
-  // monitor and toward the default camera — so no robot shows its back.
+  // Two rooms joined by a hallway: trading on the left (x -10..0), shop on
+  // the right (x 3..10), hallway between them (x 0..3). Every robot sits
+  // on the -z side of its desk and faces +z — toward its monitor and
+  // toward the default camera — so no robot shows its back.
   var DESK_SPOTS = [
-    { id: "scanner", x: -5.4, z: -2.6 },
-    { id: "paper",   x:  0.0, z: -2.6 },
-    { id: "bell",    x:  5.4, z: -2.6 },
-    { id: "keeper",  x: -2.7, z:  2.6 },
-    { id: "ledger",  x:  2.7, z:  2.6 }
+    { id: "scanner", x: -7.5, z: -2.6, room: "trading" },
+    { id: "paper",   x: -2.5, z: -2.6, room: "trading" },
+    { id: "bell",    x: -7.5, z:  2.6, room: "trading" },
+    { id: "keeper",  x:  6.5, z: -2.6, room: "shopify" },
+    { id: "ledger",  x: -2.5, z:  2.6, room: "trading" }
   ];
-  // Aisle + corner-lane waypoints. Paths are axis-aligned so robots never
-  // clip a desk: first out to the centre aisle (z=0), then along it.
-  var WAYPOINTS = [
-    [0, 0], [-7, 0], [7, 0],
-    [-7.8, 4.6], [7.8, 4.6], [-7.8, -4.6], [7.8, -4.6]
-  ];
+  // One centre lane (cx) per room, clear of every desk. Robots route
+  // (cx, from.z) -> (cx, to.z) -> (to.x, to.z) — every leg axis-aligned
+  // and clear, so they never clip a desk and never leave their own room.
+  var ROOMS = {
+    trading: { cx: -5, waypoints: [[-5, 0], [-9, 0], [-1, 0], [-5, 4.6], [-5, -4.6]] },
+    shopify: { cx: 4.5, waypoints: [[6.5, 0], [4.5, 0], [9, 0], [4.5, 4.6], [4.5, -4.6]] }
+  };
 
   var container = document.getElementById("viewport");
   var labelsEl = document.getElementById("labels");
@@ -413,8 +415,8 @@ import * as THREE from 'three';
   scene.fog = new THREE.Fog(0x241a33, 55, 150);
 
   var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 120);
-  var orbit = { theta: 0.785, phi: 0.92, radius: 17.5, target: new THREE.Vector3(0, 0.7, 0) };
-  var orbitGoal = { theta: 0.785, phi: 0.92, radius: 17.5 };
+  var orbit = { theta: 0.785, phi: 0.92, radius: 24, target: new THREE.Vector3(0, 0.7, 0) };
+  var orbitGoal = { theta: 0.785, phi: 0.92, radius: 24 };
 
   // ----- lights -----
   scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x3a2f26, 1.5));
@@ -422,8 +424,8 @@ import * as THREE from 'three';
   sun.position.set(8, 14, 6);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
-  sun.shadow.camera.left = -12; sun.shadow.camera.right = 12;
-  sun.shadow.camera.top = 12; sun.shadow.camera.bottom = -12;
+  sun.shadow.camera.left = -16; sun.shadow.camera.right = 16;
+  sun.shadow.camera.top = 16; sun.shadow.camera.bottom = -16;
   sun.shadow.camera.far = 40;
   scene.add(sun);
   var warm = new THREE.PointLight(C.accent, 28, 26, 1.8);
@@ -450,29 +452,37 @@ import * as THREE from 'three';
   }
 
   // ----- floor, walls, decor -----
-  var floor = box(18, 0.5, 12, C.floor);
-  floor.position.y = -0.25;
-  floor.castShadow = false;
-  scene.add(floor);
+  // Three floor slabs: trading room (10 wide), hallway (3), shop room (7).
+  [[-5, 10], [1.5, 3], [6.5, 7]].forEach(function(f){
+    var slab = box(f[1], 0.5, 12, C.floor);
+    slab.position.set(f[0], -0.25, 0);
+    slab.castShadow = false;
+    scene.add(slab);
+  });
   // tile seams
-  [-6, -3, 0, 3, 6].forEach(function(x){
+  [-9, -6, -3, 0, 3, 6, 9].forEach(function(x){
     var seam = box(0.035, 0.012, 12, 0x1a1512);
     seam.position.set(x, 0.006, 0); seam.castShadow = false;
     scene.add(seam);
   });
   [-4, -2, 0, 2, 4].forEach(function(z){
-    var seam = box(18, 0.012, 0.035, 0x1a1512);
+    var seam = box(20, 0.012, 0.035, 0x1a1512);
     seam.position.set(0, 0.006, z); seam.castShadow = false;
     scene.add(seam);
   });
-  // centre rug
+  // centre rug in the trading room
   var rug = box(6, 0.03, 3.2, C.rug);
-  rug.position.set(0, 0.015, 0); rug.castShadow = false;
+  rug.position.set(-5, 0.015, 0); rug.castShadow = false;
   scene.add(rug);
+  // rug runner down the hallway
+  var runner = box(1.8, 0.02, 9, 0x33291f);
+  runner.position.set(1.5, 0.01, 0); runner.castShadow = false;
+  scene.add(runner);
 
   // ----- penthouse window walls: floor-to-ceiling glass on the back and -----
-  // left sides only — the front (+z, camera side) and right (+x) sides are
-  // open, so the room is easy to see into. Dark metal frames with mullions
+  // on each room's outer side (left for trading, right for the shop) — the
+  // front (+z, camera side) and the hallway sides are open, so both rooms
+  // are easy to see into. Dark metal frames with mullions
   // + a slim gold trim under the header; the glass is faint and depthWrite-
   // off so the skyline reads cleanly through it from any orbit angle.
   var glassMat = new THREE.MeshStandardMaterial({
@@ -513,20 +523,36 @@ import * as THREE from 'three';
     g.position.set(x, 0, z);
     scene.add(g);
   }
-  windowWall(18, 0.24, 0, -6.15, true);   // back
-  windowWall(12, 0.24, -9.15, 0, false);  // left
-  // front (+z) and right (+x) are open — no wall, so the camera looks
-  // straight into the room.
-  // Ceiling beams cap the remaining window walls (no slab, so the top-down
-  // orbit view stays open). The beams on the removed front/right sides are
-  // gone with their walls; the cross-beams below hold the pendant lights
-  // and sit high enough not to block the view into the room.
-  [[0, -6.15, 18, 0.3]].forEach(function(b){
+  windowWall(20, 0.24, 0, -6.15, true);    // back, continuous across both rooms + hallway
+  windowWall(12, 0.24, -10.15, 0, false);  // left (trading room exterior)
+  windowWall(12, 0.24, 10.15, 0, false);   // right (shop room exterior)
+  // front (+z) is open — no wall, so the camera looks straight into both
+  // rooms. The hallway walls divide the rooms: solid, with a 2-wide
+  // doorway (z -1..1) into each room.
+  function hallWall(x){
+    var mat = new THREE.MeshStandardMaterial({ color: C.wall, roughness: 0.9 });
+    [[-3.5, 5], [3.5, 5]].forEach(function(s){
+      var seg = new THREE.Mesh(new THREE.BoxGeometry(0.24, 4.2, s[1]), mat);
+      seg.position.set(x, 2.1, s[0]);
+      seg.castShadow = true; seg.receiveShadow = true;
+      scene.add(seg);
+    });
+    var lintel = new THREE.Mesh(new THREE.BoxGeometry(0.24, 1.0, 2), mat);
+    lintel.position.set(x, 3.7, 0);
+    lintel.castShadow = true; lintel.receiveShadow = true;
+    scene.add(lintel);
+  }
+  hallWall(0);
+  hallWall(3);
+  // Ceiling beams cap the window walls (no slab, so the top-down orbit
+  // view stays open). The cross-beams below hold the pendant lights and
+  // sit high enough not to block the view into the rooms.
+  [[0, -6.15, 20, 0.3]].forEach(function(b){
     var beam = box(b[2], 0.22, b[3], 0x241d18);
     beam.position.set(b[0], 4.3, b[1]);
     scene.add(beam);
   });
-  [[-9.15, 0]].forEach(function(b){
+  [[-10.15, 0], [10.15, 0]].forEach(function(b){
     var beam = box(0.3, 0.22, 12, 0x241d18);
     beam.position.set(b[0], 4.3, b[1]);
     scene.add(beam);
@@ -534,11 +560,11 @@ import * as THREE from 'three';
   // Slim gold trim just under the header on the inner face of each wall.
   var trimMat = new THREE.MeshStandardMaterial({ color: C.accent, emissive: C.accent, emissiveIntensity: 0.9, roughness: 0.4 });
   [[0, -5.98]].forEach(function(s){
-    var t = new THREE.Mesh(new THREE.BoxGeometry(18, 0.07, 0.05), trimMat);
+    var t = new THREE.Mesh(new THREE.BoxGeometry(20, 0.07, 0.05), trimMat);
     t.position.set(s[0], 3.88, s[1]);
     scene.add(t);
   });
-  [[-8.98, 0]].forEach(function(s){
+  [[-9.98, 0], [9.98, 0]].forEach(function(s){
     var t = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 12), trimMat);
     t.position.set(s[0], 3.88, s[1]);
     scene.add(t);
@@ -691,15 +717,15 @@ import * as THREE from 'three';
   // ----- penthouse decor (clear of desks, robots, labels, walk paths) -----
   // Cross-beams over the desk rows — the pendant lights hang from these.
   [[-2.6], [2.6]].forEach(function(z){
-    var cb = box(18, 0.18, 0.24, 0x241d18);
+    var cb = box(20, 0.18, 0.24, 0x241d18);
     cb.position.set(0, 4.2, z[0]);
     scene.add(cb);
   });
-  // Lounge corner, front-left: low sofa + coffee table + rug + floor lamp.
-  // Lives at x -7.3..-4.15, z 3.5..5.9 — clear of the front-left waypoint
-  // (-7.8, 4.6), the z=0 aisle and the x=+/-7.8 side lanes.
-  var loungeRug = box(3.6, 0.02, 2.4, 0x33291f);
-  loungeRug.position.set(-5.5, 0.01, 4.7);
+  // Lounge against the shop room's right wall: low sofa + coffee table +
+  // rug + floor lamp. Sofa faces -x into the room; lives at x 7.5..9.9,
+  // z -0.3..3.3 — clear of George's walk lane (cx 4.5) and the z=0 aisle.
+  var loungeRug = box(2.4, 0.02, 3.6, 0x33291f);
+  loungeRug.position.set(8.7, 0.01, 1.5);
   loungeRug.castShadow = false;
   scene.add(loungeRug);
   var sofa = new THREE.Group();
@@ -728,7 +754,8 @@ import * as THREE from 'three';
   var pillow = sofaBox(0.42, 0.42, 0.14,
     new THREE.MeshStandardMaterial({ color: C.accent, roughness: 0.85 }), -0.75, 0.87, 0.22);
   pillow.rotation.z = 0.15; pillow.rotation.x = -0.1;
-  sofa.position.set(-5.5, 0, 4.9);
+  sofa.position.set(9.3, 0, 1.5);
+  sofa.rotation.y = Math.PI / 2;
   scene.add(sofa);
   // Coffee table in front of the sofa, with a book and a small succulent.
   var table = new THREE.Group();
@@ -757,7 +784,8 @@ import * as THREE from 'three';
   sprout.position.set(0.35, 0.66, 0.05);
   sprout.castShadow = true;
   table.add(sprout);
-  table.position.set(-5.5, 0, 4.0);
+  table.position.set(8.3, 0, 1.5);
+  table.rotation.y = Math.PI / 2;
   scene.add(table);
   // Floor lamps: one by the sofa with a real warm light, one by the left
   // wall (emissive only) — both clear of the walk lanes.
@@ -789,7 +817,7 @@ import * as THREE from 'three';
     g.position.set(x, 0, z);
     scene.add(g);
   }
-  floorLamp(-4.15, 5.2, true);
+  floorLamp(8.9, 3.2, true);
   floorLamp(-8.5, 3.4, false);
   // Console + bottles against the back wall (z -5.45..-5.95 — clear of the
   // back lane and Bell's desk).
@@ -842,9 +870,11 @@ import * as THREE from 'three';
     g.position.set(x, 0, z);
     scene.add(g);
   }
-  pendant(-2.7, -2.6);
-  pendant(2.7, -2.6);
-  pendant(0, 2.6);
+  pendant(-5, -2.6);
+  pendant(-5, 2.6);
+  pendant(6.5, 2.6);
+  pendant(1.5, -2.6);
+  pendant(1.5, 2.6);
   // Wall art — the big canvas hangs on the back wall and a smaller one on
   // the left wall. Abstract, on-palette.
   function artTexture(seed){
@@ -888,9 +918,14 @@ import * as THREE from 'three';
   art1.rotation.y = Math.PI;
   scene.add(art1);
   var art2 = framedArt(1.02, 0.82, 202);
-  art2.position.set(-8.95, 1.0, -2.2);
+  art2.position.set(-9.95, 1.0, -2.2);
   art2.rotation.y = -Math.PI / 2;
   scene.add(art2);
+  // A third canvas on the shop room's back wall so both rooms have art.
+  var art3 = framedArt(1.32, 0.97, 303);
+  art3.position.set(6.5, 1.0, -5.95);
+  art3.rotation.y = Math.PI;
+  scene.add(art3);
 
   // ----- desks -----
   // Desks are NOT rotated: every robot sits on the -z side of its desk and
@@ -1096,7 +1131,7 @@ import * as THREE from 'three';
 
     bots[spot.id] = {
       group: g, legL: legL, legR: legR, armL: armL, armR: armR,
-      chestMat: chestMat, anchor: anchor, faceYaw: faceYaw,
+      chestMat: chestMat, anchor: anchor, faceYaw: faceYaw, room: ROOMS[spot.room],
       mode: "idle", timer: 4 + Math.random() * 10,
       legs: [], legIndex: 0, phase: Math.random() * Math.PI * 2,
       speed: 1.7, yaw: faceYaw
@@ -1106,17 +1141,21 @@ import * as THREE from 'three';
 
   // ----- office dog: black and white Australian Shepherd -----
   // A small dog, not a bot: no name label, no desk, no click target.
-  // He wanders the open floor on axis-aligned paths (never crossing a
-  // desk), pauses to sniff, then pads back to his bed in the front-right
-  // corner by the open edge, lies down for a while, and gets up again.
-  var DOG_BED = { x: 6.9, z: 5.3 };
-  // Open-floor waypoints only: clear of every desk footprint and ring,
-  // clear of the robots' corner pause points, and clear of the lounge
-  // (the front-left corner is the sofa + coffee table, so there is no
-  // waypoint over there).
+  // He wanders both rooms and the hallway on axis-aligned paths (never
+  // crossing a desk), pauses to sniff, then pads back to his bed at the
+  // front end of the hallway, lies down for a while, and gets up again.
+  // His bed is at the front end of the hallway (x 1.5, z 5.2) — dead centre
+  // of the view, clear of desks and paths.
+  var DOG_BED = { x: 1.5, z: 5.2 };
+  // Waypoints cover both rooms and the hallway, all on open floor: clear
+  // of every desk footprint and ring, clear of the robots' pause points,
+  // and clear of the lounge (right wall of the shop room) and the
+  // sideboard. The dog crosses between rooms along the z=0 aisle, which
+  // passes through both hallway doorways.
   var DOG_WAYPOINTS = [
-    [0, 0], [-5, 0], [5, 0], [-3, 0.5], [3, 0.5], [0, -0.8],
-    [5.5, 4.5], [0, 4.6]
+    [-5, 0], [-9, 0], [-1, 0], [-5, 4.6], [-5, -4.6],
+    [1.5, 0], [1.5, 3], [1.5, -3],
+    [6.5, 0], [4.5, 0], [9, 0], [4.5, 4.6], [4.5, -4.6]
   ];
   var DOG_BLACK = 0x211b16, DOG_WHITE = 0xe9e2d4;
 
@@ -1234,10 +1273,10 @@ import * as THREE from 'three';
   var dog = buildDog();
 
   function dogPath(from, to){
-    // Route via the centre aisle (z=0), like the robots: the front desks
-    // block any direct z-crossing near x = +-2.7, and the lounge (sofa,
-    // coffee table, floor lamp) blocks the front-left — so the dog never
-    // cuts straight across the front of the room.
+    // Route via the centre aisle (z=0): it runs through both hallway
+    // doorways, so the dog can cross between rooms, and the front desks
+    // block any direct z-crossing near the desk columns — so the dog never
+    // cuts straight across a room.
     var legs = [
       new THREE.Vector3(from.x, 0, 0),
       new THREE.Vector3(to[0], 0, 0),
@@ -1294,8 +1333,9 @@ import * as THREE from 'three';
       }
     } else if(d.mode === "rest"){
       d.timer -= dt;
-      // lying in the bed, facing the room
-      d.yaw = lerpAngle(d.yaw, -2.23, 0.05);
+      // lying in the bed, facing the room (bed is at the front of the
+      // hallway, so facing -z looks back into the office)
+      d.yaw = lerpAngle(d.yaw, Math.PI, 0.05);
       g.rotation.y = d.yaw;
       if(d.timer <= 0){
         var wp2 = DOG_WAYPOINTS[Math.floor(Math.random() * DOG_WAYPOINTS.length)];
@@ -1371,25 +1411,16 @@ import * as THREE from 'three';
     while(d < -Math.PI) d += Math.PI * 2;
     return a + d * t;
   }
-  function buildPath(from, to){
-    // Back-row robots now sit on the wall side of their desks (z < -3), so
-    // a straight cut to the centre aisle would cross their own desk. From
-    // there, first slide sideways along the back lane to the side aisle,
-    // then out to the aisle — every leg stays axis-aligned and clear.
-    var legs = [];
-    if(from.z < -3){
-      var sx = (from.x >= 0 ? 1 : -1) * 7.8;
-      legs.push(new THREE.Vector3(sx, 0, from.z));
-      legs.push(new THREE.Vector3(sx, 0, 0));
-    } else {
-      legs.push(new THREE.Vector3(from.x, 0, 0));
-    }
-    if(to[1] !== 0){
-      var side = (to[0] >= 0 ? 1 : -1) * 7.8;
-      legs.push(new THREE.Vector3(side, 0, 0));
-      legs.push(new THREE.Vector3(side, 0, to[1]));
-    }
-    legs.push(new THREE.Vector3(to[0], 0, to[1]));
+  function buildPath(room, from, to){
+    // Room-aware: slide along from.z to the room's centre lane (cx), then
+    // along the lane to to.z, then sideways to the target. The centre lane
+    // is clear of every desk in the room, and the sideways legs run along
+    // from.z / to.z — in front of or behind the desks, never through them.
+    var legs = [
+      new THREE.Vector3(room.cx, 0, from.z),
+      new THREE.Vector3(room.cx, 0, to[1]),
+      new THREE.Vector3(to[0], 0, to[1])
+    ];
     return legs.filter(function(p, i){
       if(i === 0) return true;
       var q = legs[i - 1];
@@ -1408,8 +1439,8 @@ import * as THREE from 'three';
       rb.yaw = lerpAngle(rb.yaw, rb.faceYaw, 0.08);
       g.rotation.y = rb.yaw;
       if(rb.timer <= 0){
-        var wp = WAYPOINTS[Math.floor(Math.random() * WAYPOINTS.length)];
-        rb.legs = buildPath(g.position, wp);
+        var wp = rb.room.waypoints[Math.floor(Math.random() * rb.room.waypoints.length)];
+        rb.legs = buildPath(rb.room, g.position, wp);
         rb.legIndex = 0;
         rb.mode = "toWaypoint";
       }
@@ -1419,7 +1450,7 @@ import * as THREE from 'three';
       rb.legL.rotation.x = 0; rb.legR.rotation.x = 0;
       g.position.y = Math.sin(t * 2 + rb.phase) * 0.015;
       if(rb.timer <= 0){
-        rb.legs = buildPath(g.position, [rb.anchor.x, rb.anchor.z]);
+        rb.legs = buildPath(rb.room, g.position, [rb.anchor.x, rb.anchor.z]);
         rb.legIndex = 0;
         rb.mode = "toDesk";
       }
@@ -1476,7 +1507,7 @@ import * as THREE from 'three';
   });
   dom.addEventListener("wheel", function(e){
     e.preventDefault();
-    orbitGoal.radius = clamp(orbitGoal.radius * (1 + e.deltaY * 0.001), 10, 26);
+    orbitGoal.radius = clamp(orbitGoal.radius * (1 + e.deltaY * 0.001), 10, 34);
   }, { passive: false });
 
   var ray = new THREE.Raycaster();
