@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 17:55:44 ET",
-  "generated_at_utc": "2026-11-11T22:55:44Z",
+  "generated_at_et": "2026-11-11 18:00:53 ET",
+  "generated_at_utc": "2026-11-11T23:00:53Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -8,22 +8,22 @@
       "id": "scanner",
       "name": "Scanner",
       "role": "MNQ / ES watch \u2014 JELS strat detection (15m + 5m CISD + FVG)",
-      "status": "waiting",
-      "status_reason": "Outside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
+      "status": "working",
+      "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
       "last_action": "Engine run #73 at 2026-11-11 16:13 ET; 1 paper trade(s) detected so far.",
-      "next_action": "Next scan window Wed Nov 11, 6:00 PM ET",
+      "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
     {
       "id": "paper",
       "name": "Paper",
       "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders; practicing the Lucid Flex 50K pass (daily caps +$1,200 / \u2212$300, 40% consistency, EOD trailing floor)",
-      "status": "waiting",
-      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
+      "status": "working",
+      "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, checks every 5 min",
       "last_action": "PT-20261111-01 \u2014 bearish Nyam model 5m \u2014 LOSS -1.0R (-14.0 pts) (corrected to loss by Jaden Nov 11 \u2014 wick 4 pts beyond the 14-pt stop; close-based win voided) at 2026-11-11 10:00 ET. Stop 14.0 pts; wick went 4.0 pts beyond stop.",
-      "next_action": "Next window Wed Nov 11, 6:00 PM ET",
+      "next_action": "Watching for the next JELS setup (opens + midday model + Asia model).",
       "needs_you": null,
       "stats": {
         "trades_opened": 1,
