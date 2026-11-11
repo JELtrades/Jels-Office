@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 14:15:44 ET",
-  "generated_at_utc": "2026-11-11T19:15:44Z",
+  "generated_at_et": "2026-11-11 14:20:44 ET",
+  "generated_at_utc": "2026-11-11T19:20:44Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "waiting",
       "status_reason": "Outside the live watch window (Mon-Fri 09:30-14:00 ET).",
       "schedule": "Mon-Fri 09:30-14:00 ET (opens 09:30-10:30, midday 11:00-12:00)",
-      "last_action": "Engine run #60 at 2026-11-11 14:08 ET; 1 paper trade(s) detected so far.",
+      "last_action": "Engine run #61 at 2026-11-11 14:18 ET; 1 paper trade(s) detected so far.",
       "next_action": "Next scan window Thu Nov 12, 9:30 AM ET",
       "needs_you": null
     },
@@ -22,7 +22,7 @@
       "status": "waiting",
       "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-14:00 ET).",
       "schedule": "Mon-Fri 09:30-14:00 ET, checks every 5 min",
-      "last_action": "PT-20261111-01 \u2014 bearish union 5m \u2014 WIN +2.0R (+28.0 pts) at 2026-11-11 10:00 ET. Stop 14.0 pts; wick went 4.0 pts beyond stop.",
+      "last_action": "PT-20261111-01 \u2014 bearish Nyam model 5m \u2014 WIN +2.0R (+28.0 pts) at 2026-11-11 10:00 ET. Stop 14.0 pts; wick went 4.0 pts beyond stop.",
       "next_action": "Next window Thu Nov 12, 9:30 AM ET",
       "needs_you": null,
       "stats": {
@@ -96,7 +96,7 @@
     {
       "time": "2026-11-11 09:53 ET",
       "bot": "paper",
-      "text": "PT-20261111-01 detected \u2014 bearish union 5m, CISD 28343.0, FVG 28272.25-28286.25."
+      "text": "PT-20261111-01 detected \u2014 bearish Nyam model 5m, CISD 28343.0, FVG 28272.25-28286.25."
     },
     {
       "time": "2026-11-11 06:56 ET",
@@ -106,7 +106,7 @@
     {
       "time": "2026-11-10 16:47 ET",
       "bot": "paper",
-      "text": "Paper trading went live \u2014 JELS union opens 09:30-10:30 ET + midday 11:00-12:00 ET, log-only, no real orders."
+      "text": "Paper trading went live \u2014 JELS Nyam model opens 09:30-10:30 ET + midday 11:00-12:00 ET, log-only, no real orders."
     }
   ]
 }
