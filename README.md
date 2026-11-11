@@ -8,6 +8,25 @@ Needs-you badges and an office log. It mirrors the in-app Virtual Office,
 but it is a plain static site — it opens from any browser via a normal URL
 and stays live.
 
+## Layout
+
+Four rooms, all in one scene (x = left/right, z = front/back, camera side +z):
+
+| Room | Size | Bounds |
+| --- | --- | --- |
+| Trading (left) | 10 wide × 12 deep | x −10..0, z −6..6 |
+| Shop (right) | 7 wide × 12 deep | x 3..10, z −6..6 |
+| Hallway | 3 wide | x 0..3, z −6..6, doorways into both rooms |
+| Muse's office (front end of hallway) | 5 × 5.5, open platform, no walls | x −1..4, z 6..11.5 |
+| Clipping (back end of hallway) | **10 wide × 12 deep — same size as the trading room** | x −3.5..6.5, z −18..-6, open platform, glass far wall |
+
+The clipping room was resized to match the trading room on Nov 11: full-size
+2.3-wide desks (two back at z −14.6, one front at z −9.4), 3-seat couch on
+the right edge (seats z −13/−12/−11), recording gear around the subject
+spot (1.5, −12) on the YouTube floor logo, hallway runner extended to the
+far wall. Camera radius 37, shadow camera ±24, so the longer building
+(z −18..+11.5) frames comfortably.
+
 ## Files
 
 | File | What it is |
