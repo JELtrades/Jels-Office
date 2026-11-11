@@ -46,10 +46,8 @@ RECORDED_LOG = [
 ]
 
 KEEPER_OPEN_ITEMS = [
-    "Sample order — go / no-go still undecided ($19.58, mapped AliExpress listing)",
-    "DBA / assumed business name filing — Yancey County, $26, pinned open",
-    "Social links — needs Jaden's handles",
-    "NC sales tax ID — expected by mail ~Nov 24, Jaden enters it in Shopify",
+    "Social links in Shopify — needs Jaden's handles",
+    "Store password — remove at launch, then place a test order",
 ]
 KEEPER_LAST_ACTION = ("Paid shipping options removed Wed Nov 11 ~10:28 ET — "
                       "free US shipping (7-15 days) is now the only option.")
@@ -252,16 +250,16 @@ def build():
         "needs_you": None,
     }
 
-    # --- Keeper: Grind & Gather store — real open decisions waiting on Jaden
+    # --- George (keeper): Grind & Gather store, Shopify only — real open decisions waiting on Jaden
     keeper = {
         "id": "keeper",
-        "name": "Keeper",
-        "role": "Grind & Gather store — Shopify, DSers, policies, launch prep",
+        "name": "George",
+        "role": "Grind & Gather store — Shopify only: product, discount, policies, payments, launch",
         "status": "needs-you",
         "status_reason": f"{len(KEEPER_OPEN_ITEMS)} decision(s) waiting on Jaden.",
         "schedule": "No fixed schedule — acts when Jaden decides; launch target Black Fri Nov 27",
         "last_action": KEEPER_LAST_ACTION,
-        "next_action": "Sample order decision ($19.58) — then quality check + real weight.",
+        "next_action": "Remove the store password at launch, then place a test order.",
         "needs_you": KEEPER_OPEN_ITEMS,
     }
 
