@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 11:35:44 ET",
-  "generated_at_utc": "2026-11-11T16:35:44Z",
+  "generated_at_et": "2026-11-11 11:40:44 ET",
+  "generated_at_utc": "2026-11-11T16:40:44Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-14:00 ET).",
       "schedule": "Mon-Fri 09:30-14:00 ET (opens 09:30-10:30, midday 11:00-12:00)",
-      "last_action": "Engine run #29 at 2026-11-11 11:33 ET; 1 paper trade(s) detected so far.",
+      "last_action": "Engine run #30 at 2026-11-11 11:38 ET; 1 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -48,18 +48,16 @@
     },
     {
       "id": "keeper",
-      "name": "Keeper",
-      "role": "Grind & Gather store \u2014 Shopify, DSers, policies, launch prep",
+      "name": "George",
+      "role": "Grind & Gather store \u2014 Shopify only: product, discount, policies, payments, launch",
       "status": "needs-you",
-      "status_reason": "4 decision(s) waiting on Jaden.",
+      "status_reason": "2 decision(s) waiting on Jaden.",
       "schedule": "No fixed schedule \u2014 acts when Jaden decides; launch target Black Fri Nov 27",
       "last_action": "Paid shipping options removed Wed Nov 11 ~10:28 ET \u2014 free US shipping (7-15 days) is now the only option.",
-      "next_action": "Sample order decision ($19.58) \u2014 then quality check + real weight.",
+      "next_action": "Remove the store password at launch, then place a test order.",
       "needs_you": [
-        "Sample order \u2014 go / no-go still undecided ($19.58, mapped AliExpress listing)",
-        "DBA / assumed business name filing \u2014 Yancey County, $26, pinned open",
-        "Social links \u2014 needs Jaden's handles",
-        "NC sales tax ID \u2014 expected by mail ~Nov 24, Jaden enters it in Shopify"
+        "Social links in Shopify \u2014 needs Jaden's handles",
+        "Store password \u2014 remove at launch, then place a test order"
       ]
     },
     {
