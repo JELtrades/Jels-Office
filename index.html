@@ -1095,6 +1095,228 @@ import * as THREE from 'three';
   }
   DESK_SPOTS.forEach(buildRobot);
 
+  // ----- office dog: black and white Australian Shepherd -----
+  // A small dog, not a bot: no name label, no desk, no click target.
+  // He wanders the open floor on axis-aligned paths (never crossing a
+  // desk), pauses to sniff, then pads back to his bed in the front-right
+  // corner by the windows, lies down for a while, and gets up again.
+  var DOG_BED = { x: 6.9, z: 5.3 };
+  // Open-floor waypoints only: clear of every desk footprint and ring,
+  // clear of the robots' corner pause points, and clear of the lounge
+  // (the front-left corner is the sofa + coffee table, so there is no
+  // waypoint over there).
+  var DOG_WAYPOINTS = [
+    [0, 0], [-5, 0], [5, 0], [-3, 0.5], [3, 0.5], [0, -0.8],
+    [5.5, 4.5], [0, 4.6]
+  ];
+  var DOG_BLACK = 0x211b16, DOG_WHITE = 0xe9e2d4;
+
+  function buildDogBed(){
+    var g = new THREE.Group();
+    // raised rim (torus, squashed flat) + soft cushion inside
+    var rim = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.14, 12, 32),
+      new THREE.MeshStandardMaterial({ color: 0x8a5a3b, roughness: 0.95 }));
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = 0.10;
+    rim.castShadow = true; rim.receiveShadow = true;
+    g.add(rim);
+    var cushion = cyl(0.46, 0.46, 0.09, 0xded2bd);
+    cushion.position.y = 0.05;
+    g.add(cushion);
+    g.position.set(DOG_BED.x, 0, DOG_BED.z);
+    scene.add(g);
+  }
+  buildDogBed();
+
+  function buildDog(){
+    var g = new THREE.Group();
+    var bodyG = new THREE.Group();
+    g.add(bodyG);
+    var black = DOG_BLACK, white = DOG_WHITE;
+    // torso: black, long; chest slightly forward
+    var torso = rBox(0.30, 0.30, 0.62, black);
+    torso.position.y = 0.42;
+    bodyG.add(torso);
+    var chest = rBox(0.28, 0.28, 0.20, black);
+    chest.position.set(0, 0.41, 0.30);
+    bodyG.add(chest);
+    // white chest blaze on the front of the chest + white belly patch
+    var blaze = rBox(0.20, 0.22, 0.03, white);
+    blaze.position.set(0, 0.36, 0.41);
+    bodyG.add(blaze);
+    var belly = rBox(0.20, 0.04, 0.40, white);
+    belly.position.set(0, 0.27, 0.02);
+    bodyG.add(belly);
+    // head (pivot at the neck so it can rest when lying down)
+    var headG = new THREE.Group();
+    headG.position.set(0, 0.52, 0.40);
+    bodyG.add(headG);
+    var head = rBox(0.22, 0.20, 0.24, black);
+    head.position.y = 0.10;
+    headG.add(head);
+    // white blaze up the face + white muzzle + nose
+    var faceBlaze = rBox(0.07, 0.15, 0.02, white);
+    faceBlaze.position.set(0, 0.12, 0.13);
+    headG.add(faceBlaze);
+    var muzzle = rBox(0.14, 0.08, 0.10, white);
+    muzzle.position.set(0, 0.03, 0.14);
+    headG.add(muzzle);
+    var nose = rBox(0.07, 0.05, 0.04, 0x111111);
+    nose.position.set(0, 0.05, 0.20);
+    headG.add(nose);
+    // eyes
+    [-0.06, 0.06].forEach(function(dx){
+      var eye = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.035, 0.02),
+        rMat(0x111111, { roughness: 0.3 }));
+      eye.position.set(dx, 0.13, 0.125);
+      headG.add(eye);
+    });
+    // floppy ears: dark, hanging at the sides of the head, tipped outward
+    [-1, 1].forEach(function(s){
+      var ear = rBox(0.05, 0.16, 0.10, black);
+      ear.position.set(s * 0.13, 0.10, 0.0);
+      ear.rotation.z = -s * 0.28;
+      headG.add(ear);
+    });
+    // tail: medium fluffy, black with a white tip, on a pivot so it can wag
+    var tailG = new THREE.Group();
+    tailG.position.set(0, 0.48, -0.32);
+    bodyG.add(tailG);
+    var tail = rCyl(0.045, 0.075, 0.30, black, {}, 10);
+    tail.position.set(0, 0.10, -0.10);
+    tail.rotation.x = -0.7;
+    tailG.add(tail);
+    var tailTip = rCyl(0.04, 0.05, 0.10, white, {}, 10);
+    tailTip.position.set(0, 0.20, -0.19);
+    tailTip.rotation.x = -0.7;
+    tailG.add(tailTip);
+    // legs: pivots at hip/shoulder height, black above, white paws below
+    function dogLeg(dx, dz){
+      var pivot = new THREE.Group();
+      pivot.position.set(dx, 0.28, dz);
+      var upper = rBox(0.09, 0.20, 0.09, black);
+      upper.position.y = -0.10;
+      pivot.add(upper);
+      var paw = rBox(0.09, 0.08, 0.11, white);
+      paw.position.y = -0.24;
+      pivot.add(paw);
+      bodyG.add(pivot);
+      return pivot;
+    }
+    var legFL = dogLeg(-0.11, 0.20), legFR = dogLeg(0.11, 0.20);
+    var legBL = dogLeg(-0.11, -0.20), legBR = dogLeg(0.11, -0.20);
+
+    g.position.set(0, 0, 0.5);
+    g.rotation.y = 0;
+    scene.add(g);
+    return {
+      group: g, bodyG: bodyG, headG: headG, tailG: tailG,
+      legFL: legFL, legFR: legFR, legBL: legBL, legBR: legBR,
+      mode: "pause", timer: 1.5, legs: [], legIndex: 0,
+      phase: 0, speed: 1.1, yaw: 0, fold: 0, wanders: 0
+    };
+  }
+  var dog = buildDog();
+
+  function dogPath(from, to){
+    // Route via the centre aisle (z=0), like the robots: the front desks
+    // block any direct z-crossing near x = +-2.7, and the lounge (sofa,
+    // coffee table, floor lamp) blocks the front-left — so the dog never
+    // cuts straight across the front of the room.
+    var legs = [
+      new THREE.Vector3(from.x, 0, 0),
+      new THREE.Vector3(to[0], 0, 0),
+      new THREE.Vector3(to[0], 0, to[1])
+    ];
+    return legs.filter(function(p, i){
+      if(i === 0) return true;
+      var q = legs[i - 1];
+      return Math.abs(p.x - q.x) > 0.01 || Math.abs(p.z - q.z) > 0.01;
+    });
+  }
+  function stepDog(d, dt, t){
+    var g = d.group;
+    // lie-down fold eases toward its target: 1 while resting in the bed,
+    // 0 everywhere else.
+    var foldTarget = (d.mode === "rest") ? 1 : 0;
+    d.fold += (foldTarget - d.fold) * Math.min(1, dt * 3);
+    var f = d.fold;
+    d.bodyG.position.y = -0.15 * f;
+    d.headG.rotation.x = 0.55 * f;
+    // legs: fold flat when lying (front forward, back backward), trot
+    // diagonally when walking, still otherwise
+    var swing = 0;
+    if(d.mode === "wander" || d.mode === "toBed" || d.mode === "toFloor"){
+      if(d.mode === "toFloor" && f > 0.15) swing = 0; // still getting up
+      else swing = Math.sin(d.phase) * 0.5;
+    }
+    d.legFL.rotation.x = -f * 1.15 + (1 - f) * swing;
+    d.legBR.rotation.x =  f * 1.15 + (1 - f) * swing;
+    d.legFR.rotation.x = -f * 1.15 + (1 - f) * -swing;
+    d.legBL.rotation.x =  f * 1.15 + (1 - f) * -swing;
+    // tail: wag while walking or pausing, still while resting
+    var wag = (d.mode === "rest") ? 0 : Math.sin(t * (d.mode === "pause" ? 3 : 6)) * 0.45;
+    d.tailG.rotation.y = wag;
+    // body bob while walking
+    if((d.mode === "wander" || d.mode === "toBed" || d.mode === "toFloor") &&
+       !(d.mode === "toFloor" && f > 0.15)){
+      d.bodyG.position.y += Math.abs(Math.cos(d.phase)) * 0.02;
+    }
+
+    if(d.mode === "pause"){
+      d.timer -= dt;
+      if(d.timer <= 0){
+        if(d.wanders >= 2 + Math.floor(Math.random() * 2)){
+          d.legs = dogPath(g.position, [DOG_BED.x, DOG_BED.z]);
+          d.legIndex = 0;
+          d.mode = "toBed";
+        } else {
+          var wp = DOG_WAYPOINTS[Math.floor(Math.random() * DOG_WAYPOINTS.length)];
+          d.legs = dogPath(g.position, wp);
+          d.legIndex = 0;
+          d.mode = "wander";
+        }
+      }
+    } else if(d.mode === "rest"){
+      d.timer -= dt;
+      // lying in the bed, facing the room
+      d.yaw = lerpAngle(d.yaw, -2.23, 0.05);
+      g.rotation.y = d.yaw;
+      if(d.timer <= 0){
+        var wp2 = DOG_WAYPOINTS[Math.floor(Math.random() * DOG_WAYPOINTS.length)];
+        d.legs = dogPath(g.position, wp2);
+        d.legIndex = 0;
+        d.wanders = 0;
+        d.mode = "toFloor";
+      }
+    } else {
+      // walking: wander / toBed / toFloor
+      if(d.mode === "toFloor" && f > 0.15){
+        // still getting up out of the bed — stay put until the fold eases
+      } else {
+        var target = d.legs[d.legIndex];
+        var dx = target.x - g.position.x, dz = target.z - g.position.z;
+        var dist = Math.sqrt(dx * dx + dz * dz);
+        var step = d.speed * dt;
+        if(dist <= step){
+          g.position.x = target.x; g.position.z = target.z;
+          d.legIndex++;
+          if(d.legIndex >= d.legs.length){
+            if(d.mode === "wander"){ d.mode = "pause"; d.timer = 2 + Math.random() * 3; d.wanders++; }
+            else if(d.mode === "toBed"){ d.mode = "rest"; d.timer = 9 + Math.random() * 8; }
+            else { d.mode = "pause"; d.timer = 1 + Math.random() * 2; }
+          }
+        } else {
+          g.position.x += dx / dist * step;
+          g.position.z += dz / dist * step;
+          d.yaw = lerpAngle(d.yaw, Math.atan2(dx, dz), 0.12);
+        }
+        g.rotation.y = d.yaw;
+        d.phase += dt * 7;
+      }
+    }
+  }
+
   // ----- HTML labels + speech bubbles (projected from 3D each frame) -----
   var labelEls = {};
   DESK_SPOTS.forEach(function(spot){
@@ -1335,6 +1557,7 @@ import * as THREE from 'three';
     );
     camera.lookAt(orbit.target);
     Object.keys(bots).forEach(function(id){ stepRobot(bots[id], dt, t); });
+    stepDog(dog, dt, t);
     Object.keys(desks).forEach(function(id){
       var dk = desks[id];
       dk.ringMat.opacity = dk.status === "needs-you" ? 0.55 + 0.3 * Math.sin(t * 2.5) : 0.85;
