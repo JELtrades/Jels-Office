@@ -141,7 +141,7 @@
 <body>
 <header>
   <h1>Jaden's Virtual Office <span class="dot">•</span> Live Bot Status</h1>
-  <p class="sub">Six bots, three rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
+  <p class="sub">Nine bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
   <div class="toolbar">
     <span class="stamp">Last updated: <b id="updated">loading…</b></span>
     <span class="countdown" id="countdown"></span>
@@ -371,24 +371,34 @@ import * as THREE from 'three';
 
   // Desks: the five bots plus Muse's desk in the new office at the end of
   // the hallway (x 1.5, z 9.8, rotated 180° so Muse sits on the +z side
-  // facing back toward the door). rotY is 0 unless noted.
+  // facing back toward the door). rotY is 0 unless noted. The three Clip
+  // bots' desks are narrower (w 1.8) so the centre lane still fits between
+  // the two back desks in the 5-wide clipping room; their status rings are
+  // smaller for the same reason (the room's far wall is close behind them).
+  // The two back Clip desks also use a shorter seat offset (0.8 instead of
+  // 1.05) so a bot walking behind them stays clear of the far window wall.
   var DESK_SPOTS = [
     { id: "scanner", x: -7.5, z: -2.6, room: "trading" },
     { id: "paper",   x: -2.5, z: -2.6, room: "trading" },
     { id: "bell",    x: -7.5, z:  2.6, room: "trading" },
     { id: "keeper",  x:  6.5, z: -2.6, room: "shopify" },
     { id: "ledger",  x: -2.5, z:  2.6, room: "trading" },
-    { id: "muse",    x:  1.5, z:  9.8, room: "office", rotY: Math.PI }
+    { id: "muse",    x:  1.5, z:  9.8, room: "office", rotY: Math.PI },
+    { id: "clip1",   x:  0.1, z: -10.35, room: "clipping", w: 1.8, ringR: 1.15, seatOff: 0.8 },
+    { id: "clip2",   x:  2.9, z: -10.35, room: "clipping", w: 1.8, ringR: 1.15, seatOff: 0.8 },
+    { id: "clip3",   x:  0.1, z: -7.3, room: "clipping", w: 1.8, ringR: 1.05 }
   ];
-  // The five walkable bots (Muse never leaves his desk — the jelly is
+  // The eight walkable bots (Muse never leaves his desk — the jelly is
   // built separately below).
   var ROBOT_SPOTS = DESK_SPOTS.filter(function(s){ return s.id !== "muse"; });
   // One centre lane (cx) per room, clear of every desk. Bots route via
-  // their room's lane and the z=0 aisle through the hallway doorways.
+  // their room's lane and the z=0 aisle through the hallway doorways. The
+  // clipping room shares the hallway's x=1.5 spine (its doorway is on it).
   var ROOMS = {
     trading: { cx: -5 },
     shopify: { cx: 4.5 },
-    office:  { cx: 1.5 }
+    office:  { cx: 1.5 },
+    clipping: { cx: 1.5 }
   };
 
   var container = document.getElementById("viewport");
@@ -418,8 +428,8 @@ import * as THREE from 'three';
   scene.fog = new THREE.Fog(0x241a33, 55, 150);
 
   var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 120);
-  var orbit = { theta: 0.785, phi: 0.92, radius: 27, target: new THREE.Vector3(0, 0.7, 1.0) };
-  var orbitGoal = { theta: 0.785, phi: 0.92, radius: 27 };
+  var orbit = { theta: 0.785, phi: 0.92, radius: 31, target: new THREE.Vector3(0, 0.7, 0) };
+  var orbitGoal = { theta: 0.785, phi: 0.92, radius: 31 };
 
   // ----- lights -----
   scene.add(new THREE.HemisphereLight(0xfaf5ec, 0x3a2f26, 1.5));
@@ -427,9 +437,9 @@ import * as THREE from 'three';
   sun.position.set(8, 14, 6);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
-  sun.shadow.camera.left = -16; sun.shadow.camera.right = 16;
-  sun.shadow.camera.top = 16; sun.shadow.camera.bottom = -16;
-  sun.shadow.camera.far = 40;
+  sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
+  sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
+  sun.shadow.camera.far = 50;
   scene.add(sun);
   var warm = new THREE.PointLight(C.accent, 28, 26, 1.8);
   warm.position.set(0, 5.5, 0);
@@ -467,6 +477,22 @@ import * as THREE from 'three';
   officeSlab.position.set(1.5, -0.25, 8.75);
   officeSlab.castShadow = false;
   scene.add(officeSlab);
+  // Clipping room at the back end of the hallway (x -1..4, z -11.5..-6) —
+  // mirrors Muse's office: an open platform, no walls, so it's easy to
+  // see in. Reached from the hallway through the doorway in the back wall.
+  var clipSlab = box(5, 0.5, 5.5, C.floor);
+  clipSlab.position.set(1.5, -0.25, -8.75);
+  clipSlab.castShadow = false;
+  scene.add(clipSlab);
+  // tile seams inside the clipping room (mirror of the office seams)
+  [[0, -8.75, 0.035, 5.5], [3, -8.75, 0.035, 5.5]].forEach(function(s){
+    var seam = box(s[2], 0.012, s[3], 0x1a1512);
+    seam.position.set(s[0], 0.006, s[1]); seam.castShadow = false;
+    scene.add(seam);
+  });
+  var seamC = box(5, 0.012, 0.035, 0x1a1512);
+  seamC.position.set(1.5, 0.006, -9); seamC.castShadow = false;
+  scene.add(seamC);
   // tile seams inside the office
   [[0, 8.75, 0.035, 5.5], [3, 8.75, 0.035, 5.5]].forEach(function(s){
     var seam = box(s[2], 0.012, s[3], 0x1a1512);
@@ -491,10 +517,84 @@ import * as THREE from 'three';
   var rug = box(6, 0.03, 3.2, C.rug);
   rug.position.set(-5, 0.015, 0); rug.castShadow = false;
   scene.add(rug);
-  // rug runner down the hallway
-  var runner = box(1.8, 0.02, 9, 0x33291f);
-  runner.position.set(1.5, 0.01, 0); runner.castShadow = false;
+  // rug runner down the hallway, extended through the back doorway into
+  // the clipping room (x 0.6..2.4 stays inside the 2-wide doorway)
+  var runner = box(1.8, 0.02, 10.5, 0x33291f);
+  runner.position.set(1.5, 0.01, -0.75); runner.castShadow = false;
   scene.add(runner);
+
+  // ----- floor logos: one big flat decal per room, drawn on canvas -----
+  // (same canvas-texture pattern as the city facades and the wall art).
+  // They sit just above the floor (y 0.02, depthWrite off) so they read
+  // cleanly from the default camera and bots walk over them like rugs.
+  function floorLogo(w, h, x, z, draw){
+    var cv = document.createElement("canvas");
+    cv.width = 512; cv.height = Math.round(512 * h / w);
+    var ctx = cv.getContext("2d");
+    draw(ctx, cv.width, cv.height);
+    var tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2;
+    m.position.set(x, 0.02, z);
+    m.renderOrder = 1;
+    scene.add(m);
+  }
+  function rr(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+  }
+  // Trading room: TradingView "TV" in TradingView blue (#2962FF)
+  floorLogo(3.0, 1.5, -5, 4.5, function(ctx, W, H){
+    ctx.fillStyle = "#2962FF";
+    ctx.font = "900 " + Math.round(H * 0.82) + "px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("TV", W / 2, H / 2 + H * 0.04);
+  });
+  // Shop room: Shopify shopping bag in Shopify green (#95BF47)
+  floorLogo(2.2, 2.2, 5.8, 2.8, function(ctx, W, H){
+    var cx = W / 2;
+    ctx.strokeStyle = "#95BF47";
+    ctx.lineWidth = H * 0.055;
+    ctx.lineCap = "round";
+    ctx.beginPath();           // bag handle
+    ctx.arc(cx, H * 0.42, W * 0.17, Math.PI, 0);
+    ctx.stroke();
+    ctx.fillStyle = "#95BF47";
+    rr(ctx, cx - W * 0.30, H * 0.34, W * 0.60, H * 0.52, W * 0.06);
+    ctx.fill();
+    ctx.fillStyle = "#7fae3a"; // bag fold at the top
+    ctx.beginPath();
+    ctx.moveTo(cx - W * 0.30, H * 0.34);
+    ctx.lineTo(cx - W * 0.16, H * 0.46);
+    ctx.lineTo(cx + W * 0.30, H * 0.34);
+    ctx.closePath();
+    ctx.fill();
+  });
+  // Clipping room: YouTube play button — red rounded rect, white triangle
+  floorLogo(2.0, 1.3, 1.5, -8.9, function(ctx, W, H){
+    ctx.fillStyle = "#FF0000";
+    rr(ctx, W * 0.06, H * 0.10, W * 0.88, H * 0.80, H * 0.18);
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.moveTo(W * 0.42, H * 0.30);
+    ctx.lineTo(W * 0.42, H * 0.70);
+    ctx.lineTo(W * 0.66, H * 0.50);
+    ctx.closePath();
+    ctx.fill();
+  });
 
   // ----- penthouse window walls: floor-to-ceiling glass on the back and -----
   // on each room's outer side (left for trading, right for the shop) — the
@@ -540,7 +640,18 @@ import * as THREE from 'three';
     g.position.set(x, 0, z);
     scene.add(g);
   }
-  windowWall(20, 0.24, 0, -6.15, true);    // back, continuous across both rooms + hallway
+  // Back wall, in two segments so a 2-wide doorway (x 0.5..2.5) opens from
+  // the hallway into the clipping room; a lintel spans the doorway above
+  // bot height. The wall is otherwise the same glass/frame style.
+  windowWall(10.5, 0.24, -4.75, -6.15, true);  // back, left of the doorway (x -10..0.5)
+  windowWall(7.5, 0.24, 6.25, -6.15, true);    // back, right of the doorway (x 2.5..10)
+  (function backDoorLintel(){
+    var m = new THREE.Mesh(new THREE.BoxGeometry(2, 1.0, 0.24), frameMat);
+    m.position.set(1.5, 3.7, -6.15);
+    m.castShadow = true; m.receiveShadow = true;
+    scene.add(m);
+  })();
+  windowWall(5, 0.24, 1.5, -11.65, true);      // clipping room far wall, glass (city stays in view)
   windowWall(12, 0.24, -10.15, 0, false);  // left (trading room exterior)
   windowWall(12, 0.24, 10.15, 0, false);   // right (shop room exterior)
   // front (+z) is open — no wall, so the camera looks straight into both
@@ -585,13 +696,26 @@ import * as THREE from 'three';
   var beamOC = box(5, 0.18, 0.24, 0x241d18);
   beamOC.position.set(1.5, 4.2, 8.5);
   scene.add(beamOC);
+  // beam over the clipping room far wall + a cross-beam over the clipping
+  // room for its pendant
+  var beamC = box(5.3, 0.22, 0.3, 0x241d18);
+  beamC.position.set(1.5, 4.3, -11.65);
+  scene.add(beamC);
+  var beamCC = box(5, 0.18, 0.24, 0x241d18);
+  beamCC.position.set(1.5, 4.2, -8.5);
+  scene.add(beamCC);
   // Slim gold trim just under the header on the inner face of each wall.
   var trimMat = new THREE.MeshStandardMaterial({ color: C.accent, emissive: C.accent, emissiveIntensity: 0.9, roughness: 0.4 });
-  [[0, -5.98]].forEach(function(s){
-    var t = new THREE.Mesh(new THREE.BoxGeometry(20, 0.07, 0.05), trimMat);
+  // back-wall trim, split at the clipping-room doorway (x 0.5..2.5)
+  [[-4.75, -5.98, 10.5], [6.25, -5.98, 7.5]].forEach(function(s){
+    var t = new THREE.Mesh(new THREE.BoxGeometry(s[2], 0.07, 0.05), trimMat);
     t.position.set(s[0], 3.88, s[1]);
     scene.add(t);
   });
+  // gold trim under the header on the clipping room far wall's inner face
+  var trimC = new THREE.Mesh(new THREE.BoxGeometry(5, 0.07, 0.05), trimMat);
+  trimC.position.set(1.5, 3.88, -11.48);
+  scene.add(trimC);
   [[-9.98, 0], [9.98, 0]].forEach(function(s){
     var t = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 12), trimMat);
     t.position.set(s[0], 3.88, s[1]);
@@ -1034,7 +1158,7 @@ import * as THREE from 'three';
   // Small 2-seat couch along the office's right edge (faces -x into the room).
   var sofaO = buildSofa(2);
   sofaO.position.set(3.45, 0, 8.2);
-  sofaO.rotation.y = -Math.PI / 2;
+  sofaO.rotation.y = Math.PI / 2;   // face -x into the room (was -PI/2: faced the wall)
   scene.add(sofaO);
   // Two guest chairs facing Muse's desk (z 8.1, facing +z). A bot that
   // needs help walks here and sits until it is back to work.
@@ -1091,6 +1215,145 @@ import * as THREE from 'three';
   museChair.position.set(1.5, 0, 10.85);
   scene.add(museChair);
 
+  // ----- Clipping room (YouTube) decor -----
+  // 3-seat couch along the room's right edge (faces -x into the room),
+  // where the three waiting Clip bots sit. Its back end clears the back
+  // desks' fronts by ~0.15 and its front end stays inside the slab.
+  var sofaC = buildSofa(3);
+  sofaC.position.set(3.45, 0, -7.85);
+  sofaC.rotation.y = Math.PI / 2;
+  scene.add(sofaC);
+  // Small coffee table on the left side — beside the couch line, not in
+  // front of it, so the couch approaches (x 2.4) and the centre lane stay
+  // clear.
+  (function clipTable(){
+    var t = new THREE.Group();
+    var tm = new THREE.MeshStandardMaterial({ color: 0x2a2521, roughness: 0.7 });
+    function tb(w, h, d, mat, x, y, z){
+      var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+      m.position.set(x, y, z);
+      m.castShadow = true; m.receiveShadow = true;
+      t.add(m);
+      return m;
+    }
+    tb(1.1, 0.06, 0.5, tm, 0, 0.42, 0);
+    tb(1.12, 0.02, 0.52, new THREE.MeshStandardMaterial({ color: C.accent, roughness: 0.4, metalness: 0.5 }), 0, 0.38, 0);
+    tb(0.9, 0.04, 0.4, tm, 0, 0.12, 0);
+    [[-0.48, -0.18], [0.48, -0.18], [-0.48, 0.18], [0.48, 0.18]].forEach(function(p){
+      tb(0.06, 0.4, 0.06, tm, p[0], 0.21, p[1]);
+    });
+    tb(0.28, 0.04, 0.2, new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.8 }), -0.25, 0.47, 0);
+    t.position.set(-0.4, 0, -8.95);
+    scene.add(t);
+  })();
+  // Recording equipment, arranged as a small studio around the room's
+  // open centre (the subject spot is roughly (1.5, -8.5), on the YouTube
+  // floor logo). Nothing sits on the centre lane (x 1.5) or on a couch
+  // approach, so the bots' walks stay clear.
+  function buildTripodCamera(x, z, yaw){
+    var g = new THREE.Group();
+    var dark = new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 });
+    var hub = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 10), dark);
+    hub.position.y = 0.95;
+    g.add(hub);
+    [0, 2.1, 4.2].forEach(function(a){
+      var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 1.0, 8), dark);
+      leg.position.set(Math.cos(a) * 0.13, 0.5, Math.sin(a) * 0.13);
+      leg.rotation.z = Math.cos(a) * 0.28;
+      leg.rotation.x = -Math.sin(a) * 0.28;
+      g.add(leg);
+    });
+    var camBody = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.22, 0.42),
+      new THREE.MeshStandardMaterial({ color: 0x1a1512, roughness: 0.4, metalness: 0.3 }));
+    camBody.position.y = 1.12;
+    camBody.castShadow = true;
+    g.add(camBody);
+    var lens = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.16, 14),
+      new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.2, metalness: 0.5 }));
+    lens.rotation.x = Math.PI / 2;
+    lens.position.set(0, 1.12, 0.28);
+    g.add(lens);
+    var dot = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 8),
+      new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xff2222, emissiveIntensity: 2.5 }));
+    dot.position.set(0.1, 1.26, 0);
+    g.add(dot);
+    g.position.set(x, 0, z);
+    g.rotation.y = yaw;
+    scene.add(g);
+  }
+  // two cameras on tripods, both aimed at the subject spot (1.5, -8.5).
+  // They sit on the room's left side — the right side is the couch and
+  // its approaches, and the centre lane has to stay clear.
+  buildTripodCamera(0.1, -6.35, Math.atan2(1.5 - 0.1, -8.5 + 6.35));
+  buildTripodCamera(-0.6, -8.3, Math.atan2(1.5 + 0.6, -8.5 + 8.3));
+  // microphone on a boom arm, stand in the back-right corner, boom
+  // reaching over toward the subject spot
+  (function micBoom(){
+    var g = new THREE.Group();
+    var dark = new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 });
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.17, 0.05, 16), dark);
+    base.position.y = 0.025;
+    g.add(base);
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.6, 10), dark);
+    pole.position.y = 0.8;
+    g.add(pole);
+    var boom = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 1.1, 8), dark);
+    boom.position.set(0, 1.48, 0.38);
+    boom.rotation.x = 1.15;
+    g.add(boom);
+    var mic = new THREE.Mesh(new THREE.CapsuleGeometry(0.05, 0.12, 6, 12),
+      new THREE.MeshStandardMaterial({ color: 0x2a2521, roughness: 0.5, metalness: 0.3 }));
+    mic.position.set(0, 1.3, 0.8);
+    mic.rotation.x = 0.5;
+    g.add(mic);
+    g.position.set(2.6, 0, -9.45);
+    g.rotation.y = Math.atan2(1.5 - 2.6, -8.6 + 9.45);
+    scene.add(g);
+  })();
+  // ring light on a stand, facing the subject spot
+  (function ringLight(){
+    var g = new THREE.Group();
+    var dark = new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 });
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.04, 16), dark);
+    base.position.y = 0.02;
+    g.add(base);
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 1.15, 10), dark);
+    pole.position.y = 0.6;
+    g.add(pole);
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.03, 12, 40),
+      new THREE.MeshStandardMaterial({ color: 0xf5f5f5, emissive: 0xfff2cc, emissiveIntensity: 1.6, roughness: 0.4 }));
+    ring.position.y = 1.35;
+    g.add(ring);
+    g.position.set(0.7, 0, -8.9);
+    g.rotation.y = Math.atan2(1.5 - 0.7, -8.5 + 8.9);
+    scene.add(g);
+  })();
+  // freestanding preview monitor near the doorway, screen facing -x into
+  // the room toward the set (a screen angled at the subject would jut its
+  // corner into the front couch approach, so it faces straight across)
+  (function previewMonitor(){
+    var g = new THREE.Group();
+    var dark = new THREE.MeshStandardMaterial({ color: 0x1f1a16, roughness: 0.6, metalness: 0.4 });
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.04, 16), dark);
+    base.position.y = 0.02;
+    g.add(base);
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.0, 10), dark);
+    pole.position.y = 0.5;
+    g.add(pole);
+    var screen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.55, 0.06),
+      new THREE.MeshStandardMaterial({ color: 0x11100e, roughness: 0.4, metalness: 0.2, emissive: 0x88aaff, emissiveIntensity: 0.5 }));
+    screen.position.y = 1.3;
+    screen.rotation.x = 0.05;
+    screen.castShadow = true;
+    g.add(screen);
+    g.position.set(2.5, 0, -6.4);
+    g.rotation.y = -Math.PI / 2;
+    scene.add(g);
+  })();
+  plant(-0.6, -11.15);
+  floorLamp(3.7, -11.3, true);
+  pendant(1.5, -8.5);   // over the clipping room, hung from its cross-beam
+
   // ----- desks -----
   // The five bots' desks are NOT rotated: every robot sits on the -z side
   // of its desk and faces +z (toward its monitor and the default camera).
@@ -1100,11 +1363,17 @@ import * as THREE from 'three';
   // the door, keyboard by him, monitor facing him.
   function buildDesk(spot){
     var g = new THREE.Group();
-    // desktop + legs
-    var top = box(2.3, 0.1, 1.15, C.deskTop);
+    // desktop width: 2.3 everywhere except the Clip desks (1.8 — the
+    // clipping room is only 5 wide, so the narrower desks keep the centre
+    // lane open between the two back desks). Legs, mug, and the status
+    // ring scale with it; the ring is smaller on the Clip desks because
+    // the room's far wall is close behind them.
+    var dw = spot.w || 2.3;
+    var ringR = spot.ringR || 1.55;
+    var top = box(dw, 0.1, 1.15, C.deskTop);
     top.position.y = 0.85;
     g.add(tagMesh(top, spot.id));
-    [-1.0, 1.0].forEach(function(dx){
+    [-(dw / 2 - 0.15), dw / 2 - 0.15].forEach(function(dx){
       var leg = box(0.1, 0.8, 0.9, C.deskLeg);
       leg.position.set(dx, 0.4, 0);
       g.add(leg);
@@ -1129,18 +1398,18 @@ import * as THREE from 'three';
     g.add(tagMesh(screen, spot.id));
     // mug
     var mug = cyl(0.06, 0.05, 0.13, C.accent);
-    mug.position.set(0.92, 0.97, 0.3);
+    mug.position.set(dw / 2 - 0.23, 0.97, 0.3);
     g.add(mug);
 
     // status ring flat on the floor around the desk
     var ringMat = new THREE.MeshBasicMaterial({ color: C.green, transparent: true, opacity: 0.85 });
-    var ring = new THREE.Mesh(new THREE.TorusGeometry(1.55, 0.045, 10, 48), ringMat);
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(ringR, 0.045, 10, 48), ringMat);
     ring.rotation.x = Math.PI / 2;
     ring.position.y = 0.03;
     g.add(ring);
     // selected ring (gold, hidden until this desk is selected)
     var selMat = new THREE.MeshBasicMaterial({ color: C.accent, transparent: true, opacity: 0.95 });
-    var selRing = new THREE.Mesh(new THREE.TorusGeometry(1.78, 0.04, 10, 48), selMat);
+    var selRing = new THREE.Mesh(new THREE.TorusGeometry(ringR + 0.23, 0.04, 10, 48), selMat);
     selRing.rotation.x = Math.PI / 2;
     selRing.position.y = 0.03;
     selRing.visible = false;
@@ -1286,8 +1555,10 @@ import * as THREE from 'three';
     }
 
     // anchor: on the -z side of its desk, facing +z — toward the desk's
-    // monitor and toward the default camera, never its back to the room
-    var anchor = new THREE.Vector3(spot.x, 0, spot.z - 1.05);
+    // monitor and toward the default camera, never its back to the room.
+    // seatOff is 1.05 everywhere except the two back Clip desks (0.8),
+    // where the far window wall is close behind the desk.
+    var anchor = new THREE.Vector3(spot.x, 0, spot.z - (spot.seatOff || 1.05));
     var faceYaw = 0;
     g.position.copy(anchor);
     g.rotation.y = faceYaw;
@@ -1686,7 +1957,12 @@ import * as THREE from 'three';
     paper:   { room: "trading", x: -5.5, z: -5.0, yaw: 0, approach: { x: -5.5, z: -4.3 }, seatY: 0.42 },
     bell:    { room: "trading", x: -4.5, z: -5.0, yaw: 0, approach: { x: -4.5, z: -4.3 }, seatY: 0.42 },
     ledger:  { room: "trading", x: -3.5, z: -5.0, yaw: 0, approach: { x: -3.5, z: -4.3 }, seatY: 0.42 },
-    keeper:  { room: "shopify", x: 9.3, z: 1.0, yaw: -Math.PI / 2, approach: { x: 8.2, z: 0.9 }, seatY: 0.42 }
+    keeper:  { room: "shopify", x: 9.3, z: 1.0, yaw: -Math.PI / 2, approach: { x: 8.2, z: 0.9 }, seatY: 0.42 },
+    // Clip bots sit on the clipping-room couch (right edge, faces -x into
+    // the room); approaches come in from the room side (x 2.4).
+    clip1:  { room: "clipping", x: 3.4, z: -8.85, yaw: -Math.PI / 2, approach: { x: 2.4, z: -8.85 }, seatY: 0.42 },
+    clip2:  { room: "clipping", x: 3.4, z: -7.85, yaw: -Math.PI / 2, approach: { x: 2.4, z: -7.85 }, seatY: 0.42 },
+    clip3:  { room: "clipping", x: 3.4, z: -6.85, yaw: -Math.PI / 2, approach: { x: 2.4, z: -6.85 }, seatY: 0.42 }
   };
   var GUEST_CHAIRS = [
     { x: 0.6, z: 8.1, yaw: 0, approach: { x: 0.6, z: 8.8 }, seatY: 0.36, takenBy: null },
@@ -1728,6 +2004,7 @@ import * as THREE from 'three';
   }
   function roomOf(x, z){
     if(z > 6) return "office";
+    if(z < -6) return "clipping";
     if(x < 0) return "trading";
     if(x > 3) return "shopify";
     return "hallway";
@@ -1736,6 +2013,9 @@ import * as THREE from 'three';
   // step out to the current place's approach point (if settled), slide to
   // the area's centre lane, cross on the z=0 aisle through the hallway
   // doorways when changing area, then approach the seat/desk and slide in.
+  // The clipping room rides the same x=1.5 spine as the office and the
+  // hallway (its doorway is on that line), so it routes exactly like the
+  // office: down the spine, through the back doorway, to the seat.
   function routeFrom(x, z, fromPlace, to){
     var legs = [];
     function v(px, pz){ return new THREE.Vector3(px, 0, pz); }
@@ -1748,16 +2028,16 @@ import * as THREE from 'three';
     } else {
       room = roomOf(x, z);
     }
-    if(room === "office" || room === "hallway"){ push(1.5, z); }
+    if(room === "office" || room === "hallway" || room === "clipping"){ push(1.5, z); }
     else { push(ROOMS[room].cx, z); }
     var destRoom = to.room;
     if(room !== destRoom){
-      if(room === "office" || room === "hallway"){ push(1.5, 0); }
+      if(room === "office" || room === "hallway" || room === "clipping"){ push(1.5, 0); }
       else { push(ROOMS[room].cx, 0); }
-      if(destRoom === "office"){ push(1.5, 0); push(1.5, to.approach.z); }
+      if(destRoom === "office" || destRoom === "clipping"){ push(1.5, 0); push(1.5, to.approach.z); }
       else { push(ROOMS[destRoom].cx, 0); push(ROOMS[destRoom].cx, to.approach.z); }
     } else {
-      if(room === "office" || room === "hallway"){ push(1.5, to.approach.z); }
+      if(room === "office" || room === "hallway" || room === "clipping"){ push(1.5, to.approach.z); }
       else { push(ROOMS[room].cx, to.approach.z); }
     }
     push(to.approach.x, to.approach.z);
@@ -1887,7 +2167,7 @@ import * as THREE from 'three';
   });
   dom.addEventListener("wheel", function(e){
     e.preventDefault();
-    orbitGoal.radius = clamp(orbitGoal.radius * (1 + e.deltaY * 0.001), 10, 40);
+    orbitGoal.radius = clamp(orbitGoal.radius * (1 + e.deltaY * 0.001), 10, 46);
   }, { passive: false });
 
   var ray = new THREE.Raycaster();
@@ -1950,7 +2230,7 @@ import * as THREE from 'three';
       if(x < -40 || x > w + 40 || y < -20 || y > h + 40) show = false;
       els.tag.style.display = show ? "block" : "none";
       // Speech bubble is the in-scene detail card: show it only for the
-      // single selected bot, never all six at once.
+      // single selected bot, never all nine at once.
       els.bubble.style.display = (show && id === selectedId) ? "block" : "none";
       if(!show) return;
       var cx = Math.max(120, Math.min(w - 120, x));

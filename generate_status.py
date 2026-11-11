@@ -34,6 +34,9 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-11 15:11 ET", "clip1",
+     "Clipping room opened at the back end of the hallway — three new bots "
+     "(Clip 1/2/3) awaiting assignments from Jaden; recording gear in place."),
     ("2026-11-11 10:28 ET", "keeper",
      "Paid shipping options removed from Grind & Gather — free US shipping "
      "(7-15 business days) is now the only option."),
@@ -299,7 +302,24 @@ def build():
         "needs_you": None,
     }
 
-    bots = [scanner, paper_bot, bell, keeper, ledger, muse]
+    # --- Clip 1/2/3: the new YouTube/clipping room at the back end of the
+    # hallway. Placeholder names — Jaden assigns their jobs when the room
+    # is done, so they are always waiting on the clipping-room couch.
+    clips = []
+    for i in (1, 2, 3):
+        clips.append({
+            "id": f"clip{i}",
+            "name": f"Clip {i}",
+            "role": "YouTube / clipping — awaiting assignment from Jaden",
+            "status": "waiting",
+            "status_reason": "No jobs assigned yet — Jaden assigns them when the room is done.",
+            "schedule": "No fixed schedule — awaiting assignment from Jaden",
+            "last_action": "Clipping room opened Wed Nov 11 — three new bots awaiting assignments from Jaden.",
+            "next_action": "Awaiting assignment from Jaden.",
+            "needs_you": None,
+        })
+
+    bots = [scanner, paper_bot, bell, keeper, ledger, muse] + clips
 
     # --- Office log, newest first, all from real sources
     log = []
