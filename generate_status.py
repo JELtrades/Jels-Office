@@ -231,7 +231,15 @@ def build():
         else:
             res_txt = "open — awaiting entry/outcome"
         if latest.get("management") == "fixed150":
-            stop_txt = "$150 fixed stop (18.75 pts at 4 micros)"
+            # Risk derives from the trade's stored stop distance, so
+            # pre-Nov-13 trades still read "$150 fixed stop" and
+            # Combo 2 trades (from Fri Nov 13) read "$270 fixed stop".
+            _sp = latest.get("stop_pts")
+            if _sp is not None:
+                stop_txt = ("$%.0f fixed stop (%s pts at 4 micros)"
+                            % (_sp * 8.0, _sp))
+            else:
+                stop_txt = "$270 fixed stop (33.75 pts at 4 micros)"
         else:
             stop_txt = f"Stop {latest.get('stop_pts')} pts"
         last_trade_txt = (
@@ -249,14 +257,14 @@ def build():
     flex = paper.get("flex", {}) or {}
     cap_state_txt = {"trading": "trading",
                      "profit_cap": "day done — hit +$1,200 profit cap",
-                     "loss_cap": "day done — hit −$300 loss cap"}.get(
+                     "loss_cap": "day done — hit −$540 loss cap"}.get(
                          flex.get("cap_state"), "trading")
     paper_bot = {
         "id": "paper",
         "name": "Paper",
         "role": ("JELS paper trader — log-only hypothetical trades, no real "
                  "orders; practicing the Lucid Flex 50K pass (daily caps "
-                 "+$1,200 / −$300, 40% consistency, EOD trailing floor)"),
+                 "+$1,200 / −$540, 40% consistency, EOD trailing floor)"),
         "status": "working" if scan_working else "waiting",
         "status_reason": ("Inside the paper-trading window (Mon-Fri 09:30-15:00 ET)."
                           if scan_working else
