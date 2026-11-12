@@ -385,10 +385,11 @@ def build():
         "last_action": LEDGER_LAST_ACTION,
         "next_action": "Weekly review Fri Nov 13, 5:45 PM ET.",
         "needs_you": None,
+        # LFE buffer per Jaden Nov 12; LDE breached Nov 12 (Jaden) — buffer 0.
         "stats": {
             "last_logged_trade": journal_last,
-            "lucid_lfe_buffer_usd": 1471,
-            "lucid_lde_buffer_usd": 105,
+            "lucid_lfe_buffer_usd": 2761,
+            "lucid_lde_buffer_usd": 0,
         },
     }
 
