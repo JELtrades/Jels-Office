@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 22:10:45 ET",
-  "generated_at_utc": "2026-11-12T03:10:45Z",
+  "generated_at_et": "2026-11-11 22:15:45 ET",
+  "generated_at_utc": "2026-11-12T03:15:45Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
-      "last_action": "Engine run #123 at 2026-11-11 22:08 ET; 4 paper trade(s) detected so far.",
+      "last_action": "Engine run #124 at 2026-11-11 22:13 ET; 5 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -22,11 +22,11 @@
       "status": "working",
       "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, checks every 5 min",
-      "last_action": "PT-20261111-02 \u2014 bearish Asia model 5m \u2014 WIN +2.0R (+37.5 pts) at 2026-11-11 20:00 ET. $150 fixed stop (18.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
+      "last_action": "PT-20261111-05 \u2014 bullish Asia model 5m \u2014 open \u2014 awaiting entry/outcome at None. $150 fixed stop (18.75 pts at 4 micros); wick went 5.5 pts beyond stop.",
       "next_action": "Watching for the next JELS setup (opens + midday model + Asia model).",
       "needs_you": null,
       "stats": {
-        "trades_opened": 4,
+        "trades_opened": 5,
         "closed": 2,
         "wins": 1,
         "losses": 1,
@@ -136,19 +136,19 @@
   ],
   "log": [
     {
+      "time": "2026-11-11 22:13 ET",
+      "bot": "paper",
+      "text": "PT-20261111-05 closed \u2014 None. Wick went 5.5 pts beyond the stop."
+    },
+    {
+      "time": "2026-11-11 22:13 ET",
+      "bot": "paper",
+      "text": "PT-20261111-05 detected \u2014 bullish Asia model 5m, CISD 28311.25, FVG 28311.0-28323.0."
+    },
+    {
       "time": "2026-11-11 21:52 ET",
       "bot": "bell",
       "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
-    },
-    {
-      "time": "2026-11-11 20:00 ET",
-      "bot": "paper",
-      "text": "PT-20261111-02 closed \u2014 WIN +2.0R (+37.5 pts, +$300 at 4 micros). Wick went 0.0 pts beyond the stop."
-    },
-    {
-      "time": "2026-11-11 19:13 ET",
-      "bot": "paper",
-      "text": "PT-20261111-02 detected \u2014 bearish Asia model 5m, CISD 28452.25, FVG 28247.0-28257.75."
     },
     {
       "time": "2026-11-11 18:12 ET",
