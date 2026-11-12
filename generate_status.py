@@ -188,10 +188,13 @@ def build():
 
     paper = load_paper()
     trades = paper.get("trades", [])
-    closed = [t for t in trades if t.get("status") == "closed"]
-    wins = [t for t in closed if t.get("win_r", 0) > 0]
-    total_pts = sum(t.get("points", 0) for t in closed)
-    latest = trades[-1] if trades else None
+    # Voided trades are records only — never scored (win_r/points may be None).
+    closed = [t for t in trades
+              if t.get("status") == "closed" and not t.get("voided")]
+    wins = [t for t in closed if (t.get("win_r") or 0) > 0]
+    total_pts = sum(t.get("points") or 0 for t in closed)
+    scored = [t for t in trades if not t.get("voided")]
+    latest = scored[-1] if scored else None
 
     reported = load_reported()
     last_checked = parse_et(reported.get("last_checked"))
