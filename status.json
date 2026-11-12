@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 21:15:48 ET",
-  "generated_at_utc": "2026-11-12T02:15:48Z",
+  "generated_at_et": "2026-11-11 21:20:49 ET",
+  "generated_at_utc": "2026-11-12T02:20:49Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
-      "last_action": "Engine run #112 at 2026-11-11 21:13 ET; 4 paper trade(s) detected so far.",
+      "last_action": "Engine run #113 at 2026-11-11 21:18 ET; 4 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -22,7 +22,7 @@
       "status": "working",
       "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, checks every 5 min",
-      "last_action": "PT-20261111-04 \u2014 bearish Asia model 15m \u2014 open \u2014 awaiting entry/outcome at None. $150 fixed stop (18.75 pts at 4 micros); wick went 4.25 pts beyond stop.",
+      "last_action": "PT-20261111-04 \u2014 bearish Asia model 15m \u2014 open \u2014 awaiting entry/outcome at None. $150 fixed stop (18.75 pts at 4 micros); wick went 8.75 pts beyond stop.",
       "next_action": "Watching for the next JELS setup (opens + midday model + Asia model).",
       "needs_you": null,
       "stats": {
@@ -143,7 +143,7 @@
     {
       "time": "2026-11-11 20:38 ET",
       "bot": "paper",
-      "text": "PT-20261111-04 closed \u2014 None. Wick went 4.25 pts beyond the stop."
+      "text": "PT-20261111-04 closed \u2014 None. Wick went 8.75 pts beyond the stop."
     },
     {
       "time": "2026-11-11 20:38 ET",
