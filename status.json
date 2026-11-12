@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 19:30:44 ET",
-  "generated_at_utc": "2026-11-12T00:30:44Z",
+  "generated_at_et": "2026-11-11 19:35:45 ET",
+  "generated_at_utc": "2026-11-12T00:35:45Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
-      "last_action": "Engine run #91 at 2026-11-11 19:28 ET; 2 paper trade(s) detected so far.",
+      "last_action": "Engine run #92 at 2026-11-11 19:33 ET; 2 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
