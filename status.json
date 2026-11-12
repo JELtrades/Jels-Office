@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 09:26:01 ET",
-  "generated_at_utc": "2026-11-12T14:26:01Z",
+  "generated_at_et": "2026-11-12 09:30:52 ET",
+  "generated_at_utc": "2026-11-12T14:30:52Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -8,25 +8,25 @@
       "id": "scanner",
       "name": "Scanner",
       "role": "MNQ / ES watch \u2014 JELS strat detection (15m + 5m CISD + FVG)",
-      "status": "waiting",
-      "status_reason": "Outside the live watch window (Mon-Fri 09:30-15:00 ET).",
+      "status": "working",
+      "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00)",
-      "last_action": "Engine run #166 at 2026-11-12 02:58 ET; 6 paper trade(s) detected so far.",
-      "next_action": "Next scan window Thu Nov 12, 9:30 AM ET",
+      "last_action": "Engine run #167 at 2026-11-12 09:30 ET; 7 paper trade(s) detected so far.",
+      "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
     {
       "id": "paper",
       "name": "Paper",
       "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders; practicing the Lucid Flex 50K pass (daily caps +$1,200 / \u2212$300, 40% consistency, EOD trailing floor)",
-      "status": "waiting",
-      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET).",
+      "status": "working",
+      "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET, checks every 5 min",
-      "last_action": "PT-20261111-06 \u2014 bearish Asia model 5m \u2014 LOSS -1.0R (-18.75 pts) (close through $150 stop) at 2026-11-11 23:15 ET. $150 fixed stop (18.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
-      "next_action": "Next window Thu Nov 12, 9:30 AM ET",
+      "last_action": "PT-20261112-07 \u2014 bearish Nyam model 5m \u2014 open \u2014 awaiting entry/outcome at None. $150 fixed stop (18.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
+      "next_action": "Watching for the next JELS setup (opens + midday model).",
       "needs_you": null,
       "stats": {
-        "trades_opened": 6,
+        "trades_opened": 7,
         "closed": 4,
         "wins": 1,
         "losses": 3,
@@ -136,19 +136,19 @@
   ],
   "log": [
     {
+      "time": "2026-11-12 09:30 ET",
+      "bot": "paper",
+      "text": "PT-20261112-07 closed \u2014 None. Wick went 0.0 pts beyond the stop."
+    },
+    {
+      "time": "2026-11-12 09:30 ET",
+      "bot": "paper",
+      "text": "PT-20261112-07 detected \u2014 bearish Nyam model 5m, CISD 28195.0, FVG 28089.25-28100.75."
+    },
+    {
       "time": "2026-11-12 09:22 ET",
       "bot": "bell",
       "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
-    },
-    {
-      "time": "2026-11-11 23:15 ET",
-      "bot": "paper",
-      "text": "PT-20261111-06 closed \u2014 LOSS -1.0R (-18.75 pts, $-150 at 4 micros). Wick went 0.0 pts beyond the stop."
-    },
-    {
-      "time": "2026-11-11 22:48 ET",
-      "bot": "paper",
-      "text": "PT-20261111-06 detected \u2014 bearish Asia model 5m, CISD 28280.5, FVG 28228.75-28243.25."
     },
     {
       "time": "2026-11-11 18:12 ET",
