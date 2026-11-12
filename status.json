@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 06:55:43 ET",
-  "generated_at_utc": "2026-11-12T11:55:43Z",
+  "generated_at_et": "2026-11-12 07:00:43 ET",
+  "generated_at_utc": "2026-11-12T12:00:43Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -9,8 +9,8 @@
       "name": "Scanner",
       "role": "MNQ / ES watch \u2014 JELS strat detection (15m + 5m CISD + FVG)",
       "status": "waiting",
-      "status_reason": "Outside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
-      "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
+      "status_reason": "Outside the live watch window (Mon-Fri 09:30-15:00 ET).",
+      "schedule": "Mon-Fri 09:30-15:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00)",
       "last_action": "Engine run #166 at 2026-11-12 02:58 ET; 6 paper trade(s) detected so far.",
       "next_action": "Next scan window Thu Nov 12, 9:30 AM ET",
       "needs_you": null
@@ -20,8 +20,8 @@
       "name": "Paper",
       "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders; practicing the Lucid Flex 50K pass (daily caps +$1,200 / \u2212$300, 40% consistency, EOD trailing floor)",
       "status": "waiting",
-      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
-      "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, checks every 5 min",
+      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET).",
+      "schedule": "Mon-Fri 09:30-15:00 ET, checks every 5 min",
       "last_action": "PT-20261111-06 \u2014 bearish Asia model 5m \u2014 LOSS -1.0R (-18.75 pts) (close through $150 stop) at 2026-11-11 23:15 ET. $150 fixed stop (18.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
       "next_action": "Next window Thu Nov 12, 9:30 AM ET",
       "needs_you": null,
@@ -56,10 +56,10 @@
       "name": "Bell",
       "role": "Alerts & reminders \u2014 Trump statement / market-news sweeps every 30 min + session reminders (NY 7 AM, Asia 5 PM)",
       "status": "working",
-      "status_reason": "Last Trump sweep Thu Nov 12, 6:52 AM ET \u2014 fresh; between session reminders.",
+      "status_reason": "Just sent a session reminder. Last Trump sweep Thu Nov 12, 6:52 AM ET \u2014 fresh.",
       "schedule": "Trump sweeps every 30 min, around the clock + session reminders Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)",
       "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Thu Nov 12, 6:52 AM ET: no qualifying market-moving statement, no alert. 3 qualifying alert(s) ever.",
-      "next_action": "Next Trump sweep ~Thu Nov 12, 7:22 AM ET \u00b7 next reminder Thu Nov 12, 7:00 AM ET",
+      "next_action": "Next Trump sweep ~Thu Nov 12, 7:22 AM ET \u00b7 next reminder Thu Nov 12, 5:00 PM ET",
       "needs_you": null
     },
     {
