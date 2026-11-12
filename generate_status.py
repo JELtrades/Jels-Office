@@ -126,30 +126,11 @@ def in_window(now, start_h, start_m, end_h, end_m):
     return start <= now < end
 
 
-def in_evening_block(now):
-    """Paper-trading evening block 18:00-01:00 ET, starting Sun-Thu
-    evenings only — NO Friday Asia (Jaden's call Nov 11) and no
-    Saturday evening (futures closed). The 00:00-01:00 tail belongs to
-    the previous evening: Mon 00:00-01:00 (Sunday's tail) and Fri
-    00:00-01:00 (Thursday's tail) are active, but Sat 00:00-01:00 is
-    not (no Friday evening session) and Sun 00:00-01:00 is not (no
-    Saturday evening session)."""
-    hm = now.hour * 60 + now.minute
-    if hm >= 18 * 60:
-        return now.weekday() not in (4, 5)  # no Fri/Sat evening
-    if hm < 60:
-        return (now - timedelta(days=1)).weekday() not in (4, 5)
-    return False
-
-
-def next_evening_time(now):
-    """Next 18:00 ET on a Sun-Thu evening (Mon=0..Sun=6)."""
-    for ahead in range(0, 8):
-        cand = (now + timedelta(days=ahead)).replace(
-            hour=18, minute=0, second=0, microsecond=0)
-        if cand.weekday() not in (4, 5) and cand > now:
-            return cand
-    return None
+# NOTE: the paper-trading evening block (Sun-Thu 18:00-01:00 ET, Asia
+# model) was removed Thu Nov 12 2026 — Jaden scrapped the Asia model.
+# in_evening_block / next_evening_time were deleted with it; Scanner
+# and Paper now run on the day block only. (Bell's 5 PM Asia session
+# reminder is a separate standing commitment and is untouched.)
 
 
 # ---------------------------------------------------------------------------
@@ -205,27 +186,22 @@ def build():
 
     journal_last = load_journal_last_trade()
 
-    # --- Scanner: JELS watch / paper engine active windows —
-    # day block Mon-Fri 09:30-15:00 + evening block Sun-Thu 18:00-01:00
+    # --- Scanner: JELS watch / paper engine active window —
+    # day block Mon-Fri 09:30-15:00 only (the evening block was removed
+    # Nov 12 2026 when Jaden scrapped the Asia model).
     day_block = is_weekday and in_window(now, 9, 30, 15, 0)
-    scan_working = day_block or in_evening_block(now)
-    next_scan_day = next_weekday_time(now, {0, 1, 2, 3, 4}, 9, 30)
-    next_scan_eve = next_evening_time(now)
-    next_scan = min((c for c in (next_scan_day, next_scan_eve) if c),
-                    default=None)
+    scan_working = day_block
+    next_scan = next_weekday_time(now, {0, 1, 2, 3, 4}, 9, 30)
     scanner = {
         "id": "scanner",
         "name": "Scanner",
         "role": "MNQ / ES watch — JELS strat detection (15m + 5m CISD + FVG)",
         "status": "working" if scan_working else "waiting",
-        "status_reason": ("Inside the live watch window (Mon-Fri 09:30-15:00 ET "
-                          "or Sun-Thu 18:00-01:00 ET)."
+        "status_reason": ("Inside the live watch window (Mon-Fri 09:30-15:00 ET)."
                           if scan_working else
-                          "Outside the live watch window (Mon-Fri 09:30-15:00 ET "
-                          "or Sun-Thu 18:00-01:00 ET)."),
-        "schedule": ("Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET "
-                     "(Nyam opens 09:30-10:30, midday model 11:00-13:00, "
-                     "Asia model 19:00-23:00)"),
+                          "Outside the live watch window (Mon-Fri 09:30-15:00 ET)."),
+        "schedule": ("Mon-Fri 09:30-15:00 ET "
+                     "(Nyam opens 09:30-10:30, midday model 11:00-13:00)"),
         "last_action": (f"Engine run #{paper.get('runs_total', '?')} at "
                         f"{paper.get('last_run_et', 'unknown')}; "
                         f"{len(trades)} paper trade(s) detected so far."),
@@ -282,18 +258,15 @@ def build():
                  "orders; practicing the Lucid Flex 50K pass (daily caps "
                  "+$1,200 / −$300, 40% consistency, EOD trailing floor)"),
         "status": "working" if scan_working else "waiting",
-        "status_reason": ("Inside the paper-trading window (Mon-Fri 09:30-15:00 ET "
-                          "or Sun-Thu 18:00-01:00 ET)."
+        "status_reason": ("Inside the paper-trading window (Mon-Fri 09:30-15:00 ET)."
                           if scan_working else
-                          "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET "
-                          "or Sun-Thu 18:00-01:00 ET)."),
-        "schedule": ("Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, "
-                     "checks every 5 min"),
+                          "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET)."),
+        "schedule": ("Mon-Fri 09:30-15:00 ET, checks every 5 min"),
         "last_action": last_trade_txt,
         "next_action": (f"Next window {fmt_time(next_scan)}"
                         if not scan_working else
                         "Watching for the next JELS setup (opens + midday "
-                        "model + Asia model)."),
+                        "model)."),
         "needs_you": None,
         "stats": {
             "trades_opened": len(trades),
