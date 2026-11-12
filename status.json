@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 11:20:47 ET",
-  "generated_at_utc": "2026-11-12T16:20:47Z",
+  "generated_at_et": "2026-11-12 11:25:45 ET",
+  "generated_at_utc": "2026-11-12T16:25:45Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00)",
-      "last_action": "Engine run #189 at 2026-11-12 11:18 ET; 10 paper trade(s) detected so far.",
+      "last_action": "Engine run #190 at 2026-11-12 11:23 ET; 10 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -56,10 +56,10 @@
       "name": "Bell",
       "role": "Alerts & reminders \u2014 Trump statement / market-news sweeps every 30 min + session reminders (NY 7 AM, Asia 5 PM)",
       "status": "working",
-      "status_reason": "Last Trump sweep Thu Nov 12, 10:52 AM ET \u2014 fresh; between session reminders.",
+      "status_reason": "Last Trump sweep Thu Nov 12, 11:22 AM ET \u2014 fresh; between session reminders.",
       "schedule": "Trump sweeps every 30 min, around the clock + session reminders Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)",
-      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Thu Nov 12, 10:52 AM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
-      "next_action": "Next Trump sweep ~Thu Nov 12, 11:22 AM ET \u00b7 next reminder Thu Nov 12, 5:00 PM ET",
+      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Thu Nov 12, 11:22 AM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
+      "next_action": "Next Trump sweep ~Thu Nov 12, 11:52 AM ET \u00b7 next reminder Thu Nov 12, 5:00 PM ET",
       "needs_you": null
     },
     {
@@ -136,14 +136,14 @@
   ],
   "log": [
     {
+      "time": "2026-11-12 11:22 ET",
+      "bot": "bell",
+      "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
+    },
+    {
       "time": "2026-11-12 11:15 ET",
       "bot": "paper",
       "text": "PT-20261112-10 closed \u2014 WIN +10.0R (+187.5 pts, +$1500 at 4 micros). Wick went 52.0 pts beyond the stop."
-    },
-    {
-      "time": "2026-11-12 10:52 ET",
-      "bot": "bell",
-      "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
     },
     {
       "time": "2026-11-12 10:23 ET",
