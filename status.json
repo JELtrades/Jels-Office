@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-11 20:00:44 ET",
-  "generated_at_utc": "2026-11-12T01:00:44Z",
+  "generated_at_et": "2026-11-11 20:05:46 ET",
+  "generated_at_utc": "2026-11-12T01:05:46Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00, Asia model 19:00-23:00)",
-      "last_action": "Engine run #97 at 2026-11-11 19:58 ET; 2 paper trade(s) detected so far.",
+      "last_action": "Engine run #98 at 2026-11-11 20:03 ET; 2 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -22,29 +22,29 @@
       "status": "working",
       "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET or Sun-Thu 18:00-01:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET + Sun-Thu 18:00-01:00 ET, checks every 5 min",
-      "last_action": "PT-20261111-02 \u2014 bearish Asia model 5m \u2014 open \u2014 awaiting entry/outcome at None. $150 fixed stop (18.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
+      "last_action": "PT-20261111-02 \u2014 bearish Asia model 5m \u2014 WIN +2.0R (+37.5 pts) at 2026-11-11 20:00 ET. $150 fixed stop (18.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
       "next_action": "Watching for the next JELS setup (opens + midday model + Asia model).",
       "needs_you": null,
       "stats": {
         "trades_opened": 2,
-        "closed": 1,
-        "wins": 0,
+        "closed": 2,
+        "wins": 1,
         "losses": 1,
-        "win_rate_pct": 0.0,
-        "total_points": -14.0,
-        "total_usd_4_micros": -112.0,
-        "flex_target_progress_usd": -112.0,
-        "flex_target_pct": -3.7,
-        "flex_balance_usd": 49888.0,
-        "flex_floor_usd": 48000.0,
+        "win_rate_pct": 50.0,
+        "total_points": 23.5,
+        "total_usd_4_micros": 188.0,
+        "flex_target_progress_usd": 188.0,
+        "flex_target_pct": 6.3,
+        "flex_balance_usd": 50188.0,
+        "flex_floor_usd": 48188.0,
         "flex_floor_locked": false,
-        "flex_room_usd": 1888.0,
-        "flex_best_day_usd": -112.0,
+        "flex_room_usd": 2000.0,
+        "flex_best_day_usd": 188.0,
         "flex_best_day_date": "2026-11-11",
-        "flex_best_day_ratio": null,
-        "flex_required_total_usd": 0.0,
+        "flex_best_day_ratio": 1.0,
+        "flex_required_total_usd": 470.0,
         "flex_days_traded": 1,
-        "flex_today_pnl_usd": -112.0,
+        "flex_today_pnl_usd": 188.0,
         "flex_today_date": "2026-11-11",
         "flex_cap_state": "trading",
         "flex_cap_state_text": "trading",
@@ -136,14 +136,14 @@
   ],
   "log": [
     {
+      "time": "2026-11-11 20:00 ET",
+      "bot": "paper",
+      "text": "PT-20261111-02 closed \u2014 WIN +2.0R (+37.5 pts, +$300 at 4 micros). Wick went 0.0 pts beyond the stop."
+    },
+    {
       "time": "2026-11-11 19:52 ET",
       "bot": "bell",
       "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
-    },
-    {
-      "time": "2026-11-11 19:13 ET",
-      "bot": "paper",
-      "text": "PT-20261111-02 closed \u2014 None. Wick went 0.0 pts beyond the stop."
     },
     {
       "time": "2026-11-11 19:13 ET",
