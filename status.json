@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-13 17:55:53 ET",
-  "generated_at_utc": "2026-11-13T22:55:53Z",
+  "generated_at_et": "2026-11-13 18:00:50 ET",
+  "generated_at_utc": "2026-11-13T23:00:50Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -84,7 +84,7 @@
       "next_action": "Weekly review Fri Nov 13, 5:45 PM ET.",
       "needs_you": null,
       "stats": {
-        "last_logged_trade": "2026-11-12",
+        "last_logged_trade": "2026-11-13",
         "lucid_lfe_buffer_usd": 1684,
         "lucid_lde_buffer_usd": 0
       }
