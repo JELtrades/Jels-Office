@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-13 09:25:53 ET",
-  "generated_at_utc": "2026-11-13T14:25:53Z",
+  "generated_at_et": "2026-11-13 09:30:50 ET",
+  "generated_at_utc": "2026-11-13T14:30:50Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -8,22 +8,22 @@
       "id": "scanner",
       "name": "Scanner",
       "role": "MNQ / ES watch \u2014 JELS strat detection (15m + 5m CISD + FVG)",
-      "status": "waiting",
-      "status_reason": "Outside the live watch window (Mon-Fri 09:30-15:00 ET).",
+      "status": "working",
+      "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00)",
-      "last_action": "Engine run #235 at 2026-11-12 15:28 ET; 10 paper trade(s) detected so far.",
-      "next_action": "Next scan window Fri Nov 13, 9:30 AM ET",
+      "last_action": "Engine run #236 at 2026-11-13 09:28 ET; 10 paper trade(s) detected so far.",
+      "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
     {
       "id": "paper",
       "name": "Paper",
       "role": "JELS paper trader \u2014 log-only hypothetical trades, no real orders; practicing the Lucid Flex 50K pass (daily caps +$1,200 / \u2212$540, 40% consistency, EOD trailing floor)",
-      "status": "waiting",
-      "status_reason": "Outside the paper-trading window (Mon-Fri 09:30-15:00 ET).",
+      "status": "working",
+      "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET, checks every 5 min",
       "last_action": "PT-20261112-10 \u2014 bullish Nyam model both \u2014 WIN +10.0R (+187.5 pts) at 2026-11-12 11:15 ET. $150 fixed stop (18.75 pts at 4 micros); wick went 52.0 pts beyond stop.",
-      "next_action": "Next window Fri Nov 13, 9:30 AM ET",
+      "next_action": "Watching for the next JELS setup (opens + midday model).",
       "needs_you": null,
       "stats": {
         "trades_opened": 10,
@@ -44,10 +44,10 @@
         "flex_best_day_ratio": 1.081,
         "flex_required_total_usd": 3750.0,
         "flex_days_traded": 2,
-        "flex_today_pnl_usd": 1500.0,
-        "flex_today_date": "2026-11-12",
-        "flex_cap_state": "profit_cap",
-        "flex_cap_state_text": "day done \u2014 hit +$1,200 profit cap",
+        "flex_today_pnl_usd": 0.0,
+        "flex_today_date": "2026-11-13",
+        "flex_cap_state": "trading",
+        "flex_cap_state_text": "trading",
         "flex_passed": false
       }
     },
