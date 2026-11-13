@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-13 17:40:51 ET",
-  "generated_at_utc": "2026-11-13T22:40:51Z",
+  "generated_at_et": "2026-11-13 17:45:51 ET",
+  "generated_at_utc": "2026-11-13T22:45:51Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -77,8 +77,8 @@
       "id": "ledger",
       "name": "Frank",
       "role": "Trade journal + Lucid account buffers \u2014 looks back for logs himself; a day with no log means Jaden probably didn't trade",
-      "status": "waiting",
-      "status_reason": "Between reviews \u2014 a day with no log means Jaden probably didn't trade.",
+      "status": "working",
+      "status_reason": "Weekly review in progress \u2014 tallying the logged trades.",
       "schedule": "Weekly review Fridays 5:45 PM ET",
       "last_action": "Weekly review \u2014 week of Nov 2-6 (no trades logged that week).",
       "next_action": "Weekly review Fri Nov 13, 5:45 PM ET.",
