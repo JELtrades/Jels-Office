@@ -27,6 +27,7 @@ WORKSPACE = Path.home() / "workspace"
 PAPER_STATE = WORKSPACE / "goals/trading-session-reminders/hidden_files/ict-paper-state.json"
 REPORTED = WORKSPACE / "goals/trump-statement-market-alerts/hidden_files/reported.json"
 JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
+FLEA_FINDINGS = WORKSPACE / "lowpoly-studio/FLEA-FINDINGS.md"
 
 # ---------------------------------------------------------------------------
 # Recorded facts that live in MEMORY.md / the session log, not in a machine
@@ -34,6 +35,12 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-12 21:53 ET", "clip3",
+     "Flea's job expanded by Jaden — always looks for ways to improve "
+     "the videos by studying how other creators do it; when he finds "
+     "something worth implementing, he comes to Muse's desk as "
+     "needs-you instead of changing the system himself. First "
+     "improvement sweep running."),
     ("2026-11-12 21:05 ET", "clip4",
      "Clip 4 renamed Mary by Jaden — Jane's prep helper, first named "
      "Milo at Jaden's ask for a random name. Still prepping episode 3 "
@@ -168,6 +175,17 @@ def load_journal_last_trade():
     return max(dates) if dates else None
 
 
+def load_flea_findings():
+    """True when FLEA-FINDINGS.md carries STATUS: UNREVIEWED (Flea found
+    something worth implementing and is waiting at Muse's desk). Missing
+    file or STATUS: CLEAR means nothing is waiting."""
+    try:
+        first = FLEA_FINDINGS.read_text().splitlines()[0].strip()
+    except Exception:
+        return False
+    return first == "STATUS: UNREVIEWED"
+
+
 # ---------------------------------------------------------------------------
 # Build the status document
 # ---------------------------------------------------------------------------
@@ -194,6 +212,7 @@ def build():
                       and not k.startswith("news-vertical-sweep-"))
 
     journal_last = load_journal_last_trade()
+    flea_needs_you = load_flea_findings()
 
     # --- Scanner: JELS watch / paper engine active window —
     # day block Mon-Fri 09:30-15:00 only (the evening block was removed
@@ -479,13 +498,16 @@ def build():
             clips.append({
                 "id": "clip3",
                 "name": "Flea",
-                "role": "Fixer + poster — polishes Jane's finished videos, hunts flaws, and posts 3 videos/day to Instagram and YouTube",
-                "status": "working",
-                "status_reason": "On the job — polishing finished videos and posting 3/day to Instagram and YouTube.",
+                "role": "Fixer + poster + improvement research — polishes Jane's finished videos, hunts flaws, studies how other creators do it, and posts 3 videos/day to Instagram and YouTube",
+                "status": "needs-you" if flea_needs_you else "working",
+                "status_reason": ("Improvement findings waiting on Muse's review at his desk — see FLEA-FINDINGS.md."
+                          if flea_needs_you else
+                          "On the job — polishing finished videos and posting 3/day to Instagram and YouTube."),
                 "schedule": "Always on — polishing videos; posting 11:45 AM, 3:45 PM, 7:45 PM ET",
                 "last_action": "Posted episode 1 'The BBQ' to Instagram and YouTube Thu Nov 12.",
                 "next_action": "Post the next ready video at the next slot; keep the posting log.",
-                "needs_you": None,
+                "needs_you": (["Improvement findings from other creators waiting on Muse's review — FLEA-FINDINGS.md"]
+                       if flea_needs_you else None),
             })
             continue
         if i == 4:
