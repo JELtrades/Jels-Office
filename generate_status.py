@@ -34,6 +34,10 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-12 21:05 ET", "clip4",
+     "Clip 4 renamed Mary by Jaden — Jane's prep helper, first named "
+     "Milo at Jaden's ask for a random name. Still prepping episode 3 "
+     "'The Leaking Tap' while Jane renders episode 2."),
     ("2026-11-12 21:00 ET", "clip4",
      "Clip 4 named Milo — Jane's prep helper: while Jane renders one "
      "episode, Milo preps the next (script, set build, pose plan) so "
@@ -426,9 +430,10 @@ def build():
     # ideas scout, so he works at his desk. Clip 2 is Jane — assigned
     # Nov 11 ~16:54 ET to make the videos, working at her desk. Clip 3 is
     # Flea — the fixer, assigned Nov 11 ~18:12 ET (renamed Flea Nov 11
-    # ~18:21 ET), working at his desk. Clip 4 is Milo — Jane's prep
-    # helper, named Nov 12 ~21:00 ET at Jaden's ask (random name): while
-    # Jane renders one episode, Milo preps the next.
+    # ~18:21 ET), working at his desk. Clip 4 is Mary — Jane's prep
+    # helper, first named Milo Nov 12 ~21:00 ET at Jaden's ask (random
+    # name), renamed Mary by Jaden ~21:05 ET: while Jane renders one
+    # episode, Mary preps the next.
     clips = []
     for i in (1, 2, 3, 4):
         if i == 1:
@@ -461,7 +466,7 @@ def build():
                 "status_reason": "On the job — building the next Kemar episode in the exact BBQ format.",
                 "schedule": "Always on — building Kemar episodes from Rob's ideas",
                 "last_action": "Episode 1 'The BBQ' done, approved by Jaden, and posted to Instagram + YouTube; episode 2 'The Flat-Pack Shelf' rendering now.",
-                "next_action": "Render episode 3 from Milo's prep package once episode 2 is done.",
+                "next_action": "Render episode 3 from Mary's prep package once episode 2 is done.",
                 "needs_you": None,
             })
             continue
@@ -484,20 +489,21 @@ def build():
             })
             continue
         if i == 4:
-            # Milo (clip4) — Jane's prep helper (Jaden, Nov 12 ~21:00 ET;
-            # Jaden asked for a random name): while Jane renders one
+            # Mary (clip4) — Jane's prep helper (first named Milo Nov 12
+            # ~21:00 ET at Jaden's ask for a random name; renamed Mary by
+            # Jaden ~21:05 ET): while Jane renders one
             # episode, Milo preps the next — script, set build, pose
             # plan. Never renders while Jane renders: one render at a
             # time, the VM's CPU is the ceiling. First job: episode 3
             # "The Leaking Tap" prep (cold-open hook test).
             clips.append({
                 "id": "clip4",
-                "name": "Milo",
+                "name": "Mary",
                 "role": "Jane's prep helper — while Jane renders one episode, preps the next: script, set build, pose plan (never renders while Jane renders)",
                 "status": "working",
                 "status_reason": "On the job — prepping episode 3 'The Leaking Tap' (script, set, poses) while Jane renders episode 2.",
                 "schedule": "Always on — one episode ahead of Jane",
-                "last_action": "Named by Muse at Jaden's ask Thu Nov 12 ~21:00 ET — now prepping episode 3 'The Leaking Tap' while Jane renders episode 2.",
+                "last_action": "Renamed Mary by Jaden Thu Nov 12 ~21:05 ET — now prepping episode 3 'The Leaking Tap' while Jane renders episode 2.",
                 "next_action": "Hand the ep03 prep package to Jane the moment her episode 2 render finishes.",
                 "needs_you": None,
             })

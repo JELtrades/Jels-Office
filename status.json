@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 21:05:52 ET",
-  "generated_at_utc": "2026-11-13T02:05:52Z",
+  "generated_at_et": "2026-11-12 21:06:19 ET",
+  "generated_at_utc": "2026-11-12T21:06:19Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -119,7 +119,7 @@
       "status_reason": "On the job \u2014 building the next Kemar episode in the exact BBQ format.",
       "schedule": "Always on \u2014 building Kemar episodes from Rob's ideas",
       "last_action": "Episode 1 'The BBQ' done, approved by Jaden, and posted to Instagram + YouTube; episode 2 'The Flat-Pack Shelf' rendering now.",
-      "next_action": "Render episode 3 from Milo's prep package once episode 2 is done.",
+      "next_action": "Render episode 3 from Mary's prep package once episode 2 is done.",
       "needs_you": null
     },
     {
@@ -135,17 +135,22 @@
     },
     {
       "id": "clip4",
-      "name": "Milo",
+      "name": "Mary",
       "role": "Jane's prep helper \u2014 while Jane renders one episode, preps the next: script, set build, pose plan (never renders while Jane renders)",
       "status": "working",
       "status_reason": "On the job \u2014 prepping episode 3 'The Leaking Tap' (script, set, poses) while Jane renders episode 2.",
       "schedule": "Always on \u2014 one episode ahead of Jane",
-      "last_action": "Named by Muse at Jaden's ask Thu Nov 12 ~21:00 ET \u2014 now prepping episode 3 'The Leaking Tap' while Jane renders episode 2.",
+      "last_action": "Renamed Mary by Jaden Thu Nov 12 ~21:05 ET \u2014 now prepping episode 3 'The Leaking Tap' while Jane renders episode 2.",
       "next_action": "Hand the ep03 prep package to Jane the moment her episode 2 render finishes.",
       "needs_you": null
     }
   ],
   "log": [
+    {
+      "time": "2026-11-12 21:05 ET",
+      "bot": "clip4",
+      "text": "Clip 4 renamed Mary by Jaden \u2014 Jane's prep helper, first named Milo at Jaden's ask for a random name. Still prepping episode 3 'The Leaking Tap' while Jane renders episode 2."
+    },
     {
       "time": "2026-11-12 21:00 ET",
       "bot": "clip4",
@@ -200,11 +205,6 @@
       "time": "2026-11-11 15:11 ET",
       "bot": "clip1",
       "text": "Clipping room opened at the back end of the hallway \u2014 three new bots (Clip 1/2/3) awaiting assignments from Jaden; recording gear in place."
-    },
-    {
-      "time": "2026-11-11 14:25 ET",
-      "bot": "muse",
-      "text": "Muse's office opened at the end of the hallway \u2014 waiting bots take the couches, bots that need help come to sit in the guest chairs."
     }
   ]
 }
