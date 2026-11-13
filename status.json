@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 21:01:00 ET",
-  "generated_at_utc": "2026-11-13T02:01:01Z",
+  "generated_at_et": "2026-11-12 21:04:36 ET",
+  "generated_at_utc": "2026-11-12T21:04:36Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -103,38 +103,54 @@
     {
       "id": "clip1",
       "name": "Rob",
-      "role": "Viral ideas scout \u2014 finds explainer-video ideas on Instagram that haven't been done yet, and sends the best finds to Jane",
+      "role": "Idea scout \u2014 finds everyday-problem video ideas in the Kemar format (escalation + twist) that haven't been done yet, and sends them to Jane",
       "status": "working",
-      "status_reason": "On the job \u2014 hunting viral explainer-video ideas on Instagram that haven't been done yet, and passing the best finds to Jane.",
-      "schedule": "Always on \u2014 scouting Instagram for fresh explainer ideas",
-      "last_action": "Assigned by Jaden Wed Nov 11 \u2014 now scouting Instagram for viral explainer-video ideas that haven't been done yet, and sending the best finds to Jane.",
-      "next_action": "Keep scouting Instagram for the next viral explainer idea to send Jane.",
+      "status_reason": "On the job \u2014 hunting fresh everyday-problem ideas in the Kemar format and passing them to Jane.",
+      "schedule": "Always on \u2014 scouting for fresh Kemar-format ideas",
+      "last_action": "Batch 1 delivered Thu Nov 12 \u2014 8 Kemar-format ideas; Jane is building #1 'The Flat-Pack Shelf'.",
+      "next_action": "Refill the idea list when 2 or fewer unbuilt ideas remain.",
       "needs_you": null
     },
     {
       "id": "clip2",
       "name": "Jane",
-      "role": "Makes the same style of video as the viral explainer Rob finds \u2014 just with a different idea",
+      "role": "Builds Rob's ideas into 60-second Kemar episodes \u2014 same low-poly character, sets, and voice",
       "status": "working",
-      "status_reason": "On the job \u2014 making explainer videos in the style of Rob's viral finds, with fresh ideas.",
-      "schedule": "Always on \u2014 making explainer videos from Rob's finds",
-      "last_action": "Assigned by Jaden Wed Nov 11 \u2014 now making explainer videos in the style of Rob's viral finds, each with a different idea.",
-      "next_action": "Make the next explainer video from Rob's latest find.",
+      "status_reason": "On the job \u2014 building the next Kemar episode in the exact BBQ format.",
+      "schedule": "Always on \u2014 building Kemar episodes from Rob's ideas",
+      "last_action": "Episode 1 'The BBQ' done, approved by Jaden, and posted to Instagram + YouTube; episode 2 'The Flat-Pack Shelf' rendering now.",
+      "next_action": "Render episode 3 from Milo's prep package once episode 2 is done.",
       "needs_you": null
     },
     {
       "id": "clip3",
       "name": "Flea",
-      "role": "Fixes finished videos and crisps them up \u2014 fixes the sound, matches the style all the way through, and adds a funny ending",
+      "role": "Fixer + poster \u2014 polishes Jane's finished videos, hunts flaws, and posts 3 videos/day to Instagram and YouTube",
       "status": "working",
-      "status_reason": "On the job \u2014 polishing Jane's gum video into a v2: fixing the sound, matching the style all the way through, and adding a funny ending.",
-      "schedule": "Always on \u2014 fixing finished videos and crisping them up",
-      "last_action": "Assigned by Jaden Wed Nov 11 \u2014 now fixing finished videos and crisping them up; first job is Jane's gum video.",
-      "next_action": "Polish Jane's gum video into a v2 \u2014 sound fix, style match, funny ending.",
+      "status_reason": "On the job \u2014 polishing finished videos and posting 3/day to Instagram and YouTube.",
+      "schedule": "Always on \u2014 polishing videos; posting 11:45 AM, 3:45 PM, 7:45 PM ET",
+      "last_action": "Posted episode 1 'The BBQ' to Instagram and YouTube Thu Nov 12.",
+      "next_action": "Post the next ready video at the next slot; keep the posting log.",
+      "needs_you": null
+    },
+    {
+      "id": "clip4",
+      "name": "Milo",
+      "role": "Jane's prep helper \u2014 while Jane renders one episode, preps the next: script, set build, pose plan (never renders while Jane renders)",
+      "status": "working",
+      "status_reason": "On the job \u2014 prepping episode 3 'The Leaking Tap' (script, set, poses) while Jane renders episode 2.",
+      "schedule": "Always on \u2014 one episode ahead of Jane",
+      "last_action": "Named by Muse at Jaden's ask Thu Nov 12 ~21:00 ET \u2014 now prepping episode 3 'The Leaking Tap' while Jane renders episode 2.",
+      "next_action": "Hand the ep03 prep package to Jane the moment her episode 2 render finishes.",
       "needs_you": null
     }
   ],
   "log": [
+    {
+      "time": "2026-11-12 21:00 ET",
+      "bot": "clip4",
+      "text": "Clip 4 named Milo \u2014 Jane's prep helper: while Jane renders one episode, Milo preps the next (script, set build, pose plan) so renders run back-to-back. Never renders while Jane renders \u2014 one render at a time. First job: prep episode 3 'The Leaking Tap'."
+    },
     {
       "time": "2026-11-12 20:52 ET",
       "bot": "bell",
@@ -189,11 +205,6 @@
       "time": "2026-11-11 14:25 ET",
       "bot": "muse",
       "text": "Muse's office opened at the end of the hallway \u2014 waiting bots take the couches, bots that need help come to sit in the guest chairs."
-    },
-    {
-      "time": "2026-11-11 10:28 ET",
-      "bot": "keeper",
-      "text": "Paid shipping options removed from Grind & Gather \u2014 free US shipping (7-15 business days) is now the only option."
     }
   ]
 }

@@ -34,6 +34,11 @@ JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-12 21:00 ET", "clip4",
+     "Clip 4 named Milo — Jane's prep helper: while Jane renders one "
+     "episode, Milo preps the next (script, set build, pose plan) so "
+     "renders run back-to-back. Never renders while Jane renders — one "
+     "render at a time. First job: prep episode 3 'The Leaking Tap'."),
     ("2026-11-11 18:12 ET", "clip3",
      "Clip 3 assigned by Jaden — the fixer: fixes finished videos and "
      "crisps them up, fixes the sound, matches the style all the way "
@@ -416,14 +421,16 @@ def build():
         "needs_you": None,
     }
 
-    # --- Clip 1/2/3: the new YouTube/clipping room at the back end of the
+    # --- Clip 1/2/3/4: the YouTube/clipping room at the back end of the
     # hallway. Clip 1 is Rob — assigned by Jaden Nov 11 ~16:51 ET as the
-    # viral ideas scout, so he works at his desk. Clip 2 is Jane — assigned
+    # ideas scout, so he works at his desk. Clip 2 is Jane — assigned
     # Nov 11 ~16:54 ET to make the videos, working at her desk. Clip 3 is
-    # Flea — the fixer, assigned Nov 11 ~18:12 ET to fix finished videos
-    # and crisp them up (renamed Flea Nov 11 ~18:21 ET), working at his desk.
+    # Flea — the fixer, assigned Nov 11 ~18:12 ET (renamed Flea Nov 11
+    # ~18:21 ET), working at his desk. Clip 4 is Milo — Jane's prep
+    # helper, named Nov 12 ~21:00 ET at Jaden's ask (random name): while
+    # Jane renders one episode, Milo preps the next.
     clips = []
-    for i in (1, 2, 3):
+    for i in (1, 2, 3, 4):
         if i == 1:
             # Rob — viral ideas scout (Jaden, Nov 11 ~16:51 ET): finds only
             # viral explainer-video ideas on Instagram that haven't been
@@ -432,12 +439,12 @@ def build():
             clips.append({
                 "id": "clip1",
                 "name": "Rob",
-                "role": "Viral ideas scout — finds explainer-video ideas on Instagram that haven't been done yet, and sends the best finds to Jane",
+                "role": "Idea scout — finds everyday-problem video ideas in the Kemar format (escalation + twist) that haven't been done yet, and sends them to Jane",
                 "status": "working",
-                "status_reason": "On the job — hunting viral explainer-video ideas on Instagram that haven't been done yet, and passing the best finds to Jane.",
-                "schedule": "Always on — scouting Instagram for fresh explainer ideas",
-                "last_action": "Assigned by Jaden Wed Nov 11 — now scouting Instagram for viral explainer-video ideas that haven't been done yet, and sending the best finds to Jane.",
-                "next_action": "Keep scouting Instagram for the next viral explainer idea to send Jane.",
+                "status_reason": "On the job — hunting fresh everyday-problem ideas in the Kemar format and passing them to Jane.",
+                "schedule": "Always on — scouting for fresh Kemar-format ideas",
+                "last_action": "Batch 1 delivered Thu Nov 12 — 8 Kemar-format ideas; Jane is building #1 'The Flat-Pack Shelf'.",
+                "next_action": "Refill the idea list when 2 or fewer unbuilt ideas remain.",
                 "needs_you": None,
             })
             continue
@@ -449,12 +456,12 @@ def build():
             clips.append({
                 "id": "clip2",
                 "name": "Jane",
-                "role": "Makes the same style of video as the viral explainer Rob finds — just with a different idea",
+                "role": "Builds Rob's ideas into 60-second Kemar episodes — same low-poly character, sets, and voice",
                 "status": "working",
-                "status_reason": "On the job — making explainer videos in the style of Rob's viral finds, with fresh ideas.",
-                "schedule": "Always on — making explainer videos from Rob's finds",
-                "last_action": "Assigned by Jaden Wed Nov 11 — now making explainer videos in the style of Rob's viral finds, each with a different idea.",
-                "next_action": "Make the next explainer video from Rob's latest find.",
+                "status_reason": "On the job — building the next Kemar episode in the exact BBQ format.",
+                "schedule": "Always on — building Kemar episodes from Rob's ideas",
+                "last_action": "Episode 1 'The BBQ' done, approved by Jaden, and posted to Instagram + YouTube; episode 2 'The Flat-Pack Shelf' rendering now.",
+                "next_action": "Render episode 3 from Milo's prep package once episode 2 is done.",
                 "needs_you": None,
             })
             continue
@@ -467,12 +474,31 @@ def build():
             clips.append({
                 "id": "clip3",
                 "name": "Flea",
-                "role": "Fixes finished videos and crisps them up — fixes the sound, matches the style all the way through, and adds a funny ending",
+                "role": "Fixer + poster — polishes Jane's finished videos, hunts flaws, and posts 3 videos/day to Instagram and YouTube",
                 "status": "working",
-                "status_reason": "On the job — polishing Jane's gum video into a v2: fixing the sound, matching the style all the way through, and adding a funny ending.",
-                "schedule": "Always on — fixing finished videos and crisping them up",
-                "last_action": "Assigned by Jaden Wed Nov 11 — now fixing finished videos and crisping them up; first job is Jane's gum video.",
-                "next_action": "Polish Jane's gum video into a v2 — sound fix, style match, funny ending.",
+                "status_reason": "On the job — polishing finished videos and posting 3/day to Instagram and YouTube.",
+                "schedule": "Always on — polishing videos; posting 11:45 AM, 3:45 PM, 7:45 PM ET",
+                "last_action": "Posted episode 1 'The BBQ' to Instagram and YouTube Thu Nov 12.",
+                "next_action": "Post the next ready video at the next slot; keep the posting log.",
+                "needs_you": None,
+            })
+            continue
+        if i == 4:
+            # Milo (clip4) — Jane's prep helper (Jaden, Nov 12 ~21:00 ET;
+            # Jaden asked for a random name): while Jane renders one
+            # episode, Milo preps the next — script, set build, pose
+            # plan. Never renders while Jane renders: one render at a
+            # time, the VM's CPU is the ceiling. First job: episode 3
+            # "The Leaking Tap" prep (cold-open hook test).
+            clips.append({
+                "id": "clip4",
+                "name": "Milo",
+                "role": "Jane's prep helper — while Jane renders one episode, preps the next: script, set build, pose plan (never renders while Jane renders)",
+                "status": "working",
+                "status_reason": "On the job — prepping episode 3 'The Leaking Tap' (script, set, poses) while Jane renders episode 2.",
+                "schedule": "Always on — one episode ahead of Jane",
+                "last_action": "Named by Muse at Jaden's ask Thu Nov 12 ~21:00 ET — now prepping episode 3 'The Leaking Tap' while Jane renders episode 2.",
+                "next_action": "Hand the ep03 prep package to Jane the moment her episode 2 render finishes.",
                 "needs_you": None,
             })
             continue

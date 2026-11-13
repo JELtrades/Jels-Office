@@ -141,7 +141,7 @@
 <body>
 <header>
   <h1>Jaden's Virtual Office <span class="dot">•</span> Live Bot Status</h1>
-  <p class="sub">Nine bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
+  <p class="sub">Ten bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
   <div class="toolbar">
     <span class="stamp">Last updated: <b id="updated">loading…</b></span>
     <span class="countdown" id="countdown"></span>
@@ -373,10 +373,10 @@ import * as THREE from 'three';
   // the hallway (x 1.5, z 15.9, rotated 180° so Muse sits on the +z side
   // facing back toward the door). rotY is 0 unless noted. It is a BIG
   // executive desk (3.8 wide, vs 2.3 for the other bots) at the far end of
-  // the expanded 10x12 office. The three Clip
+  // the expanded 10x12 office. The four Clip
   // bots' desks are full-size (2.3 wide, same as every other room) now
   // that the clipping room is 10 wide x 12 deep like the trading room:
-  // two back desks at z -14.6, one front desk at z -9.4, all on the
+  // two back desks at z -14.6, two front desks at z -9.4, all on the
   // room's x=1.5 centre lane (desks at lane ± 2.5, like the trading room).
   var DESK_SPOTS = [
     { id: "scanner", x: -7.5, z: -2.6, room: "trading" },
@@ -387,9 +387,10 @@ import * as THREE from 'three';
     { id: "muse",    x:  1.5, z: 15.9, room: "office", rotY: Math.PI, w: 3.8, ringR: 2.05, screenW: 1.5, kbW: 1.1 },
     { id: "clip1",   x: -1, z: -14.6, room: "clipping" },
     { id: "clip2",   x:  4, z: -14.6, room: "clipping" },
-    { id: "clip3",   x: -1, z: -9.4, room: "clipping" }
+    { id: "clip3",   x: -1, z: -9.4, room: "clipping" },
+    { id: "clip4",   x:  4, z: -9.4, room: "clipping" }
   ];
-  // The eight walkable bots (Muse never leaves his desk — the jelly is
+  // The nine walkable bots (Muse never leaves his desk — the jelly is
   // built separately below).
   var ROBOT_SPOTS = DESK_SPOTS.filter(function(s){ return s.id !== "muse"; });
   // One centre lane (cx) per room, clear of every desk. Bots route via
@@ -1226,11 +1227,10 @@ import * as THREE from 'three';
   scene.add(museChair);
 
   // ----- Clipping room (YouTube) decor -----
-  // 3-seat couch along the room's right edge (faces -x into the room),
-  // where the three waiting Clip bots sit. Centred on the room (z -12);
-  // its back end clears the back desks' fronts by ~0.25 and its front
-  // end stays well inside the slab.
-  var sofaC = buildSofa(3);
+  // 4-seat couch along the room's right edge (faces -x into the room),
+  // where the four waiting Clip bots sit. Centred on the room (z -12);
+  // its ends stay clear of the desks (x-separated) and well inside the slab.
+  var sofaC = buildSofa(4);
   sofaC.position.set(5.95, 0, -12);
   sofaC.rotation.y = Math.PI / 2;
   scene.add(sofaC);
@@ -1998,9 +1998,10 @@ import * as THREE from 'three';
     keeper:  { room: "shopify", x: 9.3, z: 1.0, yaw: -Math.PI / 2, approach: { x: 8.2, z: 0.9 }, seatY: 0.42 },
     // Clip bots sit on the clipping-room couch (right edge, faces -x into
     // the room); approaches come in from the room side (x 4.9).
-    clip1:  { room: "clipping", x: 5.9, z: -13, yaw: -Math.PI / 2, approach: { x: 4.9, z: -13 }, seatY: 0.42 },
-    clip2:  { room: "clipping", x: 5.9, z: -12, yaw: -Math.PI / 2, approach: { x: 4.9, z: -12 }, seatY: 0.42 },
-    clip3:  { room: "clipping", x: 5.9, z: -11, yaw: -Math.PI / 2, approach: { x: 4.9, z: -11 }, seatY: 0.42 }
+    clip1:  { room: "clipping", x: 5.9, z: -13.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -13.5 }, seatY: 0.42 },
+    clip2:  { room: "clipping", x: 5.9, z: -12.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -12.5 }, seatY: 0.42 },
+    clip3:  { room: "clipping", x: 5.9, z: -11.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -11.5 }, seatY: 0.42 },
+    clip4:  { room: "clipping", x: 5.9, z: -10.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -10.5 }, seatY: 0.42 }
   };
   var GUEST_CHAIRS = [
     { x: 0.6, z: 14.3, yaw: 0, approach: { x: 0.6, z: 15.0 }, seatY: 0.36, takenBy: null },
