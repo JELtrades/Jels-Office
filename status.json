@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 21:55:49 ET",
-  "generated_at_utc": "2026-11-13T02:55:50Z",
+  "generated_at_et": "2026-11-12 22:00:56 ET",
+  "generated_at_utc": "2026-11-13T03:00:57Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -126,12 +126,14 @@
       "id": "clip3",
       "name": "Flea",
       "role": "Fixer + poster + improvement research \u2014 polishes Jane's finished videos, hunts flaws, studies how other creators do it, and posts 3 videos/day to Instagram and YouTube",
-      "status": "working",
-      "status_reason": "On the job \u2014 polishing finished videos and posting 3/day to Instagram and YouTube.",
+      "status": "needs-you",
+      "status_reason": "Improvement findings waiting on Muse's review at his desk \u2014 see FLEA-FINDINGS.md.",
       "schedule": "Always on \u2014 polishing videos; posting 11:45 AM, 3:45 PM, 7:45 PM ET",
       "last_action": "Posted episode 1 'The BBQ' to Instagram and YouTube Thu Nov 12.",
       "next_action": "Post the next ready video at the next slot; keep the posting log.",
-      "needs_you": null
+      "needs_you": [
+        "Improvement findings from other creators waiting on Muse's review \u2014 FLEA-FINDINGS.md"
+      ]
     },
     {
       "id": "clip4",
