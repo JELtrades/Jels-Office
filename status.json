@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-12 21:20:49 ET",
-  "generated_at_utc": "2026-11-13T02:20:49Z",
+  "generated_at_et": "2026-11-12 21:25:57 ET",
+  "generated_at_utc": "2026-11-13T02:25:57Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -56,10 +56,10 @@
       "name": "Bell",
       "role": "Alerts & reminders \u2014 Trump statement / market-news sweeps every 30 min + session reminders (NY 7 AM, Asia 5 PM)",
       "status": "working",
-      "status_reason": "Last Trump sweep Thu Nov 12, 8:52 PM ET \u2014 fresh; between session reminders.",
+      "status_reason": "Last Trump sweep Thu Nov 12, 9:22 PM ET \u2014 fresh; between session reminders.",
       "schedule": "Trump sweeps every 30 min, around the clock + session reminders Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)",
-      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Thu Nov 12, 8:52 PM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
-      "next_action": "Next Trump sweep ~Thu Nov 12, 9:22 PM ET \u00b7 next reminder Fri Nov 13, 7:00 AM ET",
+      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Thu Nov 12, 9:22 PM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
+      "next_action": "Next Trump sweep ~Thu Nov 12, 9:52 PM ET \u00b7 next reminder Fri Nov 13, 7:00 AM ET",
       "needs_you": null
     },
     {
@@ -147,6 +147,11 @@
   ],
   "log": [
     {
+      "time": "2026-11-12 21:22 ET",
+      "bot": "bell",
+      "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
+    },
+    {
       "time": "2026-11-12 21:05 ET",
       "bot": "clip4",
       "text": "Clip 4 renamed Mary by Jaden \u2014 Jane's prep helper, first named Milo at Jaden's ask for a random name. Still prepping episode 3 'The Leaking Tap' while Jane renders episode 2."
@@ -155,11 +160,6 @@
       "time": "2026-11-12 21:00 ET",
       "bot": "clip4",
       "text": "Clip 4 named Milo \u2014 Jane's prep helper: while Jane renders one episode, Milo preps the next (script, set build, pose plan) so renders run back-to-back. Never renders while Jane renders \u2014 one render at a time. First job: prep episode 3 'The Leaking Tap'."
-    },
-    {
-      "time": "2026-11-12 20:52 ET",
-      "bot": "bell",
-      "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
     },
     {
       "time": "2026-11-12 11:15 ET",
