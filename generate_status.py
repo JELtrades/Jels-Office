@@ -35,6 +35,11 @@ FLEA_FINDINGS = WORKSPACE / "lowpoly-studio/FLEA-FINDINGS.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-14 12:17 ET", "jim",
+     "Jim named by Jaden — new bot making personal stick-figure "
+     "motivation videos for Jaden's own account, separate from the "
+     "Kemar clipping room. Desk on the office platform. First test "
+     "video in production; Jaden reviews every video before anything posts."),
     ("2026-11-12 21:53 ET", "clip3",
      "Flea's job expanded by Jaden — always looks for ways to improve "
      "the videos by studying how other creators do it; when he finds "
@@ -424,7 +429,7 @@ def build():
         # LFE buffer per Jaden Nov 12; LDE breached Nov 12 (Jaden) — buffer 0.
         "stats": {
             "last_logged_trade": journal_last,
-            "lucid_lfe_buffer_usd": 2761,
+            "lucid_lfe_buffer_usd": 1684,
             "lucid_lde_buffer_usd": 0,
         },
     }
@@ -542,7 +547,36 @@ def build():
             "needs_you": None,
         })
 
-    bots = [scanner, paper_bot, bell, keeper, ledger, muse] + clips
+    # --- Jim: personal videos — black-and-white stick-figure motivation
+    # videos for Jaden's own account, separate from the Kemar clipping
+    # room. Named by Jaden Sat Nov 14 ~12:17 ET; desk on the office
+    # platform, front-left. Status is derived from real files: working
+    # while no finished video awaits review; needs-you when a finished
+    # video exists without its .approved.txt marker (Jaden reviews every
+    # video before anything posts).
+    jim_dir = WORKSPACE / "personal-videos"
+    jim_pending = False
+    if jim_dir.exists():
+        for mp4 in jim_dir.glob("*.mp4"):
+            if not (jim_dir / (mp4.stem + ".approved.txt")).exists():
+                jim_pending = True
+                break
+    jim = {
+        "id": "jim",
+        "name": "Jim",
+        "role": "Personal videos — black-and-white stick-figure motivation videos for Jaden's own account; original scripts only, separate from the Kemar clipping room",
+        "status": "needs-you" if jim_pending else "working",
+        "status_reason": ("A finished video is waiting on Jaden's review before anything posts."
+                          if jim_pending else
+                          "Building his first test video — stick figures, dotted background, calm voiceover."),
+        "schedule": "Makes videos when Jaden asks; Jaden reviews every video before it posts",
+        "last_action": "Named Jim by Jaden Sat Nov 14 ~12:17 ET — first test video in production.",
+        "next_action": "Finish the test video and send it to Jaden for review.",
+        "needs_you": (["A finished personal video is waiting on Jaden's review — nothing posts without his approval."]
+                      if jim_pending else None),
+    }
+
+    bots = [scanner, paper_bot, bell, keeper, ledger, muse] + clips + [jim]
 
     # --- Office log, newest first, all from real sources
     log = []

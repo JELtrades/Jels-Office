@@ -141,7 +141,7 @@
 <body>
 <header>
   <h1>Jaden's Virtual Office <span class="dot">•</span> Live Bot Status</h1>
-  <p class="sub">Ten bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
+  <p class="sub">Eleven bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Jim's desk sits in Muse's office — he makes the personal videos. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
   <div class="toolbar">
     <span class="stamp">Last updated: <b id="updated">loading…</b></span>
     <span class="countdown" id="countdown"></span>
@@ -388,7 +388,8 @@ import * as THREE from 'three';
     { id: "clip1",   x: -1, z: -14.6, room: "clipping" },
     { id: "clip2",   x:  4, z: -14.6, room: "clipping" },
     { id: "clip3",   x: -1, z: -9.4, room: "clipping" },
-    { id: "clip4",   x:  4, z: -9.4, room: "clipping" }
+    { id: "clip4",   x:  4, z: -9.4, room: "clipping" },
+    { id: "jim",     x: -1.2, z: 8.5, room: "office" }
   ];
   // The nine walkable bots (Muse never leaves his desk — the jelly is
   // built separately below).
@@ -2001,7 +2002,9 @@ import * as THREE from 'three';
     clip1:  { room: "clipping", x: 5.9, z: -13.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -13.5 }, seatY: 0.42 },
     clip2:  { room: "clipping", x: 5.9, z: -12.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -12.5 }, seatY: 0.42 },
     clip3:  { room: "clipping", x: 5.9, z: -11.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -11.5 }, seatY: 0.42 },
-    clip4:  { room: "clipping", x: 5.9, z: -10.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -10.5 }, seatY: 0.42 }
+    clip4:  { room: "clipping", x: 5.9, z: -10.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -10.5 }, seatY: 0.42 },
+    // Jim sits on the office couch (right edge, faces -x) when waiting.
+    jim:    { room: "office", x: 5.9, z: 11.0, yaw: -Math.PI / 2, approach: { x: 4.9, z: 11.0 }, seatY: 0.42 }
   };
   var GUEST_CHAIRS = [
     { x: 0.6, z: 14.3, yaw: 0, approach: { x: 0.6, z: 15.0 }, seatY: 0.36, takenBy: null },
