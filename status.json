@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-16 15:20:48 ET",
-  "generated_at_utc": "2026-11-16T20:20:48Z",
+  "generated_at_et": "2026-11-16 15:25:13 ET",
+  "generated_at_utc": "2026-11-16T15:25:13Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -56,10 +56,10 @@
       "name": "Bell",
       "role": "Alerts & reminders \u2014 Trump statement / market-news sweeps every 30 min + session reminders (NY 7 AM, Asia 5 PM)",
       "status": "working",
-      "status_reason": "Last Trump sweep Mon Nov 16, 2:52 PM ET \u2014 fresh; between session reminders.",
+      "status_reason": "Last Trump sweep Mon Nov 16, 3:22 PM ET \u2014 fresh; between session reminders.",
       "schedule": "Trump sweeps every 30 min, around the clock + session reminders Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)",
-      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Mon Nov 16, 2:52 PM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
-      "next_action": "Next Trump sweep ~Mon Nov 16, 3:22 PM ET \u00b7 next reminder Mon Nov 16, 5:00 PM ET",
+      "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Mon Nov 16, 3:22 PM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
+      "next_action": "Next Trump sweep ~Mon Nov 16, 3:52 PM ET \u00b7 next reminder Mon Nov 16, 5:00 PM ET",
       "needs_you": null
     },
     {
@@ -161,17 +161,17 @@
       "id": "tom",
       "name": "Tom",
       "role": "Shop revision \u2014 looks over the Grind & Gather store and fixes what needs revision: cover photos, descriptions, and listing quality on Shopify + TikTok Shop",
-      "status": "working",
-      "status_reason": "Revising the shop \u2014 2 open item(s).",
+      "status": "waiting",
+      "status_reason": "Between shop reviews \u2014 re-checks the store whenever Jaden asks or after any shop change.",
       "schedule": "No fixed schedule \u2014 reviews the shop whenever Jaden asks or after any shop change",
-      "last_action": "Named Tom by Jaden Mon Nov 16 ~14:24 ET \u2014 first job: new sharpener + sprayer covers and fuller descriptions for all 5 products.",
-      "next_action": "Working on: New cover photos: sharpener + sprayer in the clean house style, stickers removed (assigned Nov 16, 2026)",
+      "last_action": "Latest finished revision: 2026-11-16: Fuller descriptions for all 5 products (hook + bullets + use paragraph + shipping line); verified live. Sprayer 'opaque green glass' claim corrected to clear glass.",
+      "next_action": "Next shop review when Jaden asks or after the next shop change.",
       "needs_you": null
     }
   ],
   "log": [
     {
-      "time": "2026-11-16 14:52 ET",
+      "time": "2026-11-16 15:22 ET",
       "bot": "bell",
       "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
     },
