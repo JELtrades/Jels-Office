@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-16 10:10:46 ET",
-  "generated_at_utc": "2026-11-16T15:10:46Z",
+  "generated_at_et": "2026-11-16 10:15:48 ET",
+  "generated_at_utc": "2026-11-16T15:15:48Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00)",
-      "last_action": "Engine run #317 at 2026-11-16 10:08 ET; 11 paper trade(s) detected so far.",
+      "last_action": "Engine run #318 at 2026-11-16 10:13 ET; 12 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -22,11 +22,11 @@
       "status": "working",
       "status_reason": "Inside the paper-trading window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET, checks every 5 min",
-      "last_action": "PT-20261113-11 \u2014 bearish Nyam model 5m \u2014 WIN +5.56R (+187.5 pts) at 2026-11-13 10:00 ET. $270 fixed stop (33.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
+      "last_action": "PT-20261116-12 \u2014 bearish Nyam model 5m \u2014 open \u2014 awaiting entry/outcome at None. $270 fixed stop (33.75 pts at 4 micros); wick went 0.0 pts beyond stop.",
       "next_action": "Watching for the next JELS setup (opens + midday model).",
       "needs_you": null,
       "stats": {
-        "trades_opened": 11,
+        "trades_opened": 12,
         "closed": 9,
         "wins": 4,
         "losses": 5,
@@ -160,6 +160,16 @@
   ],
   "log": [
     {
+      "time": "2026-11-16 10:13 ET",
+      "bot": "paper",
+      "text": "PT-20261116-12 closed \u2014 None. Wick went 0.0 pts beyond the stop."
+    },
+    {
+      "time": "2026-11-16 10:13 ET",
+      "bot": "paper",
+      "text": "PT-20261116-12 detected \u2014 bearish Nyam model 5m, CISD 27485.75, FVG 27471.0-27529.0."
+    },
+    {
       "time": "2026-11-16 09:52 ET",
       "bot": "bell",
       "text": "Trump sweep \u2014 no qualifying market-moving statement, no alert."
@@ -168,16 +178,6 @@
       "time": "2026-11-14 12:17 ET",
       "bot": "jim",
       "text": "Jim named by Jaden \u2014 new bot making personal stick-figure motivation videos for Jaden's own account, separate from the Kemar clipping room. Desk on the office platform. First test video in production; Jaden reviews every video before anything posts."
-    },
-    {
-      "time": "2026-11-13 10:00 ET",
-      "bot": "paper",
-      "text": "PT-20261113-11 closed \u2014 WIN +5.56R (+187.5 pts, +$1500 at 4 micros). Wick went 0.0 pts beyond the stop."
-    },
-    {
-      "time": "2026-11-13 09:43 ET",
-      "bot": "paper",
-      "text": "PT-20261113-11 detected \u2014 bearish Nyam model 5m, CISD 28404.0, FVG 28357.0-28389.5."
     },
     {
       "time": "2026-11-12 21:53 ET",
