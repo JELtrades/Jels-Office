@@ -141,7 +141,7 @@
 <body>
 <header>
   <h1>Jaden's Virtual Office <span class="dot">•</span> Live Bot Status</h1>
-  <p class="sub">Eleven bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Jim's desk sits in Muse's office — he makes the personal videos. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
+  <p class="sub">Twelve bots, four rooms. Trading on the left, the shop on the right, Muse's office at the end of the hallway, clipping at the back. Jim's desk sits in Muse's office — he makes the personal videos. Tom's desk sits in the shop room — he looks over the store and fixes what needs revision. Waiting bots take the couches; a bot that needs you comes to sit in Muse's office. Each desk shows what its bot is really doing — statuses come from the bots' actual schedules and Eastern Time, never faked. Tap a robot for details.</p>
   <div class="toolbar">
     <span class="stamp">Last updated: <b id="updated">loading…</b></span>
     <span class="countdown" id="countdown"></span>
@@ -389,7 +389,8 @@ import * as THREE from 'three';
     { id: "clip2",   x:  4, z: -14.6, room: "clipping" },
     { id: "clip3",   x: -1, z: -9.4, room: "clipping" },
     { id: "clip4",   x:  4, z: -9.4, room: "clipping" },
-    { id: "jim",     x: -1.2, z: 8.5, room: "office" }
+    { id: "jim",     x: -1.2, z: 8.5, room: "office" },
+    { id: "tom",     x:  6.5, z:  4.8, room: "shopify" }
   ];
   // The nine walkable bots (Muse never leaves his desk — the jelly is
   // built separately below).
@@ -2004,7 +2005,9 @@ import * as THREE from 'three';
     clip3:  { room: "clipping", x: 5.9, z: -11.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -11.5 }, seatY: 0.42 },
     clip4:  { room: "clipping", x: 5.9, z: -10.5, yaw: -Math.PI / 2, approach: { x: 4.9, z: -10.5 }, seatY: 0.42 },
     // Jim sits on the office couch (right edge, faces -x) when waiting.
-    jim:    { room: "office", x: 5.9, z: 11.0, yaw: -Math.PI / 2, approach: { x: 4.9, z: 11.0 }, seatY: 0.42 }
+    jim:    { room: "office", x: 5.9, z: 11.0, yaw: -Math.PI / 2, approach: { x: 4.9, z: 11.0 }, seatY: 0.42 },
+    // Tom sits on the shop sofa's second cushion (next to George) when waiting.
+    tom:    { room: "shopify", x: 9.3, z: 2.0, yaw: -Math.PI / 2, approach: { x: 8.2, z: 1.9 }, seatY: 0.42 }
   };
   var GUEST_CHAIRS = [
     { x: 0.6, z: 14.3, yaw: 0, approach: { x: 0.6, z: 15.0 }, seatY: 0.36, takenBy: null },

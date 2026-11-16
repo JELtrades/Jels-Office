@@ -28,6 +28,7 @@ PAPER_STATE = WORKSPACE / "goals/trading-session-reminders/hidden_files/ict-pape
 REPORTED = WORKSPACE / "goals/trump-statement-market-alerts/hidden_files/reported.json"
 JOURNAL = WORKSPACE / "goals/trade-journal/files/trade-journal.md"
 FLEA_FINDINGS = WORKSPACE / "lowpoly-studio/FLEA-FINDINGS.md"
+TOM_QUEUE = WORKSPACE / "goals/dropshipping-restart-electric-grinder-set/hidden_files/tom-queue.md"
 
 # ---------------------------------------------------------------------------
 # Recorded facts that live in MEMORY.md / the session log, not in a machine
@@ -35,6 +36,13 @@ FLEA_FINDINGS = WORKSPACE / "lowpoly-studio/FLEA-FINDINGS.md"
 # ---------------------------------------------------------------------------
 RECORDED_LOG = [
     # (time_et_str, bot_id, text)
+    ("2026-11-16 14:24 ET", "tom",
+     "Tom named by Jaden — new bot looking over the Grind & Gather shop "
+     "and fixing what needs revision: cover photos, descriptions, and "
+     "listing quality on Shopify + TikTok Shop. Desk in the shop room "
+     "next to George. First job: new sharpener + sprayer covers in the "
+     "clean house style with stickers removed, and fuller descriptions "
+     "for all 5 products."),
     ("2026-11-14 12:17 ET", "jim",
      "Jim named by Jaden — new bot making personal stick-figure "
      "motivation videos for Jaden's own account, separate from the "
@@ -189,6 +197,38 @@ def load_flea_findings():
     except Exception:
         return False
     return first == "STATUS: UNREVIEWED"
+
+
+def load_tom_queue():
+    """Parse Tom's revision queue file: (needs_jaden, open_items, done).
+    Sections are NEEDS-JADEN: / OPEN: / DONE:, items are '- ' lines.
+    A missing file or empty sections mean nothing is waiting."""
+    needs, open_items, done = [], [], []
+    try:
+        lines = TOM_QUEUE.read_text().splitlines()
+    except Exception:
+        return needs, open_items, done
+    section = None
+    for line in lines:
+        s = line.strip()
+        if s.startswith("NEEDS-JADEN:"):
+            section = "needs"
+            continue
+        if s.startswith("OPEN:"):
+            section = "open"
+            continue
+        if s.startswith("DONE:"):
+            section = "done"
+            continue
+        if s.startswith("- "):
+            item = s[2:].strip()
+            if section == "needs":
+                needs.append(item)
+            elif section == "open":
+                open_items.append(item)
+            elif section == "done":
+                done.append(item)
+    return needs, open_items, done
 
 
 # ---------------------------------------------------------------------------
@@ -576,7 +616,42 @@ def build():
                       if jim_pending else None),
     }
 
-    bots = [scanner, paper_bot, bell, keeper, ledger, muse] + clips + [jim]
+    # --- Tom: shop revision — looks over the Grind & Gather shop and
+    # fixes what needs revision: cover photos, descriptions, and listing
+    # quality on Shopify + TikTok Shop. Named by Jaden Mon Nov 16
+    # ~14:24 ET; desk in the shop room next to George. Status derives
+    # from his real queue file: needs-you when an item waits on Jaden's
+    # decision, working while revision work is open, waiting between
+    # reviews.
+    tom_needs, tom_open, tom_done = load_tom_queue()
+    if tom_needs:
+        tom_status = "needs-you"
+        tom_reason = f"{len(tom_needs)} shop revision decision(s) waiting on Jaden."
+    elif tom_open:
+        tom_status = "working"
+        tom_reason = f"Revising the shop — {len(tom_open)} open item(s)."
+    else:
+        tom_status = "waiting"
+        tom_reason = "Between shop reviews — re-checks the store whenever Jaden asks or after any shop change."
+    tom = {
+        "id": "tom",
+        "name": "Tom",
+        "role": "Shop revision — looks over the Grind & Gather store and fixes what needs revision: cover photos, descriptions, and listing quality on Shopify + TikTok Shop",
+        "status": tom_status,
+        "status_reason": tom_reason,
+        "schedule": "No fixed schedule — reviews the shop whenever Jaden asks or after any shop change",
+        "last_action": (f"Latest finished revision: {tom_done[-1]}"
+                        if tom_done else
+                        "Named Tom by Jaden Mon Nov 16 ~14:24 ET — first job: new sharpener + sprayer covers and fuller descriptions for all 5 products."),
+        "next_action": (f"Waiting on Jaden: {tom_needs[0]}"
+                        if tom_needs else
+                        (f"Working on: {tom_open[0]}"
+                         if tom_open else
+                         "Next shop review when Jaden asks or after the next shop change.")),
+        "needs_you": tom_needs or None,
+    }
+
+    bots = [scanner, paper_bot, bell, keeper, ledger, muse] + clips + [jim, tom]
 
     # --- Office log, newest first, all from real sources
     log = []

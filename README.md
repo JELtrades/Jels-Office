@@ -1,7 +1,7 @@
 # Jaden's Virtual Office — Public (GitHub Pages) Version
 
-A bookmarkable, live-in-the-browser version of Jaden's Virtual Office: nine
-animated bots (Scanner, Paper, Bell, George, Frank, Muse, and Rob, Jane, Flea, Mary)
+A bookmarkable, live-in-the-browser version of Jaden's Virtual Office: twelve
+animated bots (Scanner, Paper, Bell, George, Frank, Muse, Rob, Jane, Flea, Mary, Jim, and Tom)
 across four rooms — trading, the shop, Muse's office at the end of the
 hallway, and the clipping room at the back — with Working / Waiting /
 Needs-you badges and an office log. It mirrors the in-app Virtual Office,
@@ -44,6 +44,8 @@ Camera radius 46, shadow camera ±24, so the longer building
 - **Jane (Clip 2)** — builds Rob's ideas into 60-second Kemar episodes: same low-poly character, sets, and voice.
 - **Flea (Clip 3)** — the fixer + poster: polishes Jane's finished videos, hunts flaws, and posts 3 videos/day to Instagram and YouTube.
 - **Mary (Clip 4)** — Jane's prep helper: while Jane renders one episode, Mary preps the next (script, set build, pose plan). Never renders while Jane renders.
+- **Jim** — personal videos: motivation videos for Jaden's own account, original scripts only, separate from the Kemar clipping room. Desk in Muse's office.
+- **Tom** — shop revision: looks over the Grind & Gather store and fixes what needs revision — cover photos, descriptions, and listing quality on Shopify + TikTok Shop. Desk in the shop room, next to George.
 
 ## Files
 
