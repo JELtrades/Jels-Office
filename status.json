@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-21 05:50:46 ET",
-  "generated_at_utc": "2026-11-21T10:50:46Z",
+  "generated_at_et": "2026-11-21 05:55:43 ET",
+  "generated_at_utc": "2026-11-21T10:55:43Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -59,7 +59,7 @@
       "status_reason": "Last Trump sweep Sat Nov 21, 5:22 AM ET \u2014 fresh; between session reminders.",
       "schedule": "Trump sweeps every 30 min, around the clock + session reminders Mon-Fri 7:00 AM ET (NY) and Sun-Thu 5:00 PM ET (Asia)",
       "last_action": "NY session reminder sent Wed Nov 11, 06:56 ET \u2014 Veterans Day, no red-folder USD events; PPI Fri Nov 13 preview. Last Trump sweep Sat Nov 21, 5:22 AM ET: no qualifying market-moving statement, no alert. 5 qualifying alert(s) ever.",
-      "next_action": "Next Trump sweep ~Sat Nov 21, 5:52 AM ET \u00b7 next reminder Sun Nov 22, 5:00 PM ET",
+      "next_action": "Next Trump sweep ~Sat Nov 21, 6:22 AM ET \u00b7 next reminder Sun Nov 22, 5:00 PM ET",
       "needs_you": null
     },
     {
