@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-26 09:30:46 ET",
-  "generated_at_utc": "2026-11-26T14:30:46Z",
+  "generated_at_et": "2026-11-26 09:35:43 ET",
+  "generated_at_utc": "2026-11-26T14:35:43Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -11,7 +11,7 @@
       "status": "working",
       "status_reason": "Inside the live watch window (Mon-Fri 09:30-15:00 ET).",
       "schedule": "Mon-Fri 09:30-15:00 ET (Nyam opens 09:30-10:30, midday model 11:00-13:00)",
-      "last_action": "Engine run #852 at 2026-11-25 15:03 ET; 28 paper trade(s) detected so far.",
+      "last_action": "Engine run #853 at 2026-11-26 09:33 ET; 28 paper trade(s) detected so far.",
       "next_action": "Scanning every 5 minutes right now.",
       "needs_you": null
     },
@@ -44,10 +44,10 @@
         "flex_best_day_ratio": 0.722,
         "flex_required_total_usd": 3750.0,
         "flex_days_traded": 11,
-        "flex_today_pnl_usd": -540.0,
-        "flex_today_date": "2026-11-25",
-        "flex_cap_state": "loss_cap",
-        "flex_cap_state_text": "day done \u2014 hit \u2212$540 loss cap",
+        "flex_today_pnl_usd": 0.0,
+        "flex_today_date": "2026-11-26",
+        "flex_cap_state": "trading",
+        "flex_cap_state_text": "trading",
         "flex_passed": false
       }
     },
