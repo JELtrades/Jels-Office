@@ -1,6 +1,6 @@
 {
-  "generated_at_et": "2026-11-26 23:55:46 ET",
-  "generated_at_utc": "2026-11-27T04:55:47Z",
+  "generated_at_et": "2026-11-27 00:00:45 ET",
+  "generated_at_utc": "2026-11-27T05:00:45Z",
   "office": "Jaden's Virtual Office",
   "note": "Statuses are derived from each bot's real schedule and current Eastern Time. Working means inside a real active window; needs-you means a real decision is waiting on Jaden.",
   "bots": [
@@ -66,12 +66,15 @@
       "id": "keeper",
       "name": "George",
       "role": "Grind & Gather store \u2014 Shopify only: product, discount, policies, payments, launch",
-      "status": "waiting",
-      "status_reason": "Waiting for launch \u2014 Nov 27, 2026. 2 launch item(s) parked until then.",
+      "status": "needs-you",
+      "status_reason": "2 decision(s) waiting on Jaden.",
       "schedule": "No fixed schedule \u2014 acts when Jaden decides; launch target Black Fri Nov 27",
       "last_action": "Paid shipping options removed Wed Nov 11 ~10:28 ET \u2014 free US shipping (7-15 days) is now the only option.",
-      "next_action": "Launch Nov 27, 2026 \u2014 then: social links (needs Jaden's handles); remove the store password, then place a test order.",
-      "needs_you": null
+      "next_action": "Remove the store password at launch, then place a test order.",
+      "needs_you": [
+        "Social links in Shopify \u2014 needs Jaden's handles",
+        "Store password \u2014 remove at launch, then place a test order"
+      ]
     },
     {
       "id": "ledger",
